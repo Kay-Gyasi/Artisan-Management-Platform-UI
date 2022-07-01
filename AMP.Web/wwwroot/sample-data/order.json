@@ -1,0 +1,37 @@
+{
+  "result": [
+    {
+      "id": 1,
+      "customerId": 16,
+      "serviceId": 1,
+      "description": "My kitchen sink drainage is malfunctioning"
+    },
+    {
+      "id": 2,
+      "customerId": 19,
+      "serviceId": 1,
+      "description": "My kitchen sink drainage is malfunctioning"
+    },
+    {
+      "id": 3,
+      "customerId": 18,
+      "serviceId": 1,
+      "description": "My kitchen sink drainage is malfunctioning"
+    },
+    {
+      "id": 4,
+      "customerId": 27,
+      "serviceId": 1,
+      "description": "My kitchen sink drainage is malfunctioning"
+    },
+    {
+      "id": 5,
+      "customerId": 23,
+      "serviceId": 1,
+      "description": "My kitchen sink drainage is malfunctioning" 
+    }
+  ],
+  "version": "v1",
+  "statusCode": 200,
+  "message": ""
+}

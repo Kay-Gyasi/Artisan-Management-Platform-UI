@@ -1,0 +1,82 @@
+{
+  "result": [
+    {
+      "Id": 16,
+      "UserId": 16,
+      "User": null
+    },
+    {
+      "Id": 17,
+      "UserId": 17,
+      "User": null
+    },
+    {
+      "Id": 18,
+      "UserId": 18,
+      "User": null
+    },
+    {
+      "Id": 19,
+      "UserId": 19,
+      "User": null
+    },
+    {
+      "Id": 20,
+      "UserId": 20,
+      "User": null
+    },
+    {
+      "Id": 21,
+      "UserId": 21,
+      "User": null
+    },
+    {
+      "Id": 22,
+      "UserId": 22,
+      "User": null
+    },
+    {
+      "Id": 23,
+      "UserId": 23,
+      "User": null
+    },
+    {
+      "Id": 24,
+      "UserId": 24,
+      "User": null
+    },
+    {
+      "Id": 25,
+      "UserId": 25,
+      "User": null
+    },
+    {
+      "Id": 26,
+      "UserId": 26,
+      "User": null
+    },
+    {
+      "Id": 27,
+      "UserId": 27,
+      "User": null
+    },
+    {
+      "Id": 28,
+      "UserId": 28,
+      "User": null
+    },
+    {
+      "Id": 29,
+      "UserId": 29,
+      "User": null
+    },
+    {
+      "Id": 30,
+      "UserId": 30,
+      "User": null
+    }
+  ],
+  "version": "v1",
+  "statusCode": 200,
+  "message": ""
+}
