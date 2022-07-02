@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMP.Web", "AMP.Web\AMP.Web.csproj", "{729B514E-2032-44C1-9284-82E291D891C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMP.Web", "AMP.Web\AMP.Web.csproj", "{729B514E-2032-44C1-9284-82E291D891C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMP.Web.Models", "AMP.Web.Models\AMP.Web.Models.csproj", "{20EE4AB8-88D6-45E9-8B5C-65674846001F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMP.Web.Models", "AMP.Web.Models\AMP.Web.Models.csproj", "{20EE4AB8-88D6-45E9-8B5C-65674846001F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kessewa.Extension.Shared", "Kessewa.Extension.Shared\Kessewa.Extension.Shared.csproj", "{934FD533-EDD2-4ACF-A8BA-23B70E3748E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kessewa.Extension.Shared", "Kessewa.Extension.Shared\Kessewa.Extension.Shared.csproj", "{934FD533-EDD2-4ACF-A8BA-23B70E3748E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

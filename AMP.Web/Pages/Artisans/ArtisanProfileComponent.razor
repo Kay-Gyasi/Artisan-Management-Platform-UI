@@ -1,10 +1,10 @@
 ﻿@page "/account/artisan/overview"
-@using AMP.Web.Services.HttpServices
-@using AMP.Web.Models.Dtos
 @inject NavigationService Navigator
+@inject ArtisanService ArtisanService
+@layout ArtisanProfileLayout
 
-<ArtisanProfileLayout Artisan="Artisan"></ArtisanProfileLayout>
-<!--begin::details View-->
+@*<ArtisanProfileLayout Artisan="Artisan"></ArtisanProfileLayout>
+*@<!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
 	<!--begin::Card header-->
 	<div class="card-header cursor-pointer">
@@ -27,7 +27,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Max Smith</span>
+				<span class="fw-bolder fs-6 text-gray-800">@UserName</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -39,7 +39,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8 fv-row">
-				<span class="fw-bold text-gray-800 fs-6">Keenthemes</span>
+				<span class="fw-bold text-gray-800 fs-6">@BusinessName</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -53,7 +53,7 @@
 			<!--begin::Col-->
 			<div class="col-lg-8 d-flex align-items-center">
 				<span class="fw-bolder fs-6 text-gray-800 me-2">044 3276 454 935</span>
-				<span class="badge badge-success">Verified</span>
+				<span class="badge badge-success" disabled="@Artisan?.IsVerified">Verified</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -78,7 +78,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Germany</span>
+				<span class="fw-bolder fs-6 text-gray-800">@Country</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -90,23 +90,12 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Email, Phone</span>
+				<span class="fw-bolder fs-6 text-gray-800">@EmailAddress, @Phone</span>
 			</div>
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
-		<!--begin::Input group-->
-		<div class="row mb-10">
-			<!--begin::Label-->
-			<label class="col-lg-4 fw-bold text-muted">Allow Changes</label>
-			<!--begin::Label-->
-			<!--begin::Label-->
-			<div class="col-lg-8">
-				<span class="fw-bold fs-6 text-gray-800">Yes</span>
-			</div>
-			<!--begin::Label-->
-		</div>
-		<!--end::Input group-->
+		
 		<!--begin::Notice-->
 		<div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
 			<!--begin::Icon-->
@@ -139,15 +128,44 @@
 <!--end::details View-->
 
 @code {
-	[Inject]
-	public ArtisanService ArtisanService { get; set; }
+	private ArtisanDto? Artisan { get; set; }
+	private int LoggedInUserId { get; set; } = 1; // id of artisan from claims
+	private string? EmailAddress { get; set; }
+	private string? BusinessName { get; set; }
+	private string? UserName { get; set; }
+	private string? StreetAddress { get; set; }
+	private string? Phone { get; set; }
+	private string? Country { get; set; }
 
-	private ArtisanDto Artisan { get; set; }
-	private int LoggedInUserId { get; set; } = 1;
-
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
-		Artisan = await ArtisanService.GetAsync(LoggedInUserId);
+		InitializeProperties();
 	}
 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Artisan = await ArtisanService.GetAsync(LoggedInUserId);
+			InitializeProperties();
+			StateHasChanged();
+		}
+	}
+
+	void InitializeProperties()
+	{
+		EmailAddress = Artisan?.User?.Contact.EmailAddress ?? "";
+		BusinessName = Artisan?.BusinessName ?? "";
+		UserName = BuildUsername();
+		StreetAddress = Artisan?.User?.Address.StreetAddress ?? "";
+	    Country = Artisan?.User?.Address.Country ?? "";
+		Phone = Artisan?.User?.Contact.PrimaryContact ?? "";
+	}
+
+	string BuildUsername()
+	{
+		var surname = Artisan?.User?.FamilyName ?? "";
+		var firstname = Artisan?.User?.FirstName ?? "";
+		return firstname + " " + surname; // trim names in backend
+	}
 }

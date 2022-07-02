@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace AMP.Web.Services;
+namespace AMP.Web.Services.Extensions;
 
 public class NavigationService
 {
@@ -29,6 +29,7 @@ public class NavigationService
     public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
     public void NavigateToCustomerProfileOverview() => _navManager.NavigateTo("/account/customer/overview");
     public void NavigateToArtisanProfileSettings() => _navManager.NavigateTo("/account/artisan/settings");
+    public void NavigateToArtisanBusinessSettings() => _navManager.NavigateTo("/account/artisan/business");
     public void NavigateToCustomerProfileSettings() => _navManager.NavigateTo("/account/customer/settings");
     public void NavigateToViewArtisans() => _navManager.NavigateTo("/users/artisans");
     public void NavigateToViewCustomers() => _navManager.NavigateTo("/users/customers");

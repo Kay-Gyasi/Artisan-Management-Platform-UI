@@ -1,5 +1,6 @@
-﻿using AMP.Web.Services;
+﻿using AMP.Web.Services.Extensions;
 using AMP.Web.Services.HttpServices;
+using AutoMapper;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -46,7 +47,13 @@ public static class RegisterServices
 
     private static IServiceCollection RegisterAutoMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        var mapperConfig = new MapperConfiguration(a =>
+        {
+            a.AddProfile<MapperProfile>();
+        });
+        var mapper = mapperConfig.CreateMapper();
+        services.AddSingleton(mapper);
         return services;
     }
 }

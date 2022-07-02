@@ -1,0 +1,139 @@
+﻿@page "/account/artisan/business"
+@layout ArtisanProfileLayout
+@inject ArtisanService ArtisanService
+@inject UserService UserService
+@inject IMapper Mapper
+
+@*<ArtisanProfileLayout></ArtisanProfileLayout>
+*@<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+	<!--begin::Card header-->
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+		<!--begin::Card title-->
+		<div class="card-title m-0">
+			<h3 class="fw-bolder m-0">Business Details</h3>
+		</div>
+		<!--end::Card title-->
+	</div>
+	<!--begin::Card header-->
+	<!--begin::Content-->
+	<div id="kt_account_profile_details" class="collapse show">
+		<!--begin::Form-->
+		<EditForm Model="Artisan" id="kt_account_profile_details_form" class="form">
+			<DataAnnotationsValidator />
+			<!--begin::Card body-->
+			<div class="card-body border-top p-9">
+
+				<!--begin::Input group-->
+				<div class="row mb-6">
+					<!--begin::Label-->
+					<label class="col-lg-4 col-form-label required fw-bold fs-6">Name</label>
+					<!--end::Label-->
+					<!--begin::Col-->
+					<div class="col-lg-8 fv-row">
+						<InputText @bind-Value="Artisan.BusinessName" type="text" name="company" class="form-control form-control-lg form-control-solid" placeholder="Company name" />
+					</div>
+					<!--end::Col-->
+				</div>
+				<!--end::Input group-->
+				<!--begin::Input group-->
+				<div class="row mb-6">
+					<!--begin::Label-->
+					<label class="col-lg-4 col-form-label fw-bold fs-6">
+						<span class="required">Description</span>
+						<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Description of business"></i>
+					</label>
+					<!--end::Label-->
+					<!--begin::Col-->
+					<div class="col-lg-8 fv-row">
+						<InputTextArea @bind-Value="Artisan.Description" name="description" class="form-control form-control-lg form-control-solid" placeholder="Description" />
+					</div>
+					<!--end::Col-->
+				</div>
+				<!--end::Input group-->
+				<!--begin::Input group-->
+				<div class="row mb-6">
+					<!--begin::Label-->
+					<label class="col-lg-4 col-form-label fw-bold fs-6">Company Site</label>
+					<!--end::Label-->
+					<!--begin::Col-->
+					<div class="col-lg-8 fv-row">
+						<input type="text" name="website" class="form-control form-control-lg form-control-solid" placeholder="Company website" value="keenthemes.com"/>
+					</div>
+					<!--end::Col-->
+				</div>
+				<!--end::Input group-->
+
+				<!--begin::Input group-->
+				<div class="row mb-6">
+					<!--begin::Label-->
+					<label class="col-lg-4 col-form-label fw-bold fs-6">Services</label>
+					<!--end::Label-->
+					<!--begin::Col-->
+					<div class="col-lg-8 fv-row">
+						<InputSelect @bind-Value="Artisan.Services" name="services" aria-label="Select a service" data-control="select2" data-placeholder="Select a service.." class="form-select form-select-solid form-select-lg">
+							<option value="">Select a service..</option>
+							<option data-kt-flag="flags/united-states.svg" value="USD">
+								<b>USD</b>&#160;-&#160;USA dollar</option>
+							<option data-kt-flag="flags/united-kingdom.svg" value="GBP">
+								<b>GBP</b>&#160;-&#160;British pound</option>
+							<option data-kt-flag="flags/australia.svg" value="AUD">
+								<b>AUD</b>&#160;-&#160;Australian dollar</option>
+							<option data-kt-flag="flags/japan.svg" value="JPY">
+								<b>JPY</b>&#160;-&#160;Japanese yen</option>
+							<option data-kt-flag="flags/sweden.svg" value="SEK">
+								<b>SEK</b>&#160;-&#160;Swedish krona</option>
+							<option data-kt-flag="flags/canada.svg" value="CAD">
+								<b>CAD</b>&#160;-&#160;Canadian dollar</option>
+							<option data-kt-flag="flags/switzerland.svg" value="CHF">
+								<b>CHF</b>&#160;-&#160;Swiss franc</option>
+						</InputSelect>
+					</div>
+					<!--end::Col-->
+				</div>
+				<!--end::Input group-->
+
+			</div>
+			<!--end::Card body-->
+			<!--begin::Actions-->
+			<div class="card-footer d-flex justify-content-end py-6 px-9">
+				<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
+				<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button>
+			</div>
+			<!--end::Actions-->
+		</EditForm>
+		<!--end::Form-->
+	</div>
+	<!--end::Content-->
+</div>
+<!--end::Basic info-->
+
+@code {
+	private ArtisanCommand? Artisan { get; set; } = new();
+	private UserCommand? User { get; set; } = new();
+	private int LoggedInUserId { get; set; } = 1; // id of artisan from claims
+	private string? BusinessName { get; set; }
+	private string? Description { get; set; }
+
+	protected override void OnInitialized()
+	{
+		InitializeProperties();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Artisan = Mapper.Map<ArtisanCommand>(await ArtisanService.GetAsync(LoggedInUserId));
+			User = Mapper.Map<UserCommand>(await UserService.GetAsync(Artisan.UserId));
+			InitializeProperties();
+			StateHasChanged();
+		}
+	}
+
+	void InitializeProperties()
+	{
+		BusinessName = Artisan?.BusinessName ?? "";
+		Description = Artisan?.Description ?? "";
+	}
+}

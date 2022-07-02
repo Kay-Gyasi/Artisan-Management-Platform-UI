@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Net.Http;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Qface.Extension.Shared.HttpServices;
+using AMP.Web.Services.Extensions;
 
 namespace AMP.Web.Services.HttpServices.Base;
 
