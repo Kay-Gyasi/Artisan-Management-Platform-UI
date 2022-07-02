@@ -1,5 +1,6 @@
 ﻿using System;
 using AMP.Web.Models.Enums;
+using AMP.Web.Models.ValueObjects;
 
 namespace AMP.Web.Models.PageDtos
 {
@@ -13,7 +14,8 @@ namespace AMP.Web.Models.PageDtos
         public Urgency Urgency { get; set; }
         public OrderStatus Status { get; set; }
         public DateTime PreferredDate { get; set; }
-        public CustomerPageDto Customer { get; set; }
-        public ServicePageDto Service { get; set; }
+        public Address Address { get; set; } = new Address();
+        public CustomerPageDto Customer { get; set; } = new CustomerPageDto();
+        public ServicePageDto Service { get; set; } = new ServicePageDto();
     }
 }

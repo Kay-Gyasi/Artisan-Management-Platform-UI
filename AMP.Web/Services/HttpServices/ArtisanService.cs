@@ -1,5 +1,6 @@
 ﻿using AMP.Web.Models.Dtos;
 using AMP.Web.Services.HttpServices.Base;
+using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Services.HttpServices;
 
@@ -15,9 +16,9 @@ public class ArtisanService
 
     // NOTE:: When registering users save first in the application database and use the Id of the inserted user as a claim
     // in the identity server
-    public async Task<ArtisanDto> GetAsync(int loggedInUserId)
+    public async Task<ArtisanDto?> GetAsync(int loggedInUserId)
     {
-        var user = await _http.GetRequestAsync<List<ArtisanDto>>("artisan.json", new CancellationToken());
-        return user.Result.FirstOrDefault(x => x.UserId == loggedInUserId);
+        var user = await _http.GetRequestAsync<List<ArtisanDto?>>("artisan.json", new CancellationToken());
+        return user.Result.FirstOrDefault(x => x?.UserId == loggedInUserId) ?? null;
     }
 }

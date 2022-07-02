@@ -1,4 +1,7 @@
-﻿namespace AMP.Web.Services.HttpServices;
+﻿using AMP.Web.Models.Dtos;
+using Kessewa.Extension.Shared.HttpServices.Models;
+
+namespace AMP.Web.Services.HttpServices;
 
 [Service]
 public class OrderService
@@ -8,5 +11,12 @@ public class OrderService
     public OrderService(IHttpRequestBase http)
     {
         _http = http;
+    }
+
+    public async Task<List<OrderDto?>> GetAllAsync()
+    {
+        var orders = await _http.GetRequestAsync<List<OrderDto?>>("order.json", 
+            new CancellationToken());
+        return orders.Result;
     }
 }

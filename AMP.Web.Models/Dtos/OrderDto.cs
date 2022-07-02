@@ -16,10 +16,10 @@ namespace AMP.Web.Models.Dtos
         public Urgency Urgency { get; set; }
         public OrderStatus Status { get; set; }
         public DateTime PreferredDate { get; set; }
-        public Address WorkAddress { get; set; }
-        public CustomerDto Customer { get; set; }
-        public ServiceDto Service { get; set; }
-        public PaymentDto Payment { get; set; }
-        public List<ProposalDto> Proposals { get; set; }
+        public Address WorkAddress { get; set; } = new Address();
+        public CustomerDto Customer { get; set; } = new CustomerDto();
+        public ServiceDto Service { get; set; } = new ServiceDto();
+        public PaymentDto Payment { get; set; } = new PaymentDto();
+        public List<ProposalDto> Proposals { get; set; } = new List<ProposalDto>();
     }
 }
