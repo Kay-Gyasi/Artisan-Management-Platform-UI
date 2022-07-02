@@ -6,10 +6,10 @@ namespace AMP.Web.Models.Dtos
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public UserDto User { get; set; }
-        public List<RatingDto> Ratings { get; set; }
-        public List<OrderDto> Orders { get; set; }
-        public List<DisputeDto> Disputes { get; set; }
-        public List<PaymentDto> Payments { get; set; }
+        public UserDto User { get; set; } = new UserDto();
+        public List<RatingDto> Ratings { get; set; } = new List<RatingDto>();
+        public List<OrderDto> Orders { get; set; } = new List<OrderDto>();
+        public List<DisputeDto> Disputes { get; set; } = new List<DisputeDto>();
+        public List<PaymentDto> Payments { get; set; } = new List<PaymentDto>();
     }
 }

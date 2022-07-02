@@ -43,7 +43,7 @@
 	
 	@foreach (var order in Orders.Data)
 	{
-		<div class="col-xl-4" style="cursor:grab" @onclick="() => Navigator.NavigateToOrderDetail(order.Id)">
+		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToOrderDetail(order.Id)">
 			<!--begin::Statistics Widget 1-->
 			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
 				<!--begin::Body-->
@@ -62,7 +62,7 @@
 
 <!--end::Container-->
 @code {
-	// Will receive data in pages
+	// Will receive data in pages (only orders that have a status of 'placed')
 	private PaginatedList<OrderPageDto> Orders { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()

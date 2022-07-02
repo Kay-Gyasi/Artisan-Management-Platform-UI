@@ -19,4 +19,11 @@ public class OrderService
             new CancellationToken());
         return orders.Result;
     }
+
+    public async Task<OrderDto?> GetAsync(int orderId)
+    {
+        var orders = await _http.GetRequestAsync<List<OrderDto>>("order.json",
+            new CancellationToken());
+        return orders.Result.FirstOrDefault(a => a.Id == orderId);
+    }
 }
