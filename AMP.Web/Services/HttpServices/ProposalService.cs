@@ -9,4 +9,11 @@ public class ProposalService
     {
         _http = http;
     }
+
+    public async Task<List<ProposalDto?>> GetAllAsync()
+    {
+        var orders = await _http.GetRequestAsync<List<ProposalDto?>>("proposal.json",
+            new CancellationToken());
+        return orders.Result;
+    }
 }

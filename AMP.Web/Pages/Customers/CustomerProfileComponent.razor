@@ -1,5 +1,7 @@
 ﻿@page "/account/customer/overview"
 @layout CustomerProfileLayout
+@inject NavigationService Navigator
+@inject CustomerService CustomerService
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -11,7 +13,7 @@
 		</div>
 		<!--end::Card title-->
 		<!--begin::Action-->
-		<a href="../../demo8/dist/account/settings.html" class="btn btn-primary align-self-center">Edit Profile</a>
+		<a @onclick="Navigator.NavigateToCustomerProfileSettings" class="btn btn-primary align-self-center">Edit Profile</a>
 		<!--end::Action-->
 	</div>
 	<!--begin::Card header-->
@@ -24,23 +26,11 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Max Smith</span>
+				<span class="fw-bolder fs-6 text-gray-800">@UserName</span>
 			</div>
 			<!--end::Col-->
 		</div>
 		<!--end::Row-->
-		<!--begin::Input group-->
-		<div class="row mb-7">
-			<!--begin::Label-->
-			<label class="col-lg-4 fw-bold text-muted">Company</label>
-			<!--end::Label-->
-			<!--begin::Col-->
-			<div class="col-lg-8 fv-row">
-				<span class="fw-bold text-gray-800 fs-6">Keenthemes</span>
-			</div>
-			<!--end::Col-->
-		</div>
-		<!--end::Input group-->
 		<!--begin::Input group-->
 		<div class="row mb-7">
 			<!--begin::Label-->
@@ -49,8 +39,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8 d-flex align-items-center">
-				<span class="fw-bolder fs-6 text-gray-800 me-2">044 3276 454 935</span>
-				<span class="badge badge-success">Verified</span>
+				<span class="fw-bolder fs-6 text-gray-800 me-2"><a href="tel:@Phone">@Phone</a></span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -75,7 +64,21 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Germany</span>
+				<span class="fw-bolder fs-6 text-gray-800">@Country</span>
+			</div>
+			<!--end::Col-->
+		</div>
+		<!--end::Input group-->
+
+		<!--begin::Input group-->
+		<div class="row mb-7">
+			<!--begin::Label-->
+			<label class="col-lg-4 fw-bold text-muted">Address
+			<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="City of residence"></i></label>
+			<!--end::Label-->
+			<!--begin::Col-->
+			<div class="col-lg-8">
+				<span class="fw-bolder fs-6 text-gray-800">@Customer?.User.Address?.City, @Customer?.User.Address?.StreetAddress</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -87,23 +90,12 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">Email, Phone</span>
+				<span class="fw-bolder fs-6 text-gray-800"><a href="mailto:@EmailAddress">@EmailAddress</a></span>
 			</div>
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
-		<!--begin::Input group-->
-		<div class="row mb-10">
-			<!--begin::Label-->
-			<label class="col-lg-4 fw-bold text-muted">Allow Changes</label>
-			<!--begin::Label-->
-			<!--begin::Label-->
-			<div class="col-lg-8">
-				<span class="fw-bold fs-6 text-gray-800">Yes</span>
-			</div>
-			<!--begin::Label-->
-		</div>
-		<!--end::Input group-->
+		
 		<!--begin::Notice-->
 		<div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
 			<!--begin::Icon-->
@@ -136,5 +128,42 @@
 <!--end::details View-->
 
 @code {
+	private CustomerDto? Customer { get; set; }
+	private int LoggedInUserId { get; set; } = 16; // id of artisan from claims
+	private string? EmailAddress { get; set; }
+	private string? UserName { get; set; }
+	private string? StreetAddress { get; set; }
+	private string? Phone { get; set; }
+	private string? Country { get; set; }
 
+	protected override void OnInitialized()
+	{
+		InitializeProperties();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Customer = await CustomerService.GetAsync(LoggedInUserId);
+			InitializeProperties();
+			StateHasChanged();
+		}
+	}
+
+	void InitializeProperties()
+	{
+		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
+		UserName = BuildUsername();
+		StreetAddress = Customer?.User.Address?.StreetAddress ?? "";
+		Country = Customer?.User.Address?.Country ?? "";
+		Phone = Customer?.User.Contact?.PrimaryContact ?? "";
+	}
+
+	string BuildUsername()
+	{
+		var surname = Customer?.User.FamilyName ?? "";
+		var firstname = Customer?.User.FirstName ?? "";
+		return firstname + " " + surname; // trim names in backend
+	}
 }

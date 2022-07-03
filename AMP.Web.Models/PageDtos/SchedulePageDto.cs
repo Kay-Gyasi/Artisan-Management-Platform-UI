@@ -9,7 +9,6 @@ namespace AMP.Web.Models.PageDtos
         public int ArtisanId { get; set; }
         public DateTime Date { get; set; }
         public DateTime Time { get; set; }
-        public string Description { get; set; }
         public OrderPageDto Order { get; set; }
         public ArtisanPageDto Artisan { get; set; }
     }

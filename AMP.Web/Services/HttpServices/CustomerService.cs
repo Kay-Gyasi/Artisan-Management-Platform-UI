@@ -11,4 +11,10 @@ public class CustomerService
     {
         _http = http;
     }
+
+    public async Task<CustomerDto?> GetAsync(int loggedInUserId)
+    {
+        var user = await _http.GetRequestAsync<List<CustomerDto?>>("customer.json", new CancellationToken());
+        return user.Result.FirstOrDefault(x => x?.UserId == loggedInUserId) ?? null;
+    }
 }

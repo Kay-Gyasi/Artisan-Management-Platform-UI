@@ -37,6 +37,8 @@ public class NavigationService
     public void NavigateToApprovalWaitlist() => _navManager.NavigateTo("/users/artisans/waitlist");
     public void NavigateToOrderList() => _navManager.NavigateTo("/orders");
     public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
+    public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/schedule/{orderId}");
+    public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/proposals/{orderId}");
     public void NavigateToArtisanOrderList() => _navManager.NavigateTo("/proposals");
     public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/schedule");
     public void NavigateToCustomerOrderList(int id) => _navManager.NavigateTo($"customers/orders/{id}");
