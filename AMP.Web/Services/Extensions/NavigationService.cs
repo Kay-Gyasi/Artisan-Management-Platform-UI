@@ -4,6 +4,7 @@ namespace AMP.Web.Services.Extensions;
 
 public class NavigationService
 {
+    // TODO:: Change all IDs to Guids for security reasons
     private readonly NavigationManager _navManager;
     public NavigationService(NavigationManager navManager)
     {
@@ -41,5 +42,7 @@ public class NavigationService
     public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/proposals/{orderId}");
     public void NavigateToArtisanOrderList() => _navManager.NavigateTo("/proposals");
     public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/schedule");
-    public void NavigateToCustomerOrderList(int id) => _navManager.NavigateTo($"customers/orders/{id}");
+    public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
+    public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
+    public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
 }

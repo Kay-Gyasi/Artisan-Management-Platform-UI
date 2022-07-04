@@ -1,4 +1,4 @@
-﻿@page "/schedule/{OrderId:int}"
+﻿@page "/customers/orders/{OrderId:int}"
 @inject OrderService OrderService
 
 <!--begin::details View-->
@@ -7,7 +7,7 @@
 	<div class="card-header cursor-pointer">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
-			<h3 class="fw-bolder m-0">Schedule Details</h3>
+			<h3 class="fw-bolder m-0">Order Details</h3>
 		</div>
 		<!--end::Card title-->
 	</div>
@@ -84,14 +84,13 @@
 		<div class="card-footer">
 			<!--begin::Action-->
 			<a href="#" class="btn btn-danger align-self-center float-end">Cancel</a>
-@*			<a href="#" class="btn btn-primary align-self-center float-end me-1">Complete</a>
-*@			<!--end::Action-->
+			<a href="#" class="btn btn-primary align-self-center float-end me-1">Complete</a>
+			<!--end::Action-->
 		</div>
 	</div>
 	<!--end::Card body-->
 </div>
 <!--end::details View-->
-
 @code {
 	[Parameter]
 	public int OrderId { get; set; }
@@ -102,5 +101,4 @@
 	{
 		Order = await OrderService.GetAsync(OrderId);
 	}
-
 }
