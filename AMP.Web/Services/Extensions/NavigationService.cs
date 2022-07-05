@@ -39,6 +39,7 @@ public class NavigationService
     public void NavigateToSearchUser() => _navManager.NavigateTo("/users/search");
     public void NavigateToApprovalWaitlist() => _navManager.NavigateTo("/users/artisans/waitlist");
     public void NavigateToOrderList() => _navManager.NavigateTo("/orders");
+    public void NavigateToAddReview() => _navManager.NavigateTo("/review");
     public void NavigateToCustomerDisputes() => _navManager.NavigateTo("/disputes");
     public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
     public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/schedule/{orderId}");
