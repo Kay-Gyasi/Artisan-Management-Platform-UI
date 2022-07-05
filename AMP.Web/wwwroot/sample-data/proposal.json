@@ -51,6 +51,45 @@
           "name": "Electrician",
           "description": ""
         }
+      },
+      "artisan": {
+        "Id": 1,
+        "UserId": 1,
+        "BusinessName": "QFace Group Ghana",
+        "Description": "With over 6 years experience, QFace Group Ghana brings to you a wide variety of professional expertise that spans across various aspects of Information Technology. We build bespoke applications (Web, Desktop, Mobile) that is africa-tolerant and friendly to our african business ecosystem, making the solution exactly tailored to work in the way that fits into your work environment. Our main services include Software Development, Interactive Multimedia and Website Design.",
+        "IsVerified": true,
+        "IsApproved": true,
+        "User": {
+          "Id": 1,
+          "UserNo": "972913d9-56d6-4d1c-a100-1397e59cd6b9",
+          "FirstName": "Kofi",
+          "FamilyName": "Gyasi",
+          "OtherName": "Jeremiah",
+          "DisplayName": "Kay Gyasi",
+          "ImageUrl": "https://avatars.githubusercontent.com/u/69327748?s=96&v=4",
+          "MomoNumber": "0557511216",
+          "IsSuspended": false,
+          "IsRemoved": false,
+          "Type": 3,
+          "LevelOfEducation": 0,
+          "Contact": {
+            "emailAddress": "kaygyasi715@gmail.com",
+            "primaryContact": "0557833216",
+            "primaryContact2": null,
+            "primaryContact3": null
+          },
+          "Address": {
+            "country": "Ghana",
+            "city": "Takoradi",
+            "town": "",
+            "streetAddress": "I.Adu - Anaji Rd"
+          },
+          "Languages": [
+            "Fante",
+            "English",
+            "Twi"
+          ]
+        }
       }
     },
     {
@@ -104,8 +143,46 @@
           "name": "Plumbing",
           "description": ""
         }
+      },
+      "artisan": {
+        "Id": 1,
+        "UserId": 1,
+        "BusinessName": "QFace Group Ghana",
+        "Description": "With over 6 years experience, QFace Group Ghana brings to you a wide variety of professional expertise that spans across various aspects of Information Technology. We build bespoke applications (Web, Desktop, Mobile) that is africa-tolerant and friendly to our african business ecosystem, making the solution exactly tailored to work in the way that fits into your work environment. Our main services include Software Development, Interactive Multimedia and Website Design.",
+        "IsVerified": true,
+        "IsApproved": true,
+        "User": {
+          "Id": 1,
+          "UserNo": "972913d9-56d6-4d1c-a100-1397e59cd6b9",
+          "FirstName": "Kofi",
+          "FamilyName": "Gyasi",
+          "OtherName": "Jeremiah",
+          "DisplayName": "Kay Gyasi",
+          "ImageUrl": "https://avatars.githubusercontent.com/u/69327748?s=96&v=4",
+          "MomoNumber": "0557511216",
+          "IsSuspended": false,
+          "IsRemoved": false,
+          "Type": 3,
+          "LevelOfEducation": 0,
+          "Contact": {
+            "emailAddress": "kaygyasi715@gmail.com",
+            "primaryContact": "0557833216",
+            "primaryContact2": null,
+            "primaryContact3": null
+          },
+          "Address": {
+            "country": "Ghana",
+            "city": "Takoradi",
+            "town": "",
+            "streetAddress": "I.Adu - Anaji Rd"
+          },
+          "Languages": [
+            "Fante",
+            "English",
+            "Twi"
+          ]
+        }
       }
-
     }
   ],
   "version": "v1",

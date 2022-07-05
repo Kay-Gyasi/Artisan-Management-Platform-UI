@@ -222,7 +222,16 @@
 		</div>
 
 		<div class="menu-item">
-			<a class="menu-link" href="#">
+			<a class="menu-link" @onclick="Navigator.NavigateToCustomerProposals">
+				<span class="menu-bullet">
+					<span class="bullet bullet-dot"></span>
+				</span>
+				<span class="menu-title">Proposals</span>
+			</a>
+		</div>
+
+		<div class="menu-item">
+			<a class="menu-link" @onclick="Navigator.NavigateToCustomerDisputes">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -231,11 +240,20 @@
 		</div>
 
 		<div class="menu-item">
-			<a class="menu-link" href="#">
+			<a class="menu-link" href="https://paystack.com/pay/hostelcrustpay">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
 				<span class="menu-title">Payments</span>
+			</a>
+		</div>
+		
+		<div class="menu-item">
+			<a class="menu-link" href="#">
+				<span class="menu-bullet">
+					<span class="bullet bullet-dot"></span>
+				</span>
+				<span class="menu-title">Reviews</span>
 			</a>
 		</div>
 

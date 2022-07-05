@@ -9,7 +9,7 @@ namespace AMP.Web.Models.Dtos
         public int ArtisanId { get; set; }
         public string Details { get; set; }
         public DisputeStatus Status { get; set; }
-        public CustomerDto Customer { get; set; }
-        public ArtisanDto Artisan { get; set; }
+        public CustomerDto Customer { get; set; } = new CustomerDto();
+        public ArtisanDto Artisan { get; set; } = new ArtisanDto();
     }
 }

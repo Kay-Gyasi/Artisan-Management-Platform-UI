@@ -1,7 +1,7 @@
-﻿@page "/account/artisan/overview"
+﻿@page "/customers/view-artisan/{ArtisanId:int}"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
-@layout ArtisanProfileLayout
+@layout CustomerViewArtisanLayout
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -13,7 +13,10 @@
 		</div>
 		<!--end::Card title-->
 		<!--begin::Action-->
-		<a @onclick="Navigator.NavigateToArtisanProfileSettings" class="btn btn-primary align-self-center">Edit Profile</a>
+		<div class="mt-auto mb-auto">
+			<button class="btn float-end btn-danger align-self-center">Reject</button>
+			<button class="btn float-end btn-primary align-self-center me-1">Accept</button>
+		</div>
 		<!--end::Action-->
 	</div>
 	<!--begin::Card header-->
@@ -83,41 +86,16 @@
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
-		
-		<!--begin::Notice-->
-		<div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-			<!--begin::Icon-->
-			<!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-			<span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-					<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
-					<rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
-					<rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
-				</svg>
-			</span>
-			<!--end::Svg Icon-->
-			<!--end::Icon-->
-			<!--begin::Wrapper-->
-			<div class="d-flex flex-stack flex-grow-1">
-				<!--begin::Content-->
-				<div class="fw-bold">
-					<h4 class="text-gray-900 fw-bolder">We need your attention!</h4>
-					<div class="fs-6 text-gray-700">Your payment was declined. To start using tools, please
-					<a class="fw-bolder" href="../../demo8/dist/account/billing.html">Add Payment Method</a>.</div>
-				</div>
-				<!--end::Content-->
-			</div>
-			<!--end::Wrapper-->
-		</div>
-		<!--end::Notice-->
+
 	</div>
 	<!--end::Card body-->
 </div>
 <!--end::details View-->
 
 @code {
+	[Parameter]
+	public int ArtisanId { get; set; }
 	private ArtisanDto? Artisan { get; set; }
-	private int LoggedInUserId { get; set; } = 1; // id of artisan from claims
 	private string? EmailAddress { get; set; }
 	private string? BusinessName { get; set; }
 	private string? UserName { get; set; }
@@ -134,7 +112,7 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetAsync(LoggedInUserId);
+			Artisan = await ArtisanService.GetAsync(ArtisanId);
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -146,7 +124,7 @@
 		BusinessName = Artisan?.BusinessName ?? "";
 		UserName = BuildUsername();
 		StreetAddress = Artisan?.User?.Address.StreetAddress ?? "";
-	    Country = Artisan?.User?.Address.Country ?? "";
+		Country = Artisan?.User?.Address.Country ?? "";
 		Phone = Artisan?.User?.Contact.PrimaryContact ?? "";
 	}
 

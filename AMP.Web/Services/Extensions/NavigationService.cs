@@ -28,15 +28,18 @@ public class NavigationService
     }
 
     public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
+    public void NavigateToCustomerViewArtisanProfile(int artisanId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}");
     public void NavigateToCustomerProfileOverview() => _navManager.NavigateTo("/account/customer/overview");
     public void NavigateToArtisanProfileSettings() => _navManager.NavigateTo("/account/artisan/settings");
     public void NavigateToArtisanBusinessSettings() => _navManager.NavigateTo("/account/artisan/business");
     public void NavigateToCustomerProfileSettings() => _navManager.NavigateTo("/account/customer/settings");
+    public void NavigateToCustomerProposals() => _navManager.NavigateTo("/customers/proposals");
     public void NavigateToViewArtisans() => _navManager.NavigateTo("/users/artisans");
     public void NavigateToViewCustomers() => _navManager.NavigateTo("/users/customers");
     public void NavigateToSearchUser() => _navManager.NavigateTo("/users/search");
     public void NavigateToApprovalWaitlist() => _navManager.NavigateTo("/users/artisans/waitlist");
     public void NavigateToOrderList() => _navManager.NavigateTo("/orders");
+    public void NavigateToCustomerDisputes() => _navManager.NavigateTo("/disputes");
     public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
     public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/schedule/{orderId}");
     public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/proposals/{orderId}");
