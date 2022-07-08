@@ -4,7 +4,6 @@ namespace AMP.Web.Services.Extensions;
 
 public class NavigationService
 {
-    // TODO:: Change all IDs to Guids for security reasons
     private readonly NavigationManager _navManager;
     public NavigationService(NavigationManager navManager)
     {
@@ -16,10 +15,8 @@ public class NavigationService
         return _navManager.BaseUri + "sample-data/";
     }
 
-    public void NavigateToDashboard()
-    {
-        _navManager.NavigateTo(_navManager.BaseUri);
-    }
+    public void NavigateToLanding() => _navManager.NavigateTo(_navManager.BaseUri);
+    
     public string IsActive(string keyword) => _navManager.Uri.Contains(keyword) ? "active" : "";
 
     public string IsDashboard()
@@ -49,4 +46,5 @@ public class NavigationService
     public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
     public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
     public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
+    public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
 }
