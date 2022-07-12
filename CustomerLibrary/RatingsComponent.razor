@@ -1,0 +1,84 @@
+﻿@page "/customer/review"
+
+<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+	<!--begin::Card header-->
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+		<!--begin::Card title-->
+		<div class="card-title m-0">
+			<h3 class="fw-bolder m-0">Post Review</h3>
+		</div>
+		<!--end::Card title-->
+	</div>
+	<!--begin::Card header-->
+	<!--begin::Content-->
+	<div id="kt_account_profile_details" class="collapse show">
+		<!--begin::Form-->
+	<EditForm Model="Rating" id="kt_account_profile_details_form" class="form">
+	<DataAnnotationsValidator />
+	<!--begin::Card body-->
+	<div class="card-body border-top p-9">
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Artisan</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputSelect @bind-Value="Rating.ArtisanId" name="artisan" class="form-control form-control-lg form-control-solid"
+						 placeholder="Artisan against whom dispute is being held">
+				<option value="">--Select an artisan--</option>
+				<option value="1">QFace Group Ghana</option>
+			</InputSelect>
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Votes</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputNumber @bind-Value="Rating.Votes" name="votes" class="form-control form-control-lg form-control-solid" 
+						 placeholder="No. of votes" />
+			<ValidationMessage For="() => Rating.Votes"></ValidationMessage>
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputTextArea @bind-Value="Rating.Description" name="description" class="form-control form-control-lg form-control-solid" 
+						   placeholder="Description" style="min-height: 20vh;" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	</div>
+	<!--end::Card body-->
+	<!--begin::Actions-->
+	<div class="card-footer d-flex justify-content-end py-6 px-9">
+		<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Post</button>
+	</div>
+	<!--end::Actions-->
+	</EditForm>
+		<!--end::Form-->
+	</div>
+	<!--end::Content-->
+</div>
+<!--end::Basic info-->
+@code {
+	public RatingCommand Rating { get; set; } = new();
+}

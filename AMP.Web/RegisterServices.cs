@@ -1,7 +1,4 @@
-﻿using AMP.Web.Services.Extensions;
-using AMP.Web.Services.HttpServices;
-using AutoMapper;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace AMP.Web;
@@ -14,7 +11,8 @@ public static class RegisterServices
         builder.RootComponents.Add<HeadOutlet>("head::after");
         builder.Services.AddScoped(sp => new HttpClient {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
 
-        builder.Services.AddServices();
+        builder.Services
+            .AddServices();
         return builder;
     }
 
