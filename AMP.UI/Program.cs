@@ -5,7 +5,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()
     .AddCircuitOptions(opts =>
     {
-        opts.DetailedErrors = builder.Environment.IsDevelopment();
+        //opts.DetailedErrors = builder.Environment.IsDevelopment();
+        opts.DetailedErrors = true;
     });
 builder.Services.AddServices();
 
