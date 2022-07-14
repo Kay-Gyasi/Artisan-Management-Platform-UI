@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AMP.Web.Models", "AMP.Web.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kessewa.Extension.Shared", "Kessewa.Extension.Shared\Kessewa.Extension.Shared.csproj", "{934FD533-EDD2-4ACF-A8BA-23B70E3748E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtisanLibrary", "ArtisanLibrary\ArtisanLibrary.csproj", "{55E4E9FA-6F1E-484F-8EF8-46F32789CE2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtisanLibrary", "ArtisanLibrary\ArtisanLibrary.csproj", "{55E4E9FA-6F1E-484F-8EF8-46F32789CE2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedComponents", "SharedComponents\SharedComponents.csproj", "{588C1244-2D20-4AFD-9FBB-76BDA7198BFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedComponents", "SharedComponents\SharedComponents.csproj", "{588C1244-2D20-4AFD-9FBB-76BDA7198BFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerLibrary", "CustomerLibrary\CustomerLibrary.csproj", "{891621F5-A29F-4DAF-9603-9C95343B7838}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerLibrary", "CustomerLibrary\CustomerLibrary.csproj", "{891621F5-A29F-4DAF-9603-9C95343B7838}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMP.UI", "AMP.UI\AMP.UI.csproj", "{5C4922A8-7CF4-45DB-B377-93967A5C7AB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{891621F5-A29F-4DAF-9603-9C95343B7838}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{891621F5-A29F-4DAF-9603-9C95343B7838}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{891621F5-A29F-4DAF-9603-9C95343B7838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4922A8-7CF4-45DB-B377-93967A5C7AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4922A8-7CF4-45DB-B377-93967A5C7AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4922A8-7CF4-45DB-B377-93967A5C7AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4922A8-7CF4-45DB-B377-93967A5C7AB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

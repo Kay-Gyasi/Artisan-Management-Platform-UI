@@ -1,0 +1,172 @@
+{
+  "result": [
+    {
+      "Id": 1,
+      "UserId": 1,
+      "BusinessName": "QFace Group Ghana",
+      "Description": "With over 6 years experience, QFace Group Ghana brings to you a wide variety of professional expertise that spans across various aspects of Information Technology. We build bespoke applications (Web, Desktop, Mobile) that is africa-tolerant and friendly to our african business ecosystem, making the solution exactly tailored to work in the way that fits into your work environment. Our main services include Software Development, Interactive Multimedia and Website Design.",
+      "IsVerified": true,
+      "IsApproved": true,
+      "User": {
+        "Id": 1,
+        "UserNo": "972913d9-56d6-4d1c-a100-1397e59cd6b9",
+        "FirstName": "Kofi",
+        "FamilyName": "Gyasi",
+        "OtherName": "Jeremiah",
+        "DisplayName": "Kay Gyasi",
+        "ImageUrl": "https://avatars.githubusercontent.com/u/69327748?s=96&v=4",
+        "MomoNumber": "0557511216",
+        "IsSuspended": false,
+        "IsRemoved": false,
+        "Type": 3,
+        "LevelOfEducation": 0,
+        "Contact": {
+          "emailAddress": "kaygyasi715@gmail.com",
+          "primaryContact": "0557833216",
+          "primaryContact2": null,
+          "primaryContact3": null
+        },
+        "Address": {
+          "country": "Ghana",
+          "city": "Takoradi",
+          "town": "",
+          "streetAddress": "I.Adu - Anaji Rd"
+        },
+        "Languages": [
+          "Fante",
+          "English",
+          "Twi"
+        ]
+      }
+    },
+    {
+      "Id": 2,
+      "UserId": 2,
+      "BusinessName": "sed magna. nibh tincidu",
+      "Description": "elit dolor. sit dolore.",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 3,
+      "UserId": 3,
+      "BusinessName": "dolor diam laoreet. magna magna aliqua",
+      "Description": "laoreet eui",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 4,
+      "UserId": 4,
+      "BusinessName": "sit adipiscing sed nonummy elit.",
+      "Description": "nibh dolor. d",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 5,
+      "UserId": 5,
+      "BusinessName": "nibh sed adipiscing diam sit.",
+      "Description": "elit dolor lorem dolore.",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 6,
+      "UserId": 6,
+      "BusinessName": "dolore amet nonummy ipsum. consectetuer dolor tinci",
+      "Description": "amet tincidunt. tinci",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 7,
+      "UserId": 7,
+      "BusinessName": "dolor euism",
+      "Description": "dolor consect",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 8,
+      "UserId": 8,
+      "BusinessName": "elit laoreet. erat l",
+      "Description": "diam dolore sed. dolor dolore consect",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 9,
+      "UserId": 9,
+      "BusinessName": "adipiscing ut nibh ut. dolor laoreet aliquam erat.",
+      "Description": "sed sed elit euismod. adipiscing aliquam t",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 10,
+      "UserId": 10,
+      "BusinessName": "consectetuer sed sit. aliquam euismod consectetuer. ",
+      "Description": "adipiscing nibh. euismod aliq",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 11,
+      "UserId": 11,
+      "BusinessName": "aliquam laoreet d",
+      "Description": "magna euismod. n",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 12,
+      "UserId": 12,
+      "BusinessName": "adipiscing diam ipsum ut euismod. ut ipsum lorem dolore",
+      "Description": "adipiscing elit. amet do",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 13,
+      "UserId": 13,
+      "BusinessName": "sed nonummy euismod erat. ipsum sed dolore dolor. ",
+      "Description": "erat aliquam ",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 14,
+      "UserId": 14,
+      "BusinessName": "tincidunt diam amet euismod. aliquam euismod era",
+      "Description": "elit sit diam. amet magna dolor. ",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    },
+    {
+      "Id": 15,
+      "UserId": 15,
+      "BusinessName": "sed diam nonummy. ",
+      "Description": "laoreet aliquam. aliquam magna. ",
+      "IsVerified": false,
+      "IsApproved": false,
+      "User": null
+    }
+  ],
+  "version": "v1",
+  "statusCode": 200,
+  "message": ""
+}
