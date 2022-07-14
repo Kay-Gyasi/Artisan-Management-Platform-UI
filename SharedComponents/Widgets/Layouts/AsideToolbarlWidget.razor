@@ -25,30 +25,27 @@
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		
-		if (firstRender)
-		{
-				
 	#region metronic js functionality methods
-			await JsRuntime.InvokeVoidAsync("KTUtil.init");
-			await JsRuntime.InvokeVoidAsync("KTApp.init");
-			await JsRuntime.InvokeVoidAsync("KTToggle.init");
-			await JsRuntime.InvokeVoidAsync("KTSwapper.init");
-			await JsRuntime.InvokeVoidAsync("KTDrawer.init");
-			await JsRuntime.InvokeVoidAsync("KTSticky.init");
-			await JsRuntime.InvokeVoidAsync("KTScrolltop.init");
-			await JsRuntime.InvokeVoidAsync("KTScroll.init");
-			await JsRuntime.InvokeVoidAsync("KTPasswordMeter.init");
-			await JsRuntime.InvokeVoidAsync("KTDialer.init");
-			await JsRuntime.InvokeVoidAsync("KTImageInput.init");
+		await JsRuntime.InvokeVoidAsync("KTUtil.init");
+		await JsRuntime.InvokeVoidAsync("KTApp.init");
+		await JsRuntime.InvokeVoidAsync("KTToggle.init");
+		await JsRuntime.InvokeVoidAsync("KTSwapper.init");
+		await JsRuntime.InvokeVoidAsync("KTDrawer.init");
+		await JsRuntime.InvokeVoidAsync("KTSticky.init");
+		await JsRuntime.InvokeVoidAsync("KTScrolltop.init");
+		await JsRuntime.InvokeVoidAsync("KTScroll.init");
+		await JsRuntime.InvokeVoidAsync("KTPasswordMeter.init");
+		await JsRuntime.InvokeVoidAsync("KTDialer.init");
+		await JsRuntime.InvokeVoidAsync("KTImageInput.init");
 	//await JsRuntime.InvokeVoidAsync("KTLayoutSearch.init");
-			await JsRuntime.InvokeVoidAsync("KTLayoutExplore.init");
-			await JsRuntime.InvokeVoidAsync("KTLayoutAside.init");
+		await JsRuntime.InvokeVoidAsync("KTLayoutExplore.init");
+		await JsRuntime.InvokeVoidAsync("KTLayoutAside.init");
 	//await JsRuntime.InvokeVoidAsync("KTLayoutToolbar.init");
-			await JsRuntime.InvokeVoidAsync("KTMenu.init");
+		await JsRuntime.InvokeVoidAsync("KTMenu.init");
 	#endregion
 
-		}
 
 	}
+
 
 }
