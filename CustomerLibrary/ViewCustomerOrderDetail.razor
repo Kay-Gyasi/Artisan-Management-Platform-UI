@@ -1,5 +1,6 @@
 ﻿@page "/customers/orders/{OrderId:int}"
 @inject OrderService OrderService
+@inject NavigationService Navigator
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -10,6 +11,18 @@
 			<h3 class="fw-bolder m-0">Order Details</h3>
 		</div>
 		<!--end::Card title-->
+		@if (!IsArtisanAssigned)
+		{
+			<!--begin::Action-->
+			<a @onclick="@(() => Navigator.NavigateToAssignOrderToArtisan(Order.Id))" class="btn btn-primary align-self-center">Assign to artisan</a>
+			<!--end::Action-->
+		}
+		else
+		{
+			<!--begin::Action-->
+			<a @onclick="RemoveAssignedArtisan" class="btn btn-danger align-self-center">Remove assigned artisan</a>
+			<!--end::Action-->
+		}
 	</div>
 	<!--begin::Card header-->
 	<!--begin::Card body-->
@@ -26,6 +39,27 @@
 			<!--end::Col-->
 		</div>
 		<!--end::Row-->
+		@if (IsArtisanAssigned)
+		{
+			<!--begin::Row-->
+			<div class="row mb-7" style="cursor: pointer;">
+				<!--begin::Label-->
+				<label class="col-lg-4 fw-bold text-muted">Assigned Artisan</label>
+				<!--end::Label-->
+
+				<!--begin::Col-->
+				<div class="col-lg-8">
+					<span class="fw-bolder fs-6 text-gray-800" 
+						  @onclick=@(() => Navigator.NavigateToCustomerViewArtisanProfile(Order.Artisan.Id))
+						>@Order?.Artisan.BusinessName</span>
+				</div>
+				<!--end::Col-->
+
+			</div>
+			<!--end::Row-->
+		}
+		
+
 		<!--begin::Input group-->
 		<div class="row mb-7">
 			<!--begin::Label-->
@@ -95,10 +129,22 @@
 	[Parameter]
 	public int OrderId { get; set; }
 
+	public bool IsArtisanAssigned { get; set; }
+
 	private OrderDto? Order { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
 		Order = await OrderService.GetAsync(OrderId);
+		Order.Artisan ??= new ArtisanDto();
+		IsArtisanAssigned = Order?.Artisan?.Id != 0;
+	}
+
+	private void RemoveAssignedArtisan()
+	{
+		// make an update http request here and if successful continue
+		Order.Artisan = new ArtisanDto();
+		IsArtisanAssigned = false;
+		StateHasChanged();
 	}
 }

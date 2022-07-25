@@ -9,6 +9,7 @@ namespace AMP.Web.Models.Dtos
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
+        public int ArtisanId { get; set; }
         public int ServiceId { get; set; }
         public int PaymentId { get; set; }
         public string Description { get; set; }
@@ -18,8 +19,8 @@ namespace AMP.Web.Models.Dtos
         public DateTime PreferredDate { get; set; }
         public Address WorkAddress { get; set; } = new Address();
         public CustomerDto Customer { get; set; } = new CustomerDto();
+        public ArtisanDto Artisan { get; set; } = new ArtisanDto();
         public ServiceDto Service { get; set; } = new ServiceDto();
         public PaymentDto Payment { get; set; } = new PaymentDto();
-        public List<ProposalDto> Proposals { get; set; } = new List<ProposalDto>();
     }
 }

@@ -26,6 +26,7 @@ namespace AMP.Web.Models.Services.Extensions
 
         public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
         public void NavigateToCustomerViewArtisanProfile(int artisanId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}");
+        public void NavigateToCustomerViewArtisanForOrder(int artisanId, int orderId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}/{orderId}");
         public void NavigateToCustomerProfileOverview() => _navManager.NavigateTo("/account/customer/overview");
         public void NavigateToArtisanProfileSettings() => _navManager.NavigateTo("/account/artisan/settings");
         public void NavigateToArtisanBusinessSettings() => _navManager.NavigateTo("/account/artisan/business");
@@ -47,6 +48,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
         public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
         public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
+        public void NavigateToAssignOrderToArtisan(int id) => _navManager.NavigateTo($"customers/assign-order/{id}");
     }
 }
 

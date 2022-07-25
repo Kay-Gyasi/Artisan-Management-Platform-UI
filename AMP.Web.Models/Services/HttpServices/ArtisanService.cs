@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Dtos;
 using AMP.Web.Models.Services.HttpServices.Base;
+using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices
 {
@@ -23,6 +24,13 @@ namespace AMP.Web.Models.Services.HttpServices
         {
             var user = await _http.GetRequestAsync<List<ArtisanDto?>>("artisan.json", new CancellationToken());
             return user.Result.FirstOrDefault(x => x?.UserId == loggedInUserId) ?? null;
+        }
+
+        public async Task<List<ArtisanDto>> GetAll()
+        {
+            var artisans = await _http.GetRequestAsync<List<ArtisanDto?>>("artisan.json",
+                new CancellationToken());
+            return artisans.Result;
         }
     }
 }

@@ -8,6 +8,8 @@ namespace AMP.Web.Models.PageDtos
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
+        public int ArtisanId { get; set; }
+        public bool IsCompleted { get; set; }
         public int ServiceId { get; set; }
         public string Description { get; set; }
         public decimal Cost { get; set; } // To be set by approved artisan
@@ -16,6 +18,7 @@ namespace AMP.Web.Models.PageDtos
         public DateTime PreferredDate { get; set; }
         public Address Address { get; set; } = new Address();
         public CustomerPageDto Customer { get; set; } = new CustomerPageDto();
+        public ArtisanPageDto Artisan { get; set; } = new ArtisanPageDto();
         public ServicePageDto Service { get; set; } = new ServicePageDto();
     }
 }

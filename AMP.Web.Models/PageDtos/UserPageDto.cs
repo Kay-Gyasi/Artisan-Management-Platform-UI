@@ -17,7 +17,7 @@ namespace AMP.Web.Models.PageDtos
         public bool IsRemoved { get; set; }
         public UserType Type { get; set; }
         public LevelOfEducation LevelOfEducation { get; set; }
-        public Contact Contact { get; set; }
-        public Address Address { get; set; }
+        public Contact Contact { get; set; } = new Contact();
+        public Address Address { get; set; } = new Address();
     }
 }

@@ -10,10 +10,11 @@ namespace AMP.Web.Models.Dtos
         public string Description { get; set; }
         public bool IsVerified { get; set; }
         public bool IsApproved { get; set; }
-        public UserDto? User { get; set; }
-        public List<ServiceDto> Services { get; set; }
-        public List<RatingDto> Ratings { get; set; }
-        public List<ProposalDto> Proposals { get; set; }
-        public List<DisputeDto> Disputes { get; set; }
+        public double Rating { get; set; }
+        public UserDto? User { get; set; } = new UserDto();
+        public List<ServiceDto> Services { get; set; } = new List<ServiceDto>();
+        public List<RatingDto> Ratings { get; set; } = new List<RatingDto>();
+        public List<OrderDto> Orders { get; set; } = new List<OrderDto>();
+        public List<DisputeDto> Disputes { get; set; } = new List<DisputeDto>();
     }
 }
