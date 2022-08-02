@@ -1,11 +1,14 @@
 ﻿@page "/customers/orders"
+@using System.Text
 @inject NavigationService Navigator
 @inject OrderService OrderService
 @inject IMapper Mapper
 
+<PageTitle>Orders</PageTitle>
 
 <!--begin::Form-->
-<form action="#">
+<EditForm Model="SearchObj" OnValidSubmit="Submit">
+	<DataAnnotationsValidator />
 	<!--begin::Card-->
 	<div class="card mb-7">
 		<!--begin::Card body-->
@@ -17,17 +20,18 @@
 					<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
 					<span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ms-6">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-							<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black" />
-							<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black" />
+							<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"/>
+							<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"/>
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<input type="text" class="form-control form-control-solid ps-10" name="search" value="" placeholder="Search" />
+					<InputText @bind-Value="SearchObj.SearchTerm" type="text" class="form-control form-control-solid ps-10" name="search" placeholder="Search"/>
 				</div>
 				<!--end::Input group-->
 				<!--begin:Action-->
 				<div class="d-flex align-items-center">
-					<button type="submit" class="btn btn-primary me-5">Search</button>
+					<button type="submit" class="btn btn-primary me-5"
+							disabled="@IsLoading">Search</button>
 				</div>
 				<!--end:Action-->
 
@@ -41,7 +45,7 @@
 		<!--end::Card body-->
 	</div>
 	<!--end::Card-->
-</form>
+</EditForm>
 <!--end::Form-->
 
 <!--begin::Container-->
@@ -56,7 +60,7 @@
 				<!--begin::Body-->
 				<div class="card-body">
 					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
-					<div class="fw-bolder text-primary my-6">@order.Address.City, @order.Address.StreetAddress</div>
+					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.City, @order.WorkAddress?.StreetAddress</div>
 					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
 				</div>
 				<!--end::Body-->
@@ -69,22 +73,31 @@
 
 <!--end::Container-->
 @code {
-	public int CustomerId { get; set; } = 16;
-	// Will receive data in pages (only orders that have a status of 'placed')
-	private PaginatedList<OrderPageDto> Orders { get; set; } = new();
+	int LoggedInUserId { get; set; } = 6;
+	Search SearchObj { get; set; } = new();
+	bool IsLoading { get; set; }
+	PaginatedList<OrderPageDto> Orders { get; set; } = new();
+	PaginatedQuery Query { get; set; } = PaginatedQuery.Build(0, 1, 20);
 
 	protected override async Task OnInitializedAsync()
 	{
 		Orders.Data = new();
-		var customerOrders = Mapper.Map<List<OrderPageDto>>(await OrderService.GetAllAsync());
-		Orders = new PaginatedList<OrderPageDto>()
-		{
-			Data = customerOrders.Where(x => x.CustomerId == CustomerId).ToList()
-		};
+		Orders = await OrderService.GetCustomerOrderPage(Query, LoggedInUserId);
 	}
 
-	
+	async Task Submit()
+	{
+		DisableButton(true);
+		Query.ThenSearch(SearchObj.SearchTerm);
+		Orders = await OrderService.GetCustomerOrderPage(Query, LoggedInUserId);
+		DisableButton(false);
+	}
 
+	void DisableButton(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }
 
 

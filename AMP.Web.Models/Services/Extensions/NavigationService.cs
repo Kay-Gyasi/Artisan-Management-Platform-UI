@@ -44,11 +44,14 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/artisan/proposals/{orderId}");
         public void NavigateToArtisanOrderList() => _navManager.NavigateTo("/artisan/proposals");
         public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/artisan/schedule");
+        public void NavigateToArtisanHistory() => _navManager.NavigateTo("/artisan/work-history");
         public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
+        public void NavigateToCustomerOrderHistory() => _navManager.NavigateTo("customers/orders/history");
         public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
         public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
         public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
-        public void NavigateToAssignOrderToArtisan(int id) => _navManager.NavigateTo($"customers/assign-order/{id}");
+        public void NavigateToAssignOrderToArtisan(int id, string service) 
+            => _navManager.NavigateTo($"customers/assign-order/{id}/{service}");
     }
 }
 

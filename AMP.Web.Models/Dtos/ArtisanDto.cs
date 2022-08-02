@@ -11,6 +11,8 @@ namespace AMP.Web.Models.Dtos
         public bool IsVerified { get; set; }
         public bool IsApproved { get; set; }
         public double Rating { get; set; }
+        public int NoOfReviews { get; set; }
+        public int NoOfOrders { get; set; }
         public UserDto? User { get; set; } = new UserDto();
         public List<ServiceDto> Services { get; set; } = new List<ServiceDto>();
         public List<RatingDto> Ratings { get; set; } = new List<RatingDto>();

@@ -1,4 +1,8 @@
-﻿using AMP.Web.Models.Services.HttpServices.Base;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AMP.Web.Models.Commands;
+using AMP.Web.Models.Services.HttpServices.Base;
+using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices
 {
@@ -11,6 +15,9 @@ namespace AMP.Web.Models.Services.HttpServices
         {
             _http = http;
         }
+
+        public async Task<RequestResponse> Save(DisputeCommand command)
+            => await _http.PostRequestAsync("dispute/save", command, new CancellationToken());
     }
 }
 

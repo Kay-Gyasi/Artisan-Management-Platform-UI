@@ -17,10 +17,16 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<CustomerDto?> GetAsync(int loggedInUserId)
+        public async Task<CustomerDto> GetAsync(int userId)
         {
-            var user = await _http.GetRequestAsync<List<CustomerDto?>>("customer.json", new CancellationToken());
-            return user.Result.FirstOrDefault(x => x?.UserId == loggedInUserId) ?? null;
+            return await _http.GetRequestAsync<CustomerDto>
+                ($"customer/get/{userId}", new CancellationToken());
+        }
+
+        public async Task<CustomerDto> GetByUserId(int userId)
+        {
+            return await _http.GetRequestAsync<CustomerDto>($"customer/GetByUser/{userId}",
+                new CancellationToken());
         }
     }
 }

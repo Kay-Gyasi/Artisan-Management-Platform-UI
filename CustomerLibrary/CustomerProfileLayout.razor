@@ -77,7 +77,7 @@
 <div class="d-flex flex-wrap flex-stack">
 	<!--begin::Wrapper-->
 	<div class="d-flex flex-column flex-grow-1 pe-8">
-		<!--begin::Stats-->
+		@*<!--begin::Stats-->
 		<div class="d-flex flex-wrap">
 			<!--begin::Stat-->
 			<div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
@@ -140,7 +140,7 @@
 			</div>
 			<!--end::Stat-->
 		</div>
-		<!--end::Stats-->
+		<!--end::Stats-->*@
 	</div>
 	<!--end::Wrapper-->
 	
@@ -174,7 +174,7 @@
 		
 
 @code {
-	private int LoggedInUserId { get; set; } = 16; // Get from claims
+	private int LoggedInUserId { get; set; } = 6; // Get from claims
 	private CustomerDto? Customer { get; set; }
 	private string? ImageUrl { get; set; }
 	private string? EmailAddress { get; set; }
@@ -190,7 +190,7 @@
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetAsync(LoggedInUserId);
+			Customer = await CustomerService.GetByUserId(LoggedInUserId);
 			InitializeProperties();
 			StateHasChanged();
 		}

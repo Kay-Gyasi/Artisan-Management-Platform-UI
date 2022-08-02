@@ -20,8 +20,20 @@ namespace AMP.Web.Models.Dtos
         public LevelOfEducation LevelOfEducation { get; set; }
         public Contact? Contact { get; set; } = new Contact();
         public Address? Address { get; set; } = new Address();
-        public List<string>? Languages { get; set; } = new List<string>();
+        public List<LanguagesDto> Languages { get; set; } = new List<LanguagesDto>();
         public List<ArtisanDto> Artisans { get; set; } = new List<ArtisanDto>();
         public List<CustomerDto> Customers { get; set; } = new List<CustomerDto>();
+    }
+
+    public class LanguagesDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    
+    public class LanguagesCommand
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

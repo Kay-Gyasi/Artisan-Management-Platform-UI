@@ -49,7 +49,7 @@
 				<!--begin::Body-->
 				<div class="card-body">
 					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
-					<div class="fw-bolder text-primary my-6">@order.Address.City, @order.Address.StreetAddress</div>
+					<div class="fw-bolder text-primary my-6">@order.WorkAddress.City, @order.WorkAddress.StreetAddress</div>
 					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
 				</div>
 				<!--end::Body-->
@@ -62,16 +62,17 @@
 
 <!--end::Container-->
 @code {
+    public int LoggedInUserId { get; set; } = 6;
 	// Will receive data in pages (only orders that have a status of 'placed')
 	private PaginatedList<OrderPageDto> Orders { get; set; } = new();
+	private PaginatedQuery query { get; set; } 
 
 	protected override async Task OnInitializedAsync()
 	{
-	    Orders.Data = new();
-		Orders = new PaginatedList<OrderPageDto>()
-		{
-			Data = Mapper.Map<List<OrderPageDto>>(await OrderService.GetAllAsync())
-		};
+	    query = PaginatedQuery.Build(0, 1, 10)
+	        .ThenSearch(LoggedInUserId.ToString());
+		Orders.Data = new();
+		Orders = await OrderService.GetPage(query);
 	}
 
 	

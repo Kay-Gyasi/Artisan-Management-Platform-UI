@@ -1,9 +1,14 @@
 ﻿@page "/account/artisan/business"
-@using AMP.Web.Models.Services.HttpServices
+@using AMP.Web.Models.ViewModels
 @layout ArtisanProfileLayout
 @inject ArtisanService ArtisanService
+@inject NotificationService ToastService
+@inject LookupService LookupService
 @inject UserService UserService
 @inject IMapper Mapper
+
+<PageTitle>Business Settings</PageTitle>
+
 
 @*<ArtisanProfileLayout></ArtisanProfileLayout>
 *@<!--begin::Basic info-->
@@ -20,7 +25,7 @@
 	<!--begin::Content-->
 	<div id="kt_account_profile_details" class="collapse show">
 		<!--begin::Form-->
-		<EditForm Model="Artisan" id="kt_account_profile_details_form" class="form">
+		<EditForm Model="Artisan" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
 			<DataAnnotationsValidator />
 			<!--begin::Card body-->
 			<div class="card-body border-top p-9">
@@ -37,58 +42,56 @@
 					<!--end::Col-->
 				</div>
 				<!--end::Input group-->
+				
 
-                <!--begin::Input group-->
+				<!--begin::Input group-->
 				<div class="row mb-6">
 					<!--begin::Label-->
 					<label class="col-lg-4 col-form-label fw-bold fs-6">Services</label>
 					<!--end::Label-->
 					<!--begin::Col-->
 					<div class="col-lg-8 fv-row">
-						<InputSelect @bind-Value="Artisan.Services" name="services" aria-label="Select a service" data-control="select2" data-placeholder="Select a service.." class="form-select form-select-solid form-select-lg">
+						<select @onchange="SelectedServicesChanged" multiple name="services" aria-label="Select a service" 
+									 data-control="select2" data-placeholder="Select a service.." 
+									 class="form-select form-select-solid form-select-lg">
 							<option value="">Select a service..</option>
-							<option data-kt-flag="flags/united-states.svg" value="USD">
-								<b>USD</b>&#160;-&#160;USA dollar</option>
-							<option data-kt-flag="flags/united-kingdom.svg" value="GBP">
-								<b>GBP</b>&#160;-&#160;British pound</option>
-							<option data-kt-flag="flags/australia.svg" value="AUD">
-								<b>AUD</b>&#160;-&#160;Australian dollar</option>
-							<option data-kt-flag="flags/japan.svg" value="JPY">
-								<b>JPY</b>&#160;-&#160;Japanese yen</option>
-							<option data-kt-flag="flags/sweden.svg" value="SEK">
-								<b>SEK</b>&#160;-&#160;Swedish krona</option>
-							<option data-kt-flag="flags/canada.svg" value="CAD">
-								<b>CAD</b>&#160;-&#160;Canadian dollar</option>
-							<option data-kt-flag="flags/switzerland.svg" value="CHF">
-								<b>CHF</b>&#160;-&#160;Swiss franc</option>
-						</InputSelect>
+							@foreach (var service in Services)
+							{
+								<option value="@service.Name">@service.Name</option>
+							}
+						</select>
 					</div>
 					<!--end::Col-->
 				</div>
-                <!--end::Input group-->
-				
-                <!--begin::Input group-->
-                <div class="row mb-6">
-                    <!--begin::Label-->
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">
-                        <span class="required">Description</span>
-                        <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Description of business"></i>
-                    </label>
-                    <!--end::Label-->
-                    <!--begin::Col-->
-                    <div class="col-lg-8 fv-row">
-                        <InputTextArea style="min-height: 25vh" @bind-Value="Artisan.Description" name="description" class="form-control form-control-lg form-control-solid" placeholder="Description" />
-                    </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Input group-->
+				<!--end::Input group-->
 
-            </div>
+				<p>
+					Selected Services: @string.Join(", ", Servs)
+				</p>
+
+				<!--begin::Input group-->
+				<div class="row mb-6">
+					<!--begin::Label-->
+					<label class="col-lg-4 col-form-label fw-bold fs-6">
+						<span class="required">Description</span>
+						<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Description of business"></i>
+					</label>
+					<!--end::Label-->
+					<!--begin::Col-->
+					<div class="col-lg-8 fv-row">
+						<InputTextArea style="min-height: 25vh" @bind-Value="Artisan.Description" name="description" class="form-control form-control-lg form-control-solid" placeholder="Description" />
+					</div>
+					<!--end::Col-->
+				</div>
+				<!--end::Input group-->
+
+			</div>
 			<!--end::Card body-->
 			<!--begin::Actions-->
 			<div class="card-footer d-flex justify-content-end py-6 px-9">
 				<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-				<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button>
+				<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
+						disabled="@IsLoading">Save Changes</button>
 			</div>
 			<!--end::Actions-->
 		</EditForm>
@@ -99,11 +102,16 @@
 <!--end::Basic info-->
 
 @code {
-	private ArtisanCommand? Artisan { get; set; } = new();
-	private UserCommand? User { get; set; } = new();
-	private int LoggedInUserId { get; set; } = 1; // id of artisan from claims
-	private string? BusinessName { get; set; }
-	private string? Description { get; set; }
+	ArtisanCommand? Artisan { get; set; } = new();
+	UserCommand? User { get; set; } = new();
+	List<Lookup> Services { get; set; } = new();
+	int LoggedInUserId { get; set; } = 7; // id of artisan from claims
+	string? BusinessName { get; set; }
+	string? Description { get; set; }
+	string[] ArtisanServices { get; set; } = new string[] {}; 
+	List<string> Servs { get; set; } = new List<string>();	
+	bool IsLoading { get; set; }
+
 
 	protected override void OnInitialized()
 	{
@@ -114,8 +122,20 @@
 	{
 		if (firstRender)
 		{
-			Artisan = Mapper.Map<ArtisanCommand>(await ArtisanService.GetAsync(LoggedInUserId));
-			User = Mapper.Map<UserCommand>(await UserService.GetAsync(Artisan.UserId));
+			var artisan = await ArtisanService.GetByUserId(LoggedInUserId);
+			Services = await LookupService.Get(LookupType.Service);
+			Artisan = Mapper.Map<ArtisanCommand>(artisan);
+			User = Mapper.Map<UserCommand>(artisan.User);
+
+			if (Artisan?.Services is not null)
+			{
+				foreach (var lang in Artisan.Services)
+				{
+					Servs.Add(lang.Name);
+				}
+			}
+
+
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -125,5 +145,40 @@
 	{
 		BusinessName = Artisan?.BusinessName ?? "";
 		Description = Artisan?.Description ?? "";
+	}
+
+	void SelectedServicesChanged(ChangeEventArgs e)
+	{
+		if (e.Value is not null)
+		{
+			ArtisanServices = (string[])e.Value;
+			Servs.Clear();
+			foreach (var lang in ArtisanServices)
+			{
+				Servs.Add(lang);
+			}
+		}
+	}
+
+	async Task Submit()
+	{
+		IsLoading = true;
+		StateHasChanged();
+		var servs = from c in Servs
+			select new ServiceCommand()
+			{
+				Name = c
+			};
+		Artisan?.Services.Clear();
+		Artisan?.Services.AddRange(servs);
+		var response = await ArtisanService.Save(Artisan);
+		IsLoading = false;
+		StateHasChanged();
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+			return;
+		}
+		ToastService.SaveFailure();
 	}
 }

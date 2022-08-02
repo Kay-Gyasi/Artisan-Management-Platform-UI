@@ -194,7 +194,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="75">0</div>
+					<div class="fs-2 fw-bolder">@Artisan?.NoOfOrders</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -214,7 +214,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="60" data-kt-countup-prefix="%">0</div>
+					<div class="fs-2 fw-bolder">@Artisan?.Rating</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -235,7 +235,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder" data-kt-countup="true" data-kt-countup-value="60" data-kt-countup-prefix="%">0</div>
+					<div class="fs-2 fw-bolder">@Artisan?.NoOfReviews</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -284,7 +284,7 @@
 
 @code {
 
-	private int LoggedInUserId { get; set; } = 1; // Get from claims
+	private int LoggedInUserId { get; set; } = 7; // Get from claims
 	private ArtisanDto? Artisan { get; set; }
 	private string? ImageUrl { get; set; }
 	private string? EmailAddress { get; set; }
@@ -301,7 +301,7 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetAsync(LoggedInUserId);
+			Artisan = await ArtisanService.GetByUserId(LoggedInUserId);
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -311,9 +311,9 @@
 	{
 		ImageUrl = Artisan?.User?.ImageUrl ?? "";
 		UserType = Artisan?.User?.Type ?? UserType.Customer;
-		EmailAddress = Artisan?.User?.Contact.EmailAddress ?? "";
+		EmailAddress = Artisan?.User?.Contact?.EmailAddress ?? "";
 		BusinessName = Artisan?.BusinessName ?? "";
-		StreetAddress = Artisan?.User?.Address.StreetAddress ?? "";
+		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
 	}
 }
 

@@ -1,4 +1,10 @@
-﻿namespace AMP.UI;
+﻿using AMP.UI.Authentication;
+using AMP.Web.Models.Services.Toast;
+using Blazored.Modal;
+using Blazored.Toast;
+using Microsoft.AspNetCore.Components.Authorization;
+
+namespace AMP.UI;
 
 public static class RegisterServices
 {
@@ -7,8 +13,15 @@ public static class RegisterServices
         services.RegisterAutoMapper()
             .AddScoped<NavigationService>()
             .AddHttpContextAccessor()
-            .AddHttpClient()
-            .RegisterHttpServices();
+            .AddBlazoredModal()
+            .AddBlazoredToast()
+            .AddScoped<NotificationService>()
+            .RegisterHttpServices()
+            .AddAuthentication()
+            .AddHttpClient("AmpDevApi", options =>
+            {
+                options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
+            });
         return services;
     }
 
@@ -21,11 +34,12 @@ public static class RegisterServices
             null);
 
         services.AddScoped<IHttpRequestBase, HttpRequestBase>();
-        Parallel.ForEach(httpServices, new ParallelOptions() { MaxDegreeOfParallelism = 10 }, service =>
+
+        foreach (var service in httpServices)
         {
             services.AddScoped(service);
-        });
-
+        }
+        
         return services;
     }
 
@@ -38,6 +52,14 @@ public static class RegisterServices
         });
         var mapper = mapperConfig.CreateMapper();
         services.AddSingleton(mapper);
+        return services;
+    }
+
+    private static IServiceCollection AddAuthentication(this IServiceCollection services)
+    {
+        services.AddScoped<TokenServerAuthenticationStateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(provider 
+            => provider.GetRequiredService<TokenServerAuthenticationStateProvider>());
         return services;
     }
 }

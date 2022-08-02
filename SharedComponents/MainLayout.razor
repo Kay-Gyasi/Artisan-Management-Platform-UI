@@ -1,6 +1,16 @@
 ﻿@inherits LayoutComponentBase
+@using Blazored.Toast.Configuration
 
-<MApp>
+
+<BlazoredToasts Position="ToastPosition.BottomRight"
+				Timeout="5"
+				IconType="IconType.FontAwesome"
+				ErrorIcon="error_outline"
+				InfoIcon="school"
+				SuccessIcon="done_outline"
+				WarningIcon="warning" 
+				MaxToastCount="1" />
+
 	<!--begin::Main-->
 	<!--begin::Root-->
 	<div class="d-flex flex-column flex-root" style="min-height: 100vh;">
@@ -1860,6 +1870,5 @@
 	</div>
 	<!--end::Scrolltop-->
 	<!--end::Main-->
-</MApp>
 
 

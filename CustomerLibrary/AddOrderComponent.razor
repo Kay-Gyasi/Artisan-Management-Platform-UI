@@ -1,4 +1,11 @@
 ﻿@page "/customers/add-order"
+@using AMP.Web.Models.ViewModels
+@inject LookupService LookupService
+@inject OrderService OrderService
+@inject NotificationService ToastService
+
+<PageTitle>Add Order</PageTitle>
+
 
 <!--begin::Basic info-->
 <div class="card mb-5 mb-xl-10">
@@ -14,7 +21,7 @@
 	<!--begin::Content-->
 	<div id="kt_account_profile_details" class="collapse show">
 		<!--begin::Form-->
-	<EditForm Model="Order" id="kt_account_profile_details_form" class="form">
+	<EditForm Model="Order" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
 	<DataAnnotationsValidator />
 	<!--begin::Card body-->
 	<div class="card-body border-top p-9">
@@ -27,14 +34,64 @@
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
 			<!--begin::Input-->
-			<InputSelect @bind-Value="Order.ServiceId" name="language" aria-label="Select a Service" data-control="select2" data-placeholder="Select a service..." class="form-select form-select-solid form-select-lg">
-				<option value="">Select a Language...</option>
-				<option data-kt-flag="flags/indonesia.svg" value="id">Plumbing</option>
-				<option data-kt-flag="flags/malaysia.svg" value="msa">Electrician</option>
+			<InputSelect @bind-Value="Order.ServiceId" name="service" aria-label="Select a Service" data-control="select2" data-placeholder="Select a service..." class="form-select form-select-solid form-select-lg">
+				<option>Select a service...</option>
+				@foreach (var service in Services)
+				{
+					<option value="@service.Id">@service.Name</option>
+				}
 			</InputSelect>
 			<!--end::Input-->
 			<!--begin::Hint-->
 			<div class="form-text">Please select the service which your order requires.</div>
+			<!--end::Hint-->
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+	
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Scope</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<!--begin::Input-->
+			<InputSelect @bind-Value="Order.Scope" name="scope" aria-label="Select a Scope" data-control="select2" data-placeholder="Select a scope..." class="form-select form-select-solid form-select-lg">
+				@foreach (var service in Enum.GetValues(typeof(ScopeOfWork)))
+				{
+					<option value="@service">@service.ToString()</option>
+				}
+			</InputSelect>
+			<!--end::Input-->
+			<!--begin::Hint-->
+			<div class="form-text">Please select the scope of work for the order</div>
+			<!--end::Hint-->
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+	
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Urgency</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<!--begin::Input-->
+			<InputSelect @bind-Value="Order.Urgency" name="urgency" aria-label="Select a level" data-control="select2" data-placeholder="Select a level..." class="form-select form-select-solid form-select-lg">
+				@foreach (var level in Enum.GetValues(typeof(Urgency)))
+				{
+					<option value="@level">@level.ToString()</option>
+				}
+			</InputSelect>
+			<!--end::Input-->
+			<!--begin::Hint-->
+			<div class="form-text">Please select the urgency of the order</div>
 			<!--end::Hint-->
 		</div>
 		<!--end::Col-->
@@ -59,6 +116,49 @@
 		<!--end::Col-->
 	</div>
 	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label fw-bold fs-6">City</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputText @bind-Value="Order.WorkAddress.City" name="city" class="form-control form-control-lg form-control-solid" 
+						   placeholder="City" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Town</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputText @bind-Value="Order.WorkAddress.Town" name="town" class="form-control form-control-lg form-control-solid" 
+						   placeholder="Town" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+	
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Street</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputText @bind-Value="Order.WorkAddress.StreetAddress" name="street" class="form-control form-control-lg form-control-solid" 
+						   placeholder="Street" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
 	
 	<!--begin::Input group-->
 	<div class="row mb-6">
@@ -78,8 +178,9 @@
 	<!--end::Card body-->
 	<!--begin::Actions-->
 	<div class="card-footer d-flex justify-content-end py-6 px-9">
-		<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Post</button>
+		<button type="reset" class="btn btn-light btn-active-light-primary me-2" disabled="@IsLoading">Discard</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
+				disabled="@IsLoading">Post</button>
 	</div>
 	<!--end::Actions-->
 	</EditForm>
@@ -90,5 +191,36 @@
 <!--end::Basic info-->
 
 @code {
-	public OrderCommand Order { get; set; } = new();
+	int LoggedInUserId { get; set; } = 6; // Pick these from claims when they get to the API
+	OrderCommand Order { get; set; } = new();
+	List<Lookup> Services { get; set; } = new();
+	bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		Services = await LookupService.Get(LookupType.Service);
+	}
+
+	async Task Submit()
+	{
+		Order.UserId = LoggedInUserId;
+	    if (Order.UserId == default || Order.ServiceId == default || string.IsNullOrEmpty(Order.WorkAddress.StreetAddress)) return;
+	    DisableButtons(true);
+		var response = await OrderService.Save(Order);
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+		    Order = new();
+			DisableButtons(false);
+			return;
+		}
+		ToastService.SaveFailure();
+		DisableButtons(false);
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }

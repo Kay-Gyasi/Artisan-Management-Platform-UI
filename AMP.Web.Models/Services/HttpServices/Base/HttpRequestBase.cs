@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -16,24 +15,21 @@ namespace AMP.Web.Models.Services.HttpServices.Base
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly NavigationService _navigator;
 
-        public HttpRequestBase(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor,
-            NavigationService navigator)
+        public HttpRequestBase(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
-            _navigator = navigator;
         }
 
-        public async Task<ApiResultModel<T>> GetRequestAsync<T>(string path, CancellationToken cancellationToken)
+        public async Task<T> GetRequestAsync<T>(string path, CancellationToken cancellationToken)
         {
             try
             {
                 using var client = CreateClient();
                 var request = await client.GetAsync(path, cancellationToken);
                 if (request.IsSuccessStatusCode)
-                    return await request.Content.ReadFromJsonAsync<ApiResultModel<T>>(cancellationToken: cancellationToken);
+                    return await request.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
                 throw new HttpRequestFailedException($"{nameof(GetRequestAsync)} for {nameof(T)} failed!");
             }
@@ -104,14 +100,14 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
         }
 
-        public async Task<PaginatedList<ApiResultModel<T>>> GetPageRequestAsync<T>(string path, PaginatedQuery payload, CancellationToken cancellationToken)
+        public async Task<PaginatedList<T>> GetPageRequestAsync<T>(string path, PaginatedQuery payload, CancellationToken cancellationToken)
         {
             try
             {
                 using var client = CreateClient();
                 var request = await client.PostAsJsonAsync(path, payload, cancellationToken);
                 if (request.IsSuccessStatusCode)
-                    return await request.Content.ReadFromJsonAsync<PaginatedList<ApiResultModel<T>>>(cancellationToken: cancellationToken);
+                    return await request.Content.ReadFromJsonAsync<PaginatedList<T>>(cancellationToken: cancellationToken);
 
                 throw new HttpRequestFailedException($"{nameof(GetPageRequestAsync)} for {nameof(T)} failed!");
             }
@@ -132,8 +128,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
 
         private HttpClient CreateClient()
         {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(_navigator.GetBaseAddress());
+            var client = _httpClientFactory.CreateClient("AmpDevApi");
             return client;
         }
     }

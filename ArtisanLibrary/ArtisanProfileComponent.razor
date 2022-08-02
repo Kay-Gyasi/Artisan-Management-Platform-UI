@@ -3,6 +3,9 @@
 @inject ArtisanService ArtisanService
 @layout ArtisanProfileLayout
 
+<PageTitle>Profile Overview</PageTitle>
+
+
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
 	<!--begin::Card header-->
@@ -51,7 +54,8 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8 d-flex align-items-center">
-				<span class="fw-bolder fs-6 text-gray-800 me-2">044 3276 454 935</span>
+				<span class="fw-bolder fs-6 text-gray-800 me-2"><a href="tel:@Artisan?.User?.Contact?.PrimaryContact">
+				@Artisan?.User?.Contact?.PrimaryContact</a></span>
 				<span class="badge badge-success" disabled="@Artisan?.IsVerified">Verified</span>
 			</div>
 			<!--end::Col-->
@@ -78,7 +82,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">@EmailAddress</span>
+                <span class="fw-bolder fs-6 text-gray-800"><a href="mailto:@EmailAddress">@EmailAddress</a></span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -117,7 +121,7 @@
 
 @code {
 	private ArtisanDto? Artisan { get; set; }
-	private int LoggedInUserId { get; set; } = 1; // id of artisan from claims
+	private int LoggedInUserId { get; set; } = 7; // id of artisan from claims
 	private string? EmailAddress { get; set; }
 	private string? BusinessName { get; set; }
 	private string? UserName { get; set; }
@@ -134,7 +138,7 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetAsync(LoggedInUserId);
+			Artisan = await ArtisanService.GetByUserId(LoggedInUserId);
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -142,18 +146,11 @@
 
 	void InitializeProperties()
 	{
-		EmailAddress = Artisan?.User?.Contact.EmailAddress ?? "";
+		EmailAddress = Artisan?.User?.Contact?.EmailAddress ?? "";
 		BusinessName = Artisan?.BusinessName ?? "";
-		UserName = BuildUsername();
-		StreetAddress = Artisan?.User?.Address.StreetAddress ?? "";
-	    Country = Artisan?.User?.Address.Country ?? "";
-		Phone = Artisan?.User?.Contact.PrimaryContact ?? "";
-	}
-
-	string BuildUsername()
-	{
-		var surname = Artisan?.User?.FamilyName ?? "";
-		var firstname = Artisan?.User?.FirstName ?? "";
-		return firstname + " " + surname; // trim names in backend
+		UserName = Artisan?.User?.DisplayName;
+		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
+		Country = Artisan?.User?.Address?.Country.ToString() ?? "";
+		Phone = Artisan?.User?.Contact?.PrimaryContact ?? "";
 	}
 }

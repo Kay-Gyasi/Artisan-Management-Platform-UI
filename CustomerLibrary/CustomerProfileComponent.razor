@@ -3,6 +3,8 @@
 @inject NavigationService Navigator
 @inject CustomerService CustomerService
 
+<PageTitle>Profile Overview</PageTitle>
+
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
 	<!--begin::Card header-->
@@ -43,9 +45,9 @@
 			</div>
 			<!--end::Col-->
 		</div>
-        <!--end::Input group-->
+		<!--end::Input group-->
 
-        <!--begin::Input group-->
+		<!--begin::Input group-->
 		<div class="row mb-7">
 			<!--begin::Label-->
 			<label class="col-lg-4 fw-bold text-muted">Country
@@ -118,7 +120,7 @@
 
 @code {
 	private CustomerDto? Customer { get; set; }
-	private int LoggedInUserId { get; set; } = 16; // id of artisan from claims
+	private int LoggedInUserId { get; set; } = 6; // id of artisan from claims
 	private string? EmailAddress { get; set; }
 	private string? UserName { get; set; }
 	private string? StreetAddress { get; set; }
@@ -134,7 +136,7 @@
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetAsync(LoggedInUserId);
+			Customer = await CustomerService.GetByUserId(LoggedInUserId);
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -145,7 +147,7 @@
 		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
 		UserName = BuildUsername();
 		StreetAddress = Customer?.User.Address?.StreetAddress ?? "";
-		Country = Customer?.User.Address?.Country ?? "";
+		Country = Customer?.User.Address?.Country.ToString() ?? "";
 		Phone = Customer?.User.Contact?.PrimaryContact ?? "";
 	}
 

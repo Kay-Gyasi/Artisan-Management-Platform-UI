@@ -1,4 +1,9 @@
 ﻿@page "/customer/disputes"
+@inject DisputeService DisputeService
+@inject NotificationService ToastService
+
+<PageTitle>Disputes</PageTitle>
+
 
 <!--begin::Basic info-->
 <div class="card mb-5 mb-xl-10">
@@ -17,7 +22,7 @@
 	<!--begin::Content-->
 	<div id="kt_account_profile_details" class="collapse show">
 		<!--begin::Form-->
-	<EditForm Model="Dispute" id="kt_account_profile_details_form" class="form">
+	<EditForm Model="Dispute" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
 	<DataAnnotationsValidator />
 	<!--begin::Card body-->
 	<div class="card-body border-top p-9">
@@ -25,12 +30,12 @@
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label fw-bold fs-6">Artisan</label>
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Order</label>
 		<!--end::Label-->
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
-			<InputSelect @bind-Value="Dispute.ArtisanId" name="artisan" class="form-control form-control-lg form-control-solid"
-						 placeholder="Artisan against whom dispute is being held">
+			<InputSelect @bind-Value="Dispute.OrderId" name="artisan" class="form-control form-control-lg form-control-solid"
+						 placeholder="Order on which dispute is being held">
 				<option value="">--Select an artisan--</option>
 			</InputSelect>
 		</div>
@@ -56,8 +61,10 @@
 	<!--end::Card body-->
 	<!--begin::Actions-->
 	<div class="card-footer d-flex justify-content-end py-6 px-9">
-		<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
-		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Post</button>
+		<button type="reset" class="btn btn-light btn-active-light-primary me-2"
+				disabled="@IsLoading">Discard</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
+				disabled="@IsLoading">Post</button>
 	</div>
 	<!--end::Actions-->
 	</EditForm>
@@ -68,5 +75,27 @@
 <!--end::Basic info-->
 
 @code {
-	private DisputeCommand Dispute { get; set; } = new();
+	int LoggedInUserId = 6;
+	DisputeCommand Dispute { get; set; } = new();
+	bool IsLoading { get; set; }
+
+	async Task Submit()
+	{
+		DisableButtons(true);
+		var response = await DisputeService.Save(Dispute);
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+			DisableButtons(false);
+			return;
+		}
+		ToastService.SaveFailure();
+		DisableButtons(false);
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }

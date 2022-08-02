@@ -1,6 +1,9 @@
 ﻿@page "/customers/orders/{OrderId:int}"
 @inject OrderService OrderService
 @inject NavigationService Navigator
+@inject NotificationService ToastService
+
+<PageTitle>Order Details</PageTitle>
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -11,17 +14,22 @@
 			<h3 class="fw-bolder m-0">Order Details</h3>
 		</div>
 		<!--end::Card title-->
-		@if (!IsArtisanAssigned)
+		@if (!IsCompleted())
 		{
-			<!--begin::Action-->
-			<a @onclick="@(() => Navigator.NavigateToAssignOrderToArtisan(Order.Id))" class="btn btn-primary align-self-center">Assign to artisan</a>
-			<!--end::Action-->
-		}
-		else
-		{
-			<!--begin::Action-->
-			<a @onclick="RemoveAssignedArtisan" class="btn btn-danger align-self-center">Remove assigned artisan</a>
-			<!--end::Action-->
+			@if (!IsArtisanAssigned)
+			{
+				<!--begin::Action-->
+				<a @onclick="@(() => Navigator.NavigateToAssignOrderToArtisan(Order.Id, Order.Service.Name))" 
+				   class="btn btn-primary align-self-center" disabled="@IsLoading">Assign to artisan</a>
+				<!--end::Action-->
+			}
+			else
+			{
+				<!--begin::Action-->
+				<a @onclick="RemoveAssignedArtisan" class="btn btn-danger align-self-center"
+				   disabled="@IsLoading">Remove assigned artisan</a>
+				<!--end::Action-->
+			}
 		}
 	</div>
 	<!--begin::Card header-->
@@ -72,6 +80,19 @@
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
+		
+		<!--begin::Input group-->
+		<div class="row mb-7">
+			<!--begin::Label-->
+			<label class="col-lg-4 fw-bold text-muted">Preferred Date</label>
+			<!--end::Label-->
+			<!--begin::Col-->
+			<div class="col-lg-8 fv-row">
+				<span class="fw-bold text-gray-800 fs-6">@Order?.PreferredDate.ToShortDateString()</span>
+			</div>
+			<!--end::Col-->
+		</div>
+		<!--end::Input group-->
 
 		<!--begin::Input group-->
 		<div class="row mb-7">
@@ -116,10 +137,15 @@
 		<!--end::Input group-->
 		
 		<div class="card-footer">
-			<!--begin::Action-->
-			<a href="#" class="btn btn-danger align-self-center float-end">Cancel</a>
-			<a href="#" class="btn btn-primary align-self-center float-end me-1">Complete</a>
-			<!--end::Action-->
+			@if (!IsCompleted())
+			{
+				<!--begin::Action-->
+				<a class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
+				   @onclick="Delete">Cancel</a>
+				<a class="btn btn-primary align-self-center float-end me-1"
+				   disabled="@IsLoading" @onclick="Complete">Complete</a>
+				<!--end::Action-->
+			}
 		</div>
 	</div>
 	<!--end::Card body-->
@@ -128,23 +154,67 @@
 @code {
 	[Parameter]
 	public int OrderId { get; set; }
+	bool IsLoading { get; set; }
+	bool IsArtisanAssigned { get; set; }
 
-	public bool IsArtisanAssigned { get; set; }
-
-	private OrderDto? Order { get; set; } = new();
+	OrderDto? Order { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
 		Order = await OrderService.GetAsync(OrderId);
 		Order.Artisan ??= new ArtisanDto();
-		IsArtisanAssigned = Order?.Artisan?.Id != 0;
+		IsArtisanAssigned = Order?.Artisan.Id != 0;
 	}
 
-	private void RemoveAssignedArtisan()
+	async Task RemoveAssignedArtisan()
 	{
-		// make an update http request here and if successful continue
-		Order.Artisan = new ArtisanDto();
-		IsArtisanAssigned = false;
+		DisableButton(true);
+		var response = await OrderService.UnassignArtisan(OrderId);
+		if (response.IsComplete)
+		{
+			IsArtisanAssigned = false;
+			ToastService.ShowUnassignArtisanSuccess();
+			DisableButton(false);
+			return;
+		}
+		ToastService.ShowUnassignArtisanFailure();
+		DisableButton(false);
+	}
+
+	async Task Complete()
+	{
+		DisableButton(true);
+		var response = await OrderService.Complete(OrderId);
+		if (response.IsComplete)
+		{
+			Navigator.NavigateToCustomerOrderList();
+			return;
+		}
+		ToastService.ShowOrderCompleteFailed();
+		DisableButton(false);
+	}
+
+	async Task Delete()
+	{
+		DisableButton(true);
+		var response = await OrderService.SoftDelete(OrderId);
+		if (response.IsComplete)
+		{
+			Navigator.NavigateToCustomerOrderList();
+			return;
+		}
+		ToastService.DeleteFailed();
+		DisableButton(false);
+	}
+
+	bool IsCompleted()
+	{
+		return Order?.Status == OrderStatus.Completed;
+	}
+
+	void DisableButton(bool isLoading)
+	{
+		IsLoading = isLoading;
 		StateHasChanged();
 	}
 }

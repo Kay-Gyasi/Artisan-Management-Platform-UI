@@ -8,7 +8,7 @@
         public string Description { get; set; }
         public bool IsVerified { get; set; }
         public bool IsApproved { get; set; }
-        public double Rating { get; set; } // TODO:: Generate this in processor
+        public double Rating { get; set; } 
         public UserPageDto User { get; set; } = new UserPageDto();
     }
 }

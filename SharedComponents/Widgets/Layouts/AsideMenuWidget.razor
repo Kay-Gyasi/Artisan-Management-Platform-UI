@@ -184,7 +184,7 @@
 			</div>*@
 
 			<div class="menu-item">
-				<a class="menu-link" href="#">
+				<a class="menu-link" @onclick="@(() => Navigator.NavigateToArtisanHistory())">
 					<span class="menu-bullet">
 						<span class="bullet bullet-dot"></span>
 					</span>
@@ -245,6 +245,15 @@
 					<span class="bullet bullet-dot"></span>
 				</span>
 				<span class="menu-title">Payments</span>
+			</a>
+		</div>
+		
+		<div class="menu-item">
+			<a class="menu-link" @onclick="Navigator.NavigateToCustomerOrderHistory">
+				<span class="menu-bullet">
+					<span class="bullet bullet-dot"></span>
+				</span>
+				<span class="menu-title">Order History</span>
 			</a>
 		</div>
 		

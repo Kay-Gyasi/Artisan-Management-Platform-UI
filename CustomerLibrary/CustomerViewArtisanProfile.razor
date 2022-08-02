@@ -1,6 +1,10 @@
 ﻿@page "/customers/view-artisan/{ArtisanId:int}/{OrderId:int}"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
+@inject OrderService OrderService
+@inject NotificationService ToastService
+
+<PageTitle>Artisan Profile View</PageTitle>
 
 <CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan"></CustomerViewArtisanLayout>
 
@@ -15,7 +19,8 @@
 		<!--end::Card title-->
 		<!--begin::Action-->
 		<div class="mt-auto mb-auto">
-			<button class="btn float-end btn-primary align-self-center me-1">Assign</button>
+			<button class="btn float-end btn-primary align-self-center me-1"
+					disabled="@IsLoading" @onclick="AssignArtisan">Assign</button>
 		</div>
 		<!--end::Action-->
 	</div>
@@ -29,7 +34,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">@Username</span>
+				<span class="fw-bolder fs-6 text-gray-800">@Artisan?.User?.DisplayName</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -69,7 +74,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">@Artisan?.User?.Address?.Country</span>
+				<span class="fw-bolder fs-6 text-gray-800">@Artisan?.User?.Address?.Country.ToString()</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -96,22 +101,31 @@
 	CustomerViewArtisanLayout artisanLayout;
 	[Parameter]
 	public int ArtisanId { get; set; }
-
 	[Parameter]
 	public int OrderId { get; set; }
-	private ArtisanDto Artisan { get; set; } = new();
-	public string Username { get; set; }
+	bool IsLoading { get; set; }
+	ArtisanDto Artisan { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
 		Artisan = await ArtisanService.GetAsync(ArtisanId);
-		Username = BuildUsername();
 	}
 
-	string BuildUsername()
+	async Task AssignArtisan()
 	{
-		var surname = Artisan?.User?.FamilyName ?? "";
-		var firstname = Artisan?.User?.FirstName ?? "";
-		return firstname + " " + surname; // trim names in backend
+		DisableButtons(true);
+		var response = await OrderService.AssignArtisan(OrderId, ArtisanId);
+		if (!response.IsComplete)
+		{
+		    ToastService.ShowAssignArtisanFailure();
+		    DisableButtons(false);	
+		}
+	    Navigator.NavigateToViewOrderDetail(OrderId);
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
 	}
 }

@@ -1,5 +1,9 @@
 ﻿@page "/artisan/schedule/{OrderId:int}"
 @inject OrderService OrderService
+@inject IMapper Mapper
+@inject NotificationService ToastService
+
+<PageTitle>Schedule Details</PageTitle>
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -34,6 +38,20 @@
 			<!--begin::Col-->
 			<div class="col-lg-8 fv-row">
 				<span class="fw-bold text-gray-800 fs-6">@Order?.Description</span>
+			</div>
+			<!--end::Col-->
+		</div>
+		<!--end::Input group-->
+		
+
+		<!--begin::Input group-->
+		<div class="row mb-7">
+			<!--begin::Label-->
+			<label class="col-lg-4 fw-bold text-muted">Preferred Date</label>
+			<!--end::Label-->
+			<!--begin::Col-->
+			<div class="col-lg-8 fv-row">
+				<span class="fw-bold text-gray-800 fs-6">@Order?.PreferredDate.ToShortDateString()</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -83,7 +101,8 @@
 		
 		<div class="card-footer">
 			<!--begin::Action-->
-			<a href="#" class="btn btn-danger align-self-center float-end">Cancel</a>
+			<a href="#" class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
+			   @onclick="UnassignArtisan">Cancel</a>
 @*			<a href="#" class="btn btn-primary align-self-center float-end me-1">Complete</a>
 *@			<!--end::Action-->
 		</div>
@@ -95,6 +114,7 @@
 @code {
 	[Parameter]
 	public int OrderId { get; set; }
+	bool IsLoading { get; set; }
 
 	private OrderDto? Order { get; set; } = new();
 
@@ -103,4 +123,23 @@
 		Order = await OrderService.GetAsync(OrderId);
 	}
 
+	async Task UnassignArtisan()
+	{
+		DisableButton(true);
+		var response = await OrderService.UnassignArtisan(OrderId);
+		if (response.IsComplete)
+		{
+			ToastService.ShowUnassignArtisanSuccess();
+			DisableButton(false);
+			return;
+		}
+		DisableButton(false);
+		ToastService.ShowUnassignArtisanFailure();
+	}
+
+	void DisableButton(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }

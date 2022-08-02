@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AMP.Web.Models.Dtos;
 using AMP.Web.Models.Enums;
 using AMP.Web.Models.ValueObjects;
 
@@ -7,6 +8,7 @@ namespace AMP.Web.Models.Commands
 {
     public class UserCommand
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Field is required")]
         public string? UserNo { get; set; }
 
@@ -20,6 +22,7 @@ namespace AMP.Web.Models.Commands
         public string? DisplayName { get; set; }
         public string? ImageUrl { get; set; }
         public string? MomoNumber { get; set; }
+        public UserType Type { get; set; }
         public LevelOfEducation LevelOfEducation { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
@@ -27,6 +30,7 @@ namespace AMP.Web.Models.Commands
 
         [Required(ErrorMessage = "Field is required")]
         public Address? Address { get; set; } = new Address();
-        public List<string>? Languages { get; set; } // work on the input field
+
+        public List<LanguagesCommand> Languages { get; set; } = new List<LanguagesCommand>();
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AMP.Web.Models
 {
+    //https://stackoverflow.com/questions/62529029/customizing-the-authenticationstateprovider-in-blazor-server-app-with-jwt-token
     public static class DependencyInjection
     {
         private static IServiceCollection RegisterAutoMapper(this IServiceCollection services)
