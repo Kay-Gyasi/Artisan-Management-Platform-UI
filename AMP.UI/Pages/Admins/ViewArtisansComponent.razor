@@ -1,6 +1,7 @@
 ﻿@page "/users/artisans"
+@inject AuthStateService AuthStateService
 
-	<!--begin::Card-->
+<!--begin::Card-->
 	<div class="card" style="overflow-x: scroll;">
 		<!--begin::Card header-->
 		<div class="card-header border-0 pt-6">
@@ -1853,5 +1854,9 @@
 	</div>
 	<!--end::Card-->
 @code {
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+	}
 
 }

@@ -1,6 +1,6 @@
 ﻿@page "/customers/orders/history"
-@using System.Text
 @inject NavigationService Navigator
+@inject AuthStateService AuthStateService
 @inject OrderService OrderService
 @inject IMapper Mapper
 
@@ -76,7 +76,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Orders.Data = new();
+	    await AuthStateService.CheckAuthStatus();
+	    Orders.Data = new();
 		Orders = await OrderService.GetOrderHistoryPage(Query, LoggedInUserId);
 	}
 

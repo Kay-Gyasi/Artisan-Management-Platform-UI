@@ -1,6 +1,7 @@
 ﻿@page "/account/artisan/overview"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
+@inject AuthStateService AuthStateService
 @layout ArtisanProfileLayout
 
 <PageTitle>Profile Overview</PageTitle>
@@ -129,12 +130,13 @@
 	private string? Phone { get; set; }
 	private string? Country { get; set; }
 
-	protected override void OnInitialized()
-	{
-		InitializeProperties();
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthStateService.CheckAuthStatus();
+        InitializeProperties();
+    }
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{

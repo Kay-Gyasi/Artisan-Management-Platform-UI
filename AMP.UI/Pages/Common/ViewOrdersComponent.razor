@@ -1,6 +1,7 @@
 ﻿@page "/orders"
 @inject OrderService OrderService
 @inject NavigationService Navigator
+@inject AuthStateService AuthStateService
 @inject IMapper Mapper
 
 <!--begin::Form-->
@@ -69,6 +70,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+	    await AuthStateService.CheckAuthStatus();
 	    query = PaginatedQuery.Build(0, 1, 10)
 	        .ThenSearch(LoggedInUserId.ToString());
 		Orders.Data = new();

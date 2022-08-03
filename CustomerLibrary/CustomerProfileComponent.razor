@@ -1,6 +1,7 @@
 ﻿@page "/account/customer/overview"
 @layout CustomerProfileLayout
 @inject NavigationService Navigator
+@inject AuthStateService AuthStateService
 @inject CustomerService CustomerService
 
 <PageTitle>Profile Overview</PageTitle>
@@ -120,23 +121,23 @@
 
 @code {
 	private CustomerDto? Customer { get; set; }
-	private int LoggedInUserId { get; set; } = 6; // id of artisan from claims
 	private string? EmailAddress { get; set; }
 	private string? UserName { get; set; }
 	private string? StreetAddress { get; set; }
 	private string? Phone { get; set; }
 	private string? Country { get; set; }
 
-	protected override void OnInitialized()
-	{
-		InitializeProperties();
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthStateService.CheckAuthStatus();
+        InitializeProperties();
+    }
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetByUserId(LoggedInUserId);
+			Customer = await CustomerService.GetByUserId();
 			InitializeProperties();
 			StateHasChanged();
 		}

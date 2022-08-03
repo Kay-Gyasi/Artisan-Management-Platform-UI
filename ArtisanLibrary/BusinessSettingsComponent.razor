@@ -3,6 +3,7 @@
 @layout ArtisanProfileLayout
 @inject ArtisanService ArtisanService
 @inject NotificationService ToastService
+@inject AuthStateService AuthStateService
 @inject LookupService LookupService
 @inject UserService UserService
 @inject IMapper Mapper
@@ -113,12 +114,18 @@
 	bool IsLoading { get; set; }
 
 
-	protected override void OnInitialized()
-	{
-		InitializeProperties();
-	}
+    protected override void OnInitialized()
+    {
+        InitializeProperties();
+    }
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthStateService.CheckAuthStatus();
+        InitializeProperties();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{

@@ -50,6 +50,8 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
         public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
         public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
+        public void NavigateToLogin() => _navManager.NavigateTo("login");
+        public void NavigateToSignup() => _navManager.NavigateTo("signup");
         public void NavigateToAssignOrderToArtisan(int id, string service) 
             => _navManager.NavigateTo($"customers/assign-order/{id}/{service}");
     }

@@ -34,5 +34,8 @@ namespace AMP.Web.Models.Services.Toast
 
         public void ShowAssignArtisanFailure() 
             => _toastService.ShowError("Assignment failed");
+
+        public void LoginFailure() =>
+            _toastService.ShowError("Invalid credentials");
     }
 }

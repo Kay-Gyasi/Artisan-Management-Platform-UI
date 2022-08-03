@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AMP.Web.Models.Commands;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Qface.Extension.Shared.HttpServices;
 
@@ -15,6 +16,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             CancellationToken cancellationToken);
         Task<PaginatedList<T>> GetPageRequestAsync<T>(string path, PaginatedQuery payload,
             CancellationToken cancellationToken);
+        Task<SigninResponse?> PostLoginAsync(SigninCommand command, CancellationToken cancellationToken);
         Task<IAuthorityClaims> GetClaimsAsync();
     }
 }

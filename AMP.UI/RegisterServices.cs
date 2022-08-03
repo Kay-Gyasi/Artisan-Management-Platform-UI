@@ -1,5 +1,8 @@
 ﻿using AMP.UI.Authentication;
+using AMP.Web.Models;
+using AMP.Web.Models.Services;
 using AMP.Web.Models.Services.Toast;
+using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,8 +18,10 @@ public static class RegisterServices
             .AddHttpContextAccessor()
             .AddBlazoredModal()
             .AddBlazoredToast()
+            .AddBlazoredLocalStorage()
             .AddScoped<NotificationService>()
             .RegisterHttpServices()
+            .AddStorage()
             .AddAuthentication()
             .AddHttpClient("AmpDevApi", options =>
             {
@@ -60,6 +65,7 @@ public static class RegisterServices
         services.AddScoped<TokenServerAuthenticationStateProvider>();
         services.AddScoped<AuthenticationStateProvider>(provider 
             => provider.GetRequiredService<TokenServerAuthenticationStateProvider>());
+        services.AddScoped<AuthStateService>();
         return services;
     }
 }

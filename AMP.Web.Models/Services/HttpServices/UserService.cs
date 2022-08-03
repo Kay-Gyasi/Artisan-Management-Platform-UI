@@ -20,20 +20,17 @@ namespace AMP.Web.Models.Services.HttpServices
         }
 
 
-        public async Task<UserDto> GetAsync(int userId)
-        {
-            return await _http.GetRequestAsync<UserDto>($"user/get/{userId}", new CancellationToken());
-        }
+        public async Task<UserDto> GetAsync(int userId) =>
+            await _http.GetRequestAsync<UserDto>($"user/get/{userId}", new CancellationToken());
 
-        public async Task<RequestResponse> Save(UserCommand command)
-        {
-            return await _http.PostRequestAsync("user/save", command, new CancellationToken());
-        }
+        public async Task<RequestResponse> Save(UserCommand command) =>
+            await _http.PostRequestAsync("user/save", command, new CancellationToken());
 
-        public async Task<RequestResponse> Delete(int id)
-        {
-            return await _http.DeleteRequestAsync($"user/delete/{id}", new CancellationToken());
-        }
+        public async Task<RequestResponse> Delete(int id) =>
+            await _http.DeleteRequestAsync($"user/delete/{id}", new CancellationToken());
+
+        public async Task<SigninResponse?> Login(SigninCommand command) =>
+            await _http.PostLoginAsync(command, new CancellationToken());
     }
 }
 

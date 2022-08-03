@@ -2,6 +2,7 @@
 @inject OrderService OrderService
 @inject IMapper Mapper
 @inject NotificationService ToastService
+@inject AuthStateService AuthStateService
 
 <PageTitle>Schedule Details</PageTitle>
 
@@ -120,7 +121,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Order = await OrderService.GetAsync(OrderId);
+	    await AuthStateService.CheckAuthStatus();
+	    Order = await OrderService.GetAsync(OrderId);
 	}
 
 	async Task UnassignArtisan()

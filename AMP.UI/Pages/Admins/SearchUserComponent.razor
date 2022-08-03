@@ -1,4 +1,5 @@
 ﻿@page "/users/search"
+@inject AuthStateService AuthStateService
 
 	<!--begin::Form-->
 	<form action="#">
@@ -1757,5 +1758,8 @@
 	<!--end::Tab Content-->
 <!--end::Container-->
 @code {
-
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+	}
 }

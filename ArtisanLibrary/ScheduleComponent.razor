@@ -1,6 +1,7 @@
 ﻿@page "/artisan/schedule"
 @inject OrderService OrderService
 @inject NavigationService Navigator
+@inject AuthStateService AuthStateService
 @inject IMapper Mapper
 
 <PageTitle>Schedule</PageTitle>
@@ -74,7 +75,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Orders.Data = new();
+	    await AuthStateService.CheckAuthStatus();
+	    Orders.Data = new();
 		Orders = await OrderService.GetSchedulePage(Query, LoggedInUserId);
 	}
 

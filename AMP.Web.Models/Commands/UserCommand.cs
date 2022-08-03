@@ -10,9 +10,6 @@ namespace AMP.Web.Models.Commands
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Field is required")]
-        public string? UserNo { get; set; }
-
-        [Required(ErrorMessage = "Field is required")]
         public string? FirstName { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
@@ -22,6 +19,7 @@ namespace AMP.Web.Models.Commands
         public string? DisplayName { get; set; }
         public string? ImageUrl { get; set; }
         public string? MomoNumber { get; set; }
+        public string? Password { get; set; }
         public UserType Type { get; set; }
         public LevelOfEducation LevelOfEducation { get; set; }
 

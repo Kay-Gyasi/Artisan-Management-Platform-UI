@@ -1,6 +1,7 @@
 ﻿@page "/account/artisan/settings"
 @layout ArtisanProfileLayout
 @inject NotificationService ToastService
+@inject AuthStateService AuthStateService
 @inject ArtisanService ArtisanService
 @inject UserService UserService
 @inject IMapper Mapper
@@ -326,8 +327,9 @@
 	bool IsLoading { get; set; }
 	List<string> Langs { get; set; } = new List<string>();
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 	}
 
@@ -377,10 +379,10 @@
 
 	async Task Submit()
 	{
-	    IsLoading = true;
+		IsLoading = true;
 		StateHasChanged();
-	    User.ImageUrl = ImageUrl;
-	    User.Type = UserType.Artisan;
+		User.ImageUrl = ImageUrl;
+		User.Type = UserType.Artisan;
 		var langs = from c in Langs
 			select new LanguagesCommand()
 			{
@@ -388,14 +390,14 @@
 			};
 		User?.Languages.Clear();
 		User?.Languages.AddRange(langs);
-	    var response = await UserService.Save(User);
-	    IsLoading = false;
-	    StateHasChanged();
-	    if (response.IsComplete)
-	    {
-	        ToastService.SaveSuccess();
-	        return;
-	    }
+		var response = await UserService.Save(User);
+		IsLoading = false;
+		StateHasChanged();
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+			return;
+		}
 		ToastService.SaveFailure();
 	}
 }

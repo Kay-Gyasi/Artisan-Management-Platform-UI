@@ -1,5 +1,7 @@
 ﻿@page "/dashboard"
 @inject NavigationService Navigator
+@inject AuthStateService AuthStateService
+@attribute [Authorize]
 <PageTitle>Dashboard</PageTitle>
 
 <!--begin::Row-->
@@ -70,7 +72,9 @@
 <!--end::Row-->
 
 @code{
-
-	// View here will be dependent on status of logged in user
+	protected override async Task OnInitializedAsync()
+	{
+	    await AuthStateService.CheckAuthStatus();
+	}
 
 }

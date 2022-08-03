@@ -1,4 +1,5 @@
 ﻿@page "/customer/review"
+@inject AuthStateService AuthStateService
 
 <PageTitle>Ratings</PageTitle>
 
@@ -83,4 +84,9 @@
 <!--end::Basic info-->
 @code {
 	public RatingCommand Rating { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthStateService.CheckAuthStatus();
+    }
 }

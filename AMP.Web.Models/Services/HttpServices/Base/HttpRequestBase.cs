@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AMP.Web.Models.Commands;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -76,6 +77,25 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+
+        public async Task<SigninResponse?> PostLoginAsync(SigninCommand command, CancellationToken cancellationToken)
+        {
+            try
+            {
+                using var client = CreateClient();
+                var request = await client.PostAsJsonAsync("user/login", command, cancellationToken);
+                if (request.StatusCode == HttpStatusCode.NoContent)
+                    return null;
+                if (request.IsSuccessStatusCode)
+                    return await request.Content.ReadFromJsonAsync<SigninResponse>();
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
                 throw;
             }
         }

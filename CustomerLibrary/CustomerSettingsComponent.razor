@@ -1,6 +1,6 @@
 ﻿@page "/account/customer/settings"
 @layout CustomerProfileLayout
-
+@inject AuthStateService AuthStateService
 @inject CustomerService CustomerService
 @inject NotificationService ToastService
 @inject UserService UserService
@@ -325,8 +325,9 @@
 	List<string> Langs { get; set; } = new List<string>();
 	bool IsLoading { get; set; }
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
+		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 	}
 
@@ -379,7 +380,7 @@
 		IsLoading = true;
 		StateHasChanged();
 		User.ImageUrl = ImageUrl;
-	    User.Type = UserType.Customer;
+		User.Type = UserType.Customer;
 		var langs = from c in Langs
 			select new LanguagesCommand()
 			{

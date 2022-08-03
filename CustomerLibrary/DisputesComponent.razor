@@ -1,6 +1,7 @@
 ﻿@page "/customer/disputes"
 @inject DisputeService DisputeService
 @inject NotificationService ToastService
+@inject AuthStateService AuthStateService
 
 <PageTitle>Disputes</PageTitle>
 
@@ -78,6 +79,11 @@
 	int LoggedInUserId = 6;
 	DisputeCommand Dispute { get; set; } = new();
 	bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+	}
 
 	async Task Submit()
 	{

@@ -1,6 +1,7 @@
 ﻿@page "/customers/view-artisan/{ArtisanId:int}/{OrderId:int}"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
+@inject AuthStateService AuthStateService
 @inject OrderService OrderService
 @inject NotificationService ToastService
 
@@ -108,7 +109,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Artisan = await ArtisanService.GetAsync(ArtisanId);
+	    await AuthStateService.CheckAuthStatus();
+	    Artisan = await ArtisanService.GetAsync(ArtisanId);
 	}
 
 	async Task AssignArtisan()

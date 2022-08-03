@@ -1,4 +1,5 @@
 ﻿@page "/users/artisans/waitlist"
+@inject AuthStateService AuthStateService
 
 <!--begin::Card-->
 <div class="card" style="overflow-x: scroll;">
@@ -1853,6 +1854,10 @@
 </div>
 <!--end::Card-->
 @code {
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+	}
 
 }
 

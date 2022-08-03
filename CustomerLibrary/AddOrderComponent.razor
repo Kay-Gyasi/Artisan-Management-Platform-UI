@@ -3,6 +3,7 @@
 @inject LookupService LookupService
 @inject OrderService OrderService
 @inject NotificationService ToastService
+@inject AuthStateService AuthStateService
 
 <PageTitle>Add Order</PageTitle>
 
@@ -198,7 +199,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Services = await LookupService.Get(LookupType.Service);
+	    await AuthStateService.CheckAuthStatus();
+	    Services = await LookupService.Get(LookupType.Service);
 	}
 
 	async Task Submit()

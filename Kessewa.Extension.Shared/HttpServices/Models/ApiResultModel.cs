@@ -61,7 +61,7 @@ namespace Kessewa.Extension.Shared.HttpServices.Models
 
 	public class PaginatedList<T>
 	{
-		public List<T> Data { get; set; }
+		public List<T> Data { get; set; } = new List<T>();
 		public int TotalPages { get; set; }
 		public int PageSize { get; set; }
 		public int TotalCount { get; set; }
