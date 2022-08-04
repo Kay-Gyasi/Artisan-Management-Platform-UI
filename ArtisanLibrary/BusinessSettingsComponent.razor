@@ -3,7 +3,7 @@
 @layout ArtisanProfileLayout
 @inject ArtisanService ArtisanService
 @inject NotificationService ToastService
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject LookupService LookupService
 @inject UserService UserService
 @inject IMapper Mapper
@@ -106,7 +106,6 @@
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
-	int LoggedInUserId { get; set; } = 7; // id of artisan from claims
 	string? BusinessName { get; set; }
 	string? Description { get; set; }
 	string[] ArtisanServices { get; set; } = new string[] {}; 
@@ -129,7 +128,7 @@
 	{
 		if (firstRender)
 		{
-			var artisan = await ArtisanService.GetByUserId(LoggedInUserId);
+			var artisan = await ArtisanService.GetByUserId();
 			Services = await LookupService.Get(LookupType.Service);
 			Artisan = Mapper.Map<ArtisanCommand>(artisan);
 			User = Mapper.Map<UserCommand>(artisan.User);

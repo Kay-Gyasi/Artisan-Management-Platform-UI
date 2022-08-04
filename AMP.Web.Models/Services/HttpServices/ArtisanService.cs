@@ -29,9 +29,9 @@ namespace AMP.Web.Models.Services.HttpServices
         }
         
         
-        public async Task<ArtisanDto> GetByUserId(int userId)
+        public async Task<ArtisanDto> GetByUserId()
         {
-            return await _http.GetRequestAsync<ArtisanDto>($"artisan/GetByUser/{userId}",
+            return await _http.GetRequestAsync<ArtisanDto>($"artisan/GetByUser",
                 new CancellationToken());
         }
 

@@ -1,5 +1,5 @@
-﻿using AMP.UI.Authentication;
-using AMP.Web.Models;
+﻿using AMP.Web.Models;
+using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Services;
 using AMP.Web.Models.Services.Toast;
 using Blazored.LocalStorage;
@@ -65,7 +65,7 @@ public static class RegisterServices
         services.AddScoped<TokenServerAuthenticationStateProvider>();
         services.AddScoped<AuthenticationStateProvider>(provider 
             => provider.GetRequiredService<TokenServerAuthenticationStateProvider>());
-        services.AddScoped<AuthStateService>();
+        services.AddScoped<AuthService>();
         return services;
     }
 }

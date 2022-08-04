@@ -1,7 +1,7 @@
 ﻿@page "/customer/disputes"
 @inject DisputeService DisputeService
 @inject NotificationService ToastService
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 
 <PageTitle>Disputes</PageTitle>
 
@@ -76,7 +76,6 @@
 <!--end::Basic info-->
 
 @code {
-	int LoggedInUserId = 6;
 	DisputeCommand Dispute { get; set; } = new();
 	bool IsLoading { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿@page "/account/artisan/settings"
 @layout ArtisanProfileLayout
 @inject NotificationService ToastService
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject ArtisanService ArtisanService
 @inject UserService UserService
 @inject IMapper Mapper
@@ -316,7 +316,6 @@
 @code {
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
-	int LoggedInUserId { get; set; } = 7; // id of artisan from claims
 	string EmailAddress { get; set; }
 	string UserName { get; set; }
 	string StreetAddress { get; set; }
@@ -337,7 +336,7 @@
 	{
 		if (firstRender)
 		{
-			var artisan = await ArtisanService.GetByUserId(LoggedInUserId);
+			var artisan = await ArtisanService.GetByUserId();
 			Artisan = Mapper.Map<ArtisanCommand>(artisan);
 			User = Mapper.Map<UserCommand>(artisan.User);
 

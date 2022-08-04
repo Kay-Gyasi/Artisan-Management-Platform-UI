@@ -1,4 +1,5 @@
 ﻿@inject NavigationService Navigator
+@inject AuthService AuthService
 
 <div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
 <!--begin::Symbol-->
@@ -262,7 +263,6 @@
 
 @code
 {
-    [Inject] AuthenticationStateProvider AuthStateProvider { get; set; }
     string User { get; set; }
     string Role { get; set; }
     string Email { get; set; }
@@ -270,11 +270,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        User = authState.User.FindFirst("unique_name")?.Value;
-        Role = authState.User.FindFirst("role")?.Value;
-        Email = authState.User.FindFirst("email")?.Value;
-        ImageUrl = authState.User.FindFirst("ImageUrl")?.Value;
+        User = await AuthService.GetClaim("unique_name");
+        Role = await AuthService.GetClaim("role");
+        Email = await AuthService.GetClaim("email");
+        ImageUrl = await AuthService.GetClaim("ImageUrl");
     }
 }
 

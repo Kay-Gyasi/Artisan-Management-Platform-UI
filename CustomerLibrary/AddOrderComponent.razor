@@ -3,7 +3,7 @@
 @inject LookupService LookupService
 @inject OrderService OrderService
 @inject NotificationService ToastService
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 
 <PageTitle>Add Order</PageTitle>
 
@@ -192,7 +192,6 @@
 <!--end::Basic info-->
 
 @code {
-	int LoggedInUserId { get; set; } = 6; // Pick these from claims when they get to the API
 	OrderCommand Order { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
 	bool IsLoading { get; set; }
@@ -205,7 +204,7 @@
 
 	async Task Submit()
 	{
-		Order.UserId = LoggedInUserId;
+		Order.UserId = Convert.ToInt32(await AuthStateService.GetClaim("nameid"));
 	    if (Order.UserId == default || Order.ServiceId == default || string.IsNullOrEmpty(Order.WorkAddress.StreetAddress)) return;
 	    DisableButtons(true);
 		var response = await OrderService.Save(Order);

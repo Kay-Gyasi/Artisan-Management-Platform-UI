@@ -1,7 +1,7 @@
 ﻿@page "/orders"
 @inject OrderService OrderService
 @inject NavigationService Navigator
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject IMapper Mapper
 
 <!--begin::Form-->
@@ -63,16 +63,15 @@
 
 <!--end::Container-->
 @code {
-    public int LoggedInUserId { get; set; } = 6;
-	// Will receive data in pages (only orders that have a status of 'placed')
 	private PaginatedList<OrderPageDto> Orders { get; set; } = new();
 	private PaginatedQuery query { get; set; } 
 
 	protected override async Task OnInitializedAsync()
 	{
+	    var userId = await AuthStateService.GetClaim("nameid");
 	    await AuthStateService.CheckAuthStatus();
 	    query = PaginatedQuery.Build(0, 1, 10)
-	        .ThenSearch(LoggedInUserId.ToString());
+	        .ThenSearch(userId);
 		Orders.Data = new();
 		Orders = await OrderService.GetPage(query);
 	}

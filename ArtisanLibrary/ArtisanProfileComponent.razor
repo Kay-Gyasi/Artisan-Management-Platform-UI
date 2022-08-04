@@ -1,7 +1,7 @@
 ﻿@page "/account/artisan/overview"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @layout ArtisanProfileLayout
 
 <PageTitle>Profile Overview</PageTitle>
@@ -83,7 +83,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-                <span class="fw-bolder fs-6 text-gray-800"><a href="mailto:@EmailAddress">@EmailAddress</a></span>
+				<span class="fw-bolder fs-6 text-gray-800"><a href="mailto:@EmailAddress">@EmailAddress</a></span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -122,7 +122,6 @@
 
 @code {
 	private ArtisanDto? Artisan { get; set; }
-	private int LoggedInUserId { get; set; } = 7; // id of artisan from claims
 	private string? EmailAddress { get; set; }
 	private string? BusinessName { get; set; }
 	private string? UserName { get; set; }
@@ -130,17 +129,17 @@
 	private string? Phone { get; set; }
 	private string? Country { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await AuthStateService.CheckAuthStatus();
-        InitializeProperties();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+		InitializeProperties();
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetByUserId(LoggedInUserId);
+			Artisan = await ArtisanService.GetByUserId();
 			InitializeProperties();
 			StateHasChanged();
 		}

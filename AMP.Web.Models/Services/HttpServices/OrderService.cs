@@ -22,21 +22,21 @@ namespace AMP.Web.Models.Services.HttpServices
             => await _http.GetPageRequestAsync<OrderPageDto>
                 ("order/GetPage", query, new CancellationToken());
 
-        public async Task<PaginatedList<OrderPageDto>> GetSchedulePage(PaginatedQuery query, int userId) 
+        public async Task<PaginatedList<OrderPageDto>> GetSchedulePage(PaginatedQuery query) 
             => await _http.GetPageRequestAsync<OrderPageDto>
-                ($"order/GetSchedulePage/{userId}", query, new CancellationToken());
+                ("order/GetSchedulePage", query, new CancellationToken());
 
-        public async Task<PaginatedList<OrderPageDto>> GetHistoryPage(PaginatedQuery query, int userId) 
+        public async Task<PaginatedList<OrderPageDto>> GetHistoryPage(PaginatedQuery query) 
             => await _http.GetPageRequestAsync<OrderPageDto>
-                ($"order/GetHistoryPage/{userId}", query, new CancellationToken());
+                ("order/GetHistoryPage", query, new CancellationToken());
 
-        public async Task<PaginatedList<OrderPageDto>> GetOrderHistoryPage(PaginatedQuery query, int userId) 
+        public async Task<PaginatedList<OrderPageDto>> GetOrderHistoryPage(PaginatedQuery query) 
             => await _http.GetPageRequestAsync<OrderPageDto>
-                ($"order/GetOrderHistoryPage/{userId}", query, new CancellationToken());
+                ("order/GetOrderHistoryPage", query, new CancellationToken());
 
-        public async Task<PaginatedList<OrderPageDto>> GetCustomerOrderPage(PaginatedQuery query, int userId)
+        public async Task<PaginatedList<OrderPageDto>> GetCustomerOrderPage(PaginatedQuery query)
             => await _http.GetPageRequestAsync<OrderPageDto>
-                ($"order/GetCustomerOrderPage/{userId}", query, new CancellationToken());
+                ($"order/GetCustomerOrderPage", query, new CancellationToken());
 
         public async Task<OrderDto> GetAsync(int id) 
             => await _http.GetRequestAsync<OrderDto>($"order/get/{id}",

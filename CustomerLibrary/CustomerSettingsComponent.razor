@@ -1,6 +1,6 @@
 ﻿@page "/account/customer/settings"
 @layout CustomerProfileLayout
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject CustomerService CustomerService
 @inject NotificationService ToastService
 @inject UserService UserService
@@ -314,7 +314,6 @@
 @code {
 	CustomerCommand? Customer { get; set; } = new();
 	UserCommand? User { get; set; } = new();
-	int LoggedInUserId { get; set; } = 6; // id of customer from claims
 	string EmailAddress { get; set; }
 	string UserName { get; set; }
 	string StreetAddress { get; set; }
@@ -335,7 +334,7 @@
 	{
 		if (firstRender)
 		{
-			var customer = await CustomerService.GetByUserId(LoggedInUserId);
+			var customer = await CustomerService.GetByUserId();
 			Customer = Mapper.Map<CustomerCommand>(customer);
 			User = Mapper.Map<UserCommand>(customer.User);
 

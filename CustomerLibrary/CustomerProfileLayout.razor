@@ -174,7 +174,6 @@
 		
 
 @code {
-	private int LoggedInUserId { get; set; } = 6; // Get from claims
 	private CustomerDto? Customer { get; set; }
 	private string? ImageUrl { get; set; }
 	private string? EmailAddress { get; set; }
@@ -190,7 +189,7 @@
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetByUserId(LoggedInUserId);
+			Customer = await CustomerService.GetByUserId();
 			InitializeProperties();
 			StateHasChanged();
 		}

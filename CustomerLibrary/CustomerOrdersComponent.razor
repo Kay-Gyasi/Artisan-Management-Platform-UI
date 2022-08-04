@@ -1,6 +1,6 @@
 ﻿@page "/customers/orders"
 @inject NavigationService Navigator
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject OrderService OrderService
 @inject IMapper Mapper
 
@@ -73,7 +73,6 @@
 
 <!--end::Container-->
 @code {
-	int LoggedInUserId { get; set; } = 6;
 	Search SearchObj { get; set; } = new();
 	bool IsLoading { get; set; }
 	PaginatedList<OrderPageDto> Orders { get; set; } = new();
@@ -83,14 +82,14 @@
 	{
 	    await AuthStateService.CheckAuthStatus();
 	    Orders.Data = new();
-		Orders = await OrderService.GetCustomerOrderPage(Query, LoggedInUserId);
+		Orders = await OrderService.GetCustomerOrderPage(Query);
 	}
 
 	async Task Submit()
 	{
 		DisableButton(true);
 		Query.ThenSearch(SearchObj.SearchTerm);
-		Orders = await OrderService.GetCustomerOrderPage(Query, LoggedInUserId);
+		Orders = await OrderService.GetCustomerOrderPage(Query);
 		DisableButton(false);
 	}
 

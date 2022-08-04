@@ -1,7 +1,7 @@
 ﻿@page "/artisan/work-history"
 @inject OrderService OrderService
 @inject NavigationService Navigator
-@inject AuthStateService AuthStateService
+@inject AuthService AuthStateService
 @inject IMapper Mapper
 
 <PageTitle>Work History</PageTitle>
@@ -67,7 +67,6 @@
 
 <!--end::Container-->
 @code {
-	int LoggedInUserId { get; set; } = 2;
 	Search SearchObj { get; set; } = new();
 	bool IsLoading { get; set; }
 	PaginatedList<OrderPageDto> Orders { get; set; } = new();
@@ -77,14 +76,14 @@
 	{
 	    await AuthStateService.CheckAuthStatus();
 	    Orders.Data = new();
-		Orders = await OrderService.GetHistoryPage(Query, LoggedInUserId);
+		Orders = await OrderService.GetHistoryPage(Query);
 	}
 
 	async Task Submit()
 	{
 		DisableButton(true);
 		Query.ThenSearch(SearchObj.SearchTerm);
-		Orders = await OrderService.GetHistoryPage(Query, LoggedInUserId);
+		Orders = await OrderService.GetHistoryPage(Query);
 		DisableButton(false);
 	}
 

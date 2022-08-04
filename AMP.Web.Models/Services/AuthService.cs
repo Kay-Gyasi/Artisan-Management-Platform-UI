@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AMP.Web.Models.Services
 {
-    public class AuthStateService
+    public class AuthService
     {
         private readonly AuthenticationStateProvider _provider;
         private readonly NavigationService _navigation;
 
-        public AuthStateService(AuthenticationStateProvider provider,
+        public AuthService(AuthenticationStateProvider provider,
             NavigationService navigation)
         {
             _provider = provider;
@@ -20,6 +20,12 @@ namespace AMP.Web.Models.Services
         {
             var authState = await _provider.GetAuthenticationStateAsync();
             if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform")) _navigation.NavigateToLogin();
+        }
+
+        public async Task<string?> GetClaim(string claim)
+        {
+            var authState = await _provider.GetAuthenticationStateAsync();
+            return authState.User.FindFirst(claim)?.Value;
         }
     }
 }

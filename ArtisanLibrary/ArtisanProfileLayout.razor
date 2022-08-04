@@ -283,8 +283,6 @@
 @Body
 
 @code {
-
-	private int LoggedInUserId { get; set; } = 7; // Get from claims
 	private ArtisanDto? Artisan { get; set; }
 	private string? ImageUrl { get; set; }
 	private string? EmailAddress { get; set; }
@@ -301,7 +299,7 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetByUserId(LoggedInUserId);
+			Artisan = await ArtisanService.GetByUserId();
 			InitializeProperties();
 			StateHasChanged();
 		}
