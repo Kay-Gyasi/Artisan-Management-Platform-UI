@@ -25,6 +25,10 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<PaginatedList<OrderPageDto>> GetSchedulePage(PaginatedQuery query) 
             => await _http.GetPageRequestAsync<OrderPageDto>
                 ("order/GetSchedulePage", query, new CancellationToken());
+        
+        public async Task<PaginatedList<OrderPageDto>> GetRequestPage(PaginatedQuery query) 
+            => await _http.GetPageRequestAsync<OrderPageDto>
+                ("order/GetRequestPage", query, new CancellationToken());
 
         public async Task<PaginatedList<OrderPageDto>> GetHistoryPage(PaginatedQuery query) 
             => await _http.GetPageRequestAsync<OrderPageDto>
@@ -50,6 +54,12 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> Complete(int orderId) 
             => await _http.PutRequestAsync("order/complete", orderId, new CancellationToken());
+
+        public async Task<RequestResponse> Accept(int orderId) 
+            => await _http.PutRequestAsync("order/accept", orderId, new CancellationToken());
+        
+        public async Task<RequestResponse> Cancel(int orderId) 
+            => await _http.PutRequestAsync("order/cancel", orderId, new CancellationToken());
 
         public async Task<RequestResponse> AssignArtisan(int orderId, int artisanId) 
             => await _http.PutRequestAsync($"order/assignArtisan/{artisanId}", orderId, new CancellationToken());

@@ -197,7 +197,7 @@
 
 	void InitializeProperties()
 	{
-		ImageUrl = Customer?.User.ImageUrl ?? "";
+		ImageUrl = Customer?.User.Image?.ImageUrl ?? "";
 		UserType = Customer?.User.Type ?? UserType.Customer;
 		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
 		StreetAddress = Customer?.User.Address?.StreetAddress ?? "";

@@ -1,5 +1,6 @@
 ﻿@page "/customers/add-order"
 @using AMP.Web.Models.ViewModels
+@using CustomerLibrary.Modals
 @inject LookupService LookupService
 @inject OrderService OrderService
 @inject NotificationService ToastService
@@ -150,12 +151,12 @@
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label required fw-bold fs-6">Street</label>
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Location</label>
 		<!--end::Label-->
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
 			<InputText @bind-Value="Order.WorkAddress.StreetAddress" name="street" class="form-control form-control-lg form-control-solid" 
-						   placeholder="Street" />
+						   placeholder="Work location" />
 		</div>
 		<!--end::Col-->
 	</div>
@@ -192,6 +193,7 @@
 <!--end::Basic info-->
 
 @code {
+	[CascadingParameter] IModalService Modal { get; set; }
 	OrderCommand Order { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
 	bool IsLoading { get; set; }
@@ -204,24 +206,9 @@
 
 	async Task Submit()
 	{
-		Order.UserId = Convert.ToInt32(await AuthStateService.GetClaim("nameid"));
-	    if (Order.UserId == default || Order.ServiceId == default || string.IsNullOrEmpty(Order.WorkAddress.StreetAddress)) return;
-	    DisableButtons(true);
-		var response = await OrderService.Save(Order);
-		if (response.IsComplete)
-		{
-			ToastService.SaveSuccess();
-		    Order = new();
-			DisableButtons(false);
-			return;
-		}
-		ToastService.SaveFailure();
-		DisableButtons(false);
-	}
+	    var parameters = new ModalParameters();
+	    parameters.Add(nameof(PostOrderComponent.Order), Order);
 
-	void DisableButtons(bool isLoading)
-	{
-		IsLoading = isLoading;
-		StateHasChanged();
+	    Modal.Show<PostOrderComponent>("Post Order", parameters);
 	}
 }

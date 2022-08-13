@@ -41,9 +41,11 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToCustomerDisputes() => _navManager.NavigateTo("/customer/disputes");
         public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
         public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/artisan/schedule/{orderId}");
+        public void NavigateToRequestDetail(int orderId) => _navManager.NavigateTo($"/artisans/requests/{orderId}");
         public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/artisan/proposals/{orderId}");
-        public void NavigateToArtisanOrderList() => _navManager.NavigateTo("/artisan/proposals");
+        public void NavigateToOrderRequests() => _navManager.NavigateTo("/artisans/requests");
         public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/artisan/schedule");
+        public void NavigateToArtisanImage() => _navManager.NavigateTo("/artisan/image");
         public void NavigateToArtisanHistory() => _navManager.NavigateTo("/artisan/work-history");
         public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
         public void NavigateToCustomerOrderHistory() => _navManager.NavigateTo("customers/orders/history");

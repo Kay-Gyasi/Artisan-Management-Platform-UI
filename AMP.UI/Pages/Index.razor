@@ -1,9 +1,11 @@
 ﻿@page "/"
 @using AMP.Web.Models.Authentication
+@using SharedComponents.Modals
 @layout BaseLayout
 <PageTitle>Artisan Management Platform</PageTitle>
 
 @inject NavigationService Navigator
+@inject AuthenticationStateProvider AuthStateProvider
 
 <!--begin::Header Section-->
 <div class="mb-0" id="home">
@@ -94,7 +96,7 @@
 					<Authorized>
 						<!--begin::Toolbar-->
 						<div class="flex-equal text-end ms-1">
-							<a @onclick="Logout" class="btn btn-success">Sign Out</a>
+							<a @onclick="@(() => Modal.Show<SignoutComponent>("Sign out"))" class="btn btn-success">Sign Out</a>
 						</div>
 						<!--end::Toolbar-->
 					</Authorized>
@@ -1717,23 +1719,17 @@
 <!--end::Body-->
 
 @code{
-	[Inject] TokenServerAuthenticationStateProvider TokenProvider { get; set; }
-	[Inject] AuthenticationStateProvider AuthStateProvider { get; set; }
-	async Task Logout()
-	{
-		await TokenProvider.SetTokenAsync(null);
-		StateHasChanged();
-	}
+	[CascadingParameter] public IModalService Modal { get; set; }
 
 	async Task EnterApp()
 	{
 		var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-	    if (authState.User.HasClaim(x => x.Value == "AmpWebPlatform"))
-	    {
-	        Navigator.NavigateToDashboard();
-	        return;
-	    }
+		if (authState.User.HasClaim(x => x.Value == "AmpWebPlatform"))
+		{
+			Navigator.NavigateToDashboard();
+			return;
+		}
 
-	    Navigator.NavigateToLogin();
+		Navigator.NavigateToLogin();
 	}
 }

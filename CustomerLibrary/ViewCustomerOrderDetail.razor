@@ -1,4 +1,5 @@
 ﻿@page "/customers/orders/{OrderId:int}"
+@using CustomerLibrary.Modals
 @inject OrderService OrderService
 @inject NavigationService Navigator
 @inject NotificationService ToastService
@@ -153,6 +154,8 @@
 </div>
 <!--end::details View-->
 @code {
+	[CascadingParameter]
+	IModalService Modal { get; set; }
 	[Parameter]
 	public int OrderId { get; set; }
 	bool IsLoading { get; set; }
@@ -168,19 +171,12 @@
 		IsArtisanAssigned = Order?.Artisan.Id != 0;
 	}
 
-	async Task RemoveAssignedArtisan()
+	void RemoveAssignedArtisan()
 	{
-		DisableButton(true);
-		var response = await OrderService.UnassignArtisan(OrderId);
-		if (response.IsComplete)
-		{
-			IsArtisanAssigned = false;
-			ToastService.ShowUnassignArtisanSuccess();
-			DisableButton(false);
-			return;
-		}
-		ToastService.ShowUnassignArtisanFailure();
-		DisableButton(false);
+	    var parameters = new ModalParameters();
+		parameters.Add(nameof(UnassignArtisanComponent.OrderId), OrderId);
+
+	    Modal.Show<UnassignArtisanComponent>("Unassign Artisan", parameters);
 	}
 
 	async Task Complete()

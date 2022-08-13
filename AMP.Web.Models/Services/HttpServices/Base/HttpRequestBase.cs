@@ -10,7 +10,6 @@ using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Qface.Extension.Shared.HttpServices;
 
 namespace AMP.Web.Models.Services.HttpServices.Base
 {
@@ -40,6 +39,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 {
                     _navigationService.NavigateToLogin();
                     await _auth.SetTokenAsync(null);
+                    return default;
                 }
                 if (request.IsSuccessStatusCode)
                     return await request.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
@@ -63,6 +63,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 {
                     _navigationService.NavigateToLogin();
                     await _auth.SetTokenAsync(null);
+                    return default;
                 }
                 if (request.IsSuccessStatusCode)
                     return RequestResponse.Done("Deleted Successfully");
@@ -88,6 +89,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 {
                     _navigationService.NavigateToLogin();
                     await _auth.SetTokenAsync(null);
+                    return default;
                 }
                 if (request.IsSuccessStatusCode)
                     return RequestResponse.Done("Deleted Successfully");
@@ -132,6 +134,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 {
                     _navigationService.NavigateToLogin();
                     await _auth.SetTokenAsync(null);
+                    return default;
                 }
                 if (request.IsSuccessStatusCode)
                     return RequestResponse.Done("Deleted Successfully");
@@ -157,6 +160,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 {
                     _navigationService.NavigateToLogin();
                     await _auth.SetTokenAsync(null);
+                    return default;
                 }
                 if (request.IsSuccessStatusCode)
                     return await request.Content.ReadFromJsonAsync<PaginatedList<T>>(cancellationToken: cancellationToken);
@@ -170,13 +174,13 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
         }
 
-        public async Task<IAuthorityClaims> GetClaimsAsync()
-        {
-            return new IAuthorityClaims
-            {
-                Token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token")
-            };
-        }
+        //public async Task<IAuthorityClaims> GetClaimsAsync()
+        //{
+        //    return new IAuthorityClaims
+        //    {
+        //        Token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token")
+        //    };
+        //}
 
         private async Task<HttpClient> CreateClient()
         {

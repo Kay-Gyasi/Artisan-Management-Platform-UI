@@ -1,4 +1,5 @@
 ﻿@page "/artisan/schedule/{OrderId:int}"
+@using ArtisanLibrary.Modals
 @inject OrderService OrderService
 @inject IMapper Mapper
 @inject NotificationService ToastService
@@ -102,8 +103,8 @@
 		
 		<div class="card-footer">
 			<!--begin::Action-->
-			<a href="#" class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
-			   @onclick="UnassignArtisan">Cancel</a>
+			<a class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
+			   @onclick="@(() => UnassignArtisan(OrderId))">Cancel</a>
 @*			<a href="#" class="btn btn-primary align-self-center float-end me-1">Complete</a>
 *@			<!--end::Action-->
 		</div>
@@ -113,6 +114,7 @@
 <!--end::details View-->
 
 @code {
+	[CascadingParameter] public IModalService Modal { get; set; }
 	[Parameter]
 	public int OrderId { get; set; }
 	bool IsLoading { get; set; }
@@ -121,27 +123,15 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
-	    Order = await OrderService.GetAsync(OrderId);
+		await AuthStateService.CheckAuthStatus();
+		Order = await OrderService.GetAsync(OrderId);
 	}
 
-	async Task UnassignArtisan()
+	void UnassignArtisan(int orderId)
 	{
-		DisableButton(true);
-		var response = await OrderService.UnassignArtisan(OrderId);
-		if (response.IsComplete)
-		{
-			ToastService.ShowUnassignArtisanSuccess();
-			DisableButton(false);
-			return;
-		}
-		DisableButton(false);
-		ToastService.ShowUnassignArtisanFailure();
-	}
+		var parameters = new ModalParameters();
+		parameters.Add(nameof(CancelScheduleComponent.OrderId), orderId);
 
-	void DisableButton(bool isLoading)
-	{
-		IsLoading = isLoading;
-		StateHasChanged();
+		Modal.Show<CancelScheduleComponent>("Cancel Schedule", parameters);
 	}
 }

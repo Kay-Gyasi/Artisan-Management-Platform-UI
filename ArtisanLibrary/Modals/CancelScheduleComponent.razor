@@ -1,0 +1,37 @@
+﻿@inject OrderService OrderService
+@inject NotificationService ToastService
+@inject NavigationService Navigator
+
+<h3>Continue cancel?</h3>
+
+<div class="card-footer">
+    <!--begin::Action-->
+    <a class="btn btn-danger align-self-center float-end" @onclick="UnassignArtisan">Yes</a>
+    <!--end::Action-->
+</div>
+@code {
+    [Parameter] 
+    public int OrderId { get; set; }
+    bool IsLoading { get; set; }
+
+    async Task UnassignArtisan()
+    {
+        Navigator.NavigateToScheduleDetail(OrderId);
+        DisableButton(true);
+        var response = await OrderService.UnassignArtisan(OrderId);
+        if (response.IsComplete)
+        {
+            ToastService.ShowUnassignArtisanSuccess();
+            Navigator.NavigateToArtisanSchedule();
+            return;
+        }
+        DisableButton(false);
+        ToastService.ShowUnassignArtisanFailure();
+    }
+
+    void DisableButton(bool isLoading)
+    {
+        IsLoading = isLoading;
+        StateHasChanged();
+    }
+}

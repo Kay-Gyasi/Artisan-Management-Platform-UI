@@ -27,6 +27,7 @@ namespace AMP.Web.Models.Services
             var authState = await _provider.GetAuthenticationStateAsync();
             return authState.User.FindFirst(claim)?.Value;
         }
+
     }
 }
 

@@ -1,0 +1,19 @@
+﻿@inject TokenServerAuthenticationStateProvider TokenProvider
+@inject NavigationService Navigator
+
+<h3>Continue sign out?</h3>
+
+<div class="card-footer">
+    <!--begin::Action-->
+    <a href="#" class="btn btn-danger align-self-center float-end" @onclick="Logout">Yes</a>
+    <!--end::Action-->
+</div>
+
+@code {
+
+    async Task Logout()
+    {
+        await TokenProvider.SetTokenAsync(null);
+        Navigator.NavigateToLanding();
+    }
+}

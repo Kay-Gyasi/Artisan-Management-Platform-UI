@@ -1,0 +1,47 @@
+﻿@using AMP.Web.Models.ViewModels
+@inject OrderService OrderService
+@inject NotificationService ToastService
+@inject NavigationService Navigator
+@inject AuthService AuthStateService
+
+<h3>Continue post?</h3>
+
+<div class="card-footer">
+    <!--begin::Action-->
+    <a class="btn btn-success align-self-center float-end" @onclick="PostOrder">Yes</a>
+    <!--end::Action-->
+</div>
+
+@code {
+
+    [Parameter]
+    public OrderCommand Order { get; set; } = new();
+    [Parameter]
+    public List<Lookup> Services { get; set; } = new();
+
+    bool IsLoading { get; set; }
+
+
+    async Task PostOrder()
+    {
+        Navigator.NavigateToAddOrder();
+        Order.UserId = Convert.ToInt32(await AuthStateService.GetClaim("nameid"));
+        if (Order.UserId == default || Order.ServiceId == default || string.IsNullOrEmpty(Order.WorkAddress.StreetAddress)) return;
+        DisableButtons(true);
+        var response = await OrderService.Save(Order);
+        if (response.IsComplete)
+        {
+            ToastService.SaveSuccess();
+            Navigator.NavigateToCustomerOrderList();
+            return;
+        }
+        ToastService.SaveFailure();
+        DisableButtons(false);
+    }
+
+    void DisableButtons(bool isLoading)
+    {
+        IsLoading = isLoading;
+        StateHasChanged();
+    }
+}

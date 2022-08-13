@@ -68,8 +68,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    var userId = await AuthStateService.GetClaim("nameid");
 	    await AuthStateService.CheckAuthStatus();
+	    var userId = await AuthStateService.GetClaim("nameid");
 	    query = PaginatedQuery.Build(0, 1, 10)
 	        .ThenSearch(userId);
 		Orders.Data = new();

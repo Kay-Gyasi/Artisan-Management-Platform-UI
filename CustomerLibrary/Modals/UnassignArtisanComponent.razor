@@ -1,0 +1,39 @@
+﻿@inject OrderService OrderService
+@inject NotificationService ToastService
+@inject NavigationService Navigator
+
+<h3>Continue action?</h3>
+
+<div class="card-footer">
+    <!--begin::Action-->
+    <a class="btn btn-danger align-self-center float-end" @onclick="RemoveAssignedArtisan">Yes</a>
+    <!--end::Action-->
+</div>
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+    bool IsLoading { get; set; }
+    bool IsArtisanAssigned { get; set; }
+
+    async Task RemoveAssignedArtisan()
+    {
+        Navigator.NavigateToViewOrderDetail(OrderId);
+        DisableButton(true);
+        var response = await OrderService.UnassignArtisan(OrderId);
+        if (response.IsComplete)
+        {
+            IsArtisanAssigned = false;
+            ToastService.ShowUnassignArtisanSuccess();
+            Navigator.NavigateToViewOrderDetail(OrderId);
+            return;
+        }
+        ToastService.ShowUnassignArtisanFailure();
+        Navigator.NavigateToViewOrderDetail(OrderId);
+    }
+    
+    void DisableButton(bool isLoading)
+    {
+        IsLoading = isLoading;
+        StateHasChanged();
+    }
+}

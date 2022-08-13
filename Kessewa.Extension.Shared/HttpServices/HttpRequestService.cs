@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Qface.Extension.Shared.HttpServices;
 using RestSharp;
 
 namespace Kessewa.Extension.Shared.HttpServices
 {
 
-	// TODO:: Change implementations
-	public class HttpRequestService : IHttpRequestService
+    // TODO:: Change implementations
+    public class HttpRequestService : IHttpRequestService
 	{
 
 

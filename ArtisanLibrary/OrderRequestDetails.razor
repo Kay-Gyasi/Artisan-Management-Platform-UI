@@ -1,6 +1,8 @@
-﻿@page "/orders/{OrderId:int}"
+﻿@page "/artisans/requests/{OrderId:int}"
+@inject NavigationService Navigator
 @inject OrderService OrderService
 @inject AuthService AuthStateService
+@inject NotificationService ToastService
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -11,9 +13,10 @@
 			<h3 class="fw-bolder m-0">Order Details</h3>
 		</div>
 		<!--end::Card title-->
-		@*<!--begin::Action-->
-		<a href="#" class="btn btn-primary align-self-center">Send Proposal</a>
-		<!--end::Action-->*@
+		<!--begin::Action-->
+		<a @onclick="AcceptOrder" class="btn btn-primary align-self-center"
+		   disabled="@IsLoading">Accept</a>
+		<!--end::Action-->
 	</div>
 	<!--begin::Card header-->
 	<!--begin::Card body-->
@@ -99,20 +102,60 @@
 		<!--end::Input group-->
 	</div>
 	<!--end::Card body-->
-
+	
+	<div class="card-footer">
+		<!--begin::Action-->
+		<a href="#" class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
+		   @onclick="UnassignArtisan">Decline</a>
+	</div>
 </div>
 <!--end::details View-->
 
 @code {
 	[Parameter]
 	public int OrderId { get; set; }
-
+	bool IsLoading { get; set; }
 	private OrderDto? Order { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
+		await AuthStateService.CheckAuthStatus();
 		Order = await OrderService.GetAsync(OrderId);
 	}
 
+	async Task AcceptOrder()
+	{
+		DisableButtons(true);
+		var response = await OrderService.Accept(OrderId);
+		if (response.IsComplete)
+		{
+			DisableButtons(false);
+			ToastService.SaveSuccess();
+			Navigator.NavigateToArtisanSchedule();
+			return;
+		}
+
+		DisableButtons(false);
+		ToastService.SaveFailure();
+	}
+
+	async Task UnassignArtisan()
+	{
+		DisableButtons(true);
+		var response = await OrderService.UnassignArtisan(OrderId);
+		if (response.IsComplete)
+		{
+			ToastService.ShowUnassignArtisanSuccess();
+			DisableButtons(false);
+			return;
+		}
+		DisableButtons(false);
+		ToastService.ShowUnassignArtisanFailure();
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }

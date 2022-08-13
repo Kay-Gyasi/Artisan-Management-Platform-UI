@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Qface.Extension.Shared
+namespace Kessewa.Extension.Shared
 {
-	public class HttpServiceAttribute : Attribute
-	{
-		//For Tracking registration
-		//Do not delete
-	}
+    public class HttpServiceAttribute : Attribute
+    {
+        //For Tracking registration
+        //Do not delete
+    }
 }

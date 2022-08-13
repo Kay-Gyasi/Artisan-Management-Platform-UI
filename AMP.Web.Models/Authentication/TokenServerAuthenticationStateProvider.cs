@@ -21,9 +21,9 @@ namespace AMP.Web.Models.Authentication
         public async Task<string> GetTokenAsync()
             => await _localStorage.Get(AuthKey);
 
-        public async Task SetTokenAsync(string token)
+        public async Task SetTokenAsync(string? token)
         {
-            if (token is null)
+            if (string.IsNullOrEmpty(token))
             {
                 await _localStorage.Remove(AuthKey);
                 NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
