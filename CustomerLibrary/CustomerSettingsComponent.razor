@@ -1,4 +1,5 @@
 ﻿@page "/account/customer/settings"
+@using AMP.Web.Models.ValueObjects
 @layout CustomerProfileLayout
 @inject AuthService AuthStateService
 @inject CustomerService CustomerService
@@ -307,6 +308,7 @@
 			}
 			
 			InitializeProperties();
+		    User.Address ??= new Address();
 			StateHasChanged();
 		}
 	}

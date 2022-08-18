@@ -1,5 +1,7 @@
 ﻿@page "/customer/disputes"
+@using AMP.Web.Models.ViewModels
 @inject DisputeService DisputeService
+@inject LookupService LookupService
 @inject NotificationService ToastService
 @inject AuthService AuthStateService
 
@@ -16,7 +18,7 @@
 		</div>
 		<!--end::Card title-->
 		<div class="mt-auto mb-auto">
-			Open Disputes: 1
+			Open Disputes: @DisputeCount.Count
 		</div>
 	</div>
 	<!--begin::Card header-->
@@ -37,7 +39,11 @@
 		<div class="col-lg-8 fv-row">
 			<InputSelect @bind-Value="Dispute.OrderId" name="artisan" class="form-control form-control-lg form-control-solid"
 						 placeholder="Order on which dispute is being held">
-				<option value="">--Select an artisan--</option>
+				<option value="">--Select an order--</option>
+				@foreach (var order in OpenOrders)
+				{
+					<option value="@order.Id">@order.Name</option>
+				}
 			</InputSelect>
 		</div>
 		<!--end::Col-->
@@ -77,11 +83,23 @@
 
 @code {
 	DisputeCommand Dispute { get; set; } = new();
+	DisputeCount DisputeCount { get; set; } = new();
+	List<Lookup> OpenOrders { get; set; } = new();
 	bool IsLoading { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			OpenOrders = await LookupService.GetOpenOrdersLookup();
+		    DisputeCount = await DisputeService.GetOpenDisputeCount();
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

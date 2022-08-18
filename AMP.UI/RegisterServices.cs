@@ -25,8 +25,8 @@ public static class RegisterServices
             .AddAuthentication()
             .AddHttpClient("AmpDevApi", options =>
             {
-                options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
-                //options.BaseAddress = new Uri("https://ampwebapiprod.azurewebsites.net/api/v1/");
+                //options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
+                options.BaseAddress = new Uri("http://kofigyasi-001-site2.btempurl.com/api/v1/");
             });
         return services;
     }
@@ -51,7 +51,6 @@ public static class RegisterServices
 
     private static IServiceCollection RegisterAutoMapper(this IServiceCollection services)
     {
-        //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         var mapperConfig = new MapperConfiguration(a =>
         {
             a.AddProfile<MapperProfile>();

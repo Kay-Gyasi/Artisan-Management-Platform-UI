@@ -18,6 +18,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> Save(DisputeCommand command)
             => await _http.PostRequestAsync("dispute/save", command, new CancellationToken());
+        
+        public async Task<DisputeCount> GetOpenDisputeCount()
+            => await _http.GetRequestAsync<DisputeCount>("dispute/GetOpenDisputeCount", new CancellationToken());
     }
 }
 

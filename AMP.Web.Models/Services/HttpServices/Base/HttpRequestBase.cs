@@ -136,6 +136,9 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
+
+                if(request.StatusCode == HttpStatusCode.Conflict)
+                    return RequestResponse.Error("Email already exists");
                 if (request.IsSuccessStatusCode)
                     return RequestResponse.Done("Deleted Successfully");
 

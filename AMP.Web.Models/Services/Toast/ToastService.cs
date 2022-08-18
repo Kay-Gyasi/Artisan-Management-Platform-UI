@@ -37,5 +37,11 @@ namespace AMP.Web.Models.Services.Toast
 
         public void LoginFailure() =>
             _toastService.ShowError("Invalid credentials");
+
+        public void SignupFailure() =>
+            _toastService.ShowError("Registration failed. Please try again");
+
+        public void EmailExists() =>
+            _toastService.ShowInfo("User with given email exists. Please log in");
     }
 }

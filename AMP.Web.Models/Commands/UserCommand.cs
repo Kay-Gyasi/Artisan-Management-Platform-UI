@@ -12,10 +12,10 @@ namespace AMP.Web.Models.Commands
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Field is required")]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
-        public string? FamilyName { get; set; }
+        public string FamilyName { get; set; }
         public int? ImageId { get; set; }
         public string? OtherName { get; set; }
         public string? DisplayName { get; set; }

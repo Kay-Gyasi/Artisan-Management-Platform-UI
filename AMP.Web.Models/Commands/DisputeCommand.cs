@@ -6,9 +6,6 @@ namespace AMP.Web.Models.Commands
     public class DisputeCommand
     {
         public int Id { get; set; }
-
-        [Required]
-        public int CustomerId { get; set; }
         public DisputeStatus Status { get; set; }
 
         [Required]
@@ -16,5 +13,10 @@ namespace AMP.Web.Models.Commands
 
         [Required]
         public string Details { get; set; }
+    }
+
+    public class DisputeCount
+    {
+        public int Count { get; set; }
     }
 }

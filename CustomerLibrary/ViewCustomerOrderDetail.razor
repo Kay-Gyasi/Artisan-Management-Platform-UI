@@ -1,9 +1,11 @@
 ﻿@page "/customers/orders/{OrderId:int}"
 @using CustomerLibrary.Modals
+@using AMP.Web.Models.Payments
 @inject OrderService OrderService
 @inject NavigationService Navigator
 @inject NotificationService ToastService
 @inject AuthService AuthStateService
+@inject PaystackService PaystackService
 
 <PageTitle>Order Details</PageTitle>
 
@@ -144,7 +146,9 @@
 				<!--begin::Action-->
 				<a class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
 				   @onclick="Delete">Cancel</a>
-				<a class="btn btn-primary align-self-center float-end me-1"
+			    <a class="btn btn-success align-self-center float-end me-1"
+                   disabled="@IsLoading" @onclick="InitiatePayment">Make Payment</a>
+			    <a class="btn btn-primary align-self-center float-end me-1"
 				   disabled="@IsLoading" @onclick="Complete">Complete</a>
 				<!--end::Action-->
 			}
@@ -167,9 +171,21 @@
 	{
 	    await AuthStateService.CheckAuthStatus();
 		Order = await OrderService.GetAsync(OrderId);
-		Order.Artisan ??= new ArtisanDto();
+		if(Order is not null) Order.Artisan ??= new ArtisanDto();
 		IsArtisanAssigned = Order?.Artisan.Id != 0;
 	}
+
+    void InitiatePayment()
+    {
+        var payment = new PaymentCommand
+        {
+			CustomerId = 1,
+			OrderId = 1,
+			AmountPaid = 100
+        };
+
+        var approvalSite = PaystackService.InitializeTransaction(payment, "kaygyasi715@gmail.com");
+    }
 
 	void RemoveAssignedArtisan()
 	{

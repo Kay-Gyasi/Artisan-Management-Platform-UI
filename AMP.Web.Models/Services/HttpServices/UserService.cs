@@ -25,6 +25,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> Save(UserCommand command) =>
             await _http.PostRequestAsync("user/save", command, new CancellationToken());
+        
+        public async Task<RequestResponse> Post(UserCommand command) =>
+            await _http.PostRequestAsync("user/post", command, new CancellationToken());
 
         public async Task<RequestResponse> Delete(int id) =>
             await _http.DeleteRequestAsync($"user/delete/{id}", new CancellationToken());

@@ -17,10 +17,11 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<List<Lookup>> Get(LookupType type)
-        {
-            return await _http.GetRequestAsync<List<Lookup>>($"lookup/get/{type}", new CancellationToken());
-        }
+        public async Task<List<Lookup>> Get(LookupType type) => 
+            await _http.GetRequestAsync<List<Lookup>>($"lookup/get/{type}", new CancellationToken());
+        
+        public async Task<List<Lookup>> GetOpenOrdersLookup() => 
+            await _http.GetRequestAsync<List<Lookup>>("lookup/GetOpenOrdersLookup", new CancellationToken());
 
     }
 }

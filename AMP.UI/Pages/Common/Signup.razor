@@ -3,6 +3,7 @@
 
 @inject UserService UserService
 @inject NavigationService Navigator
+@inject NotificationService ToastService
 
 <!--begin::Main-->
 <div class="d-flex flex-column flex-root">
@@ -131,7 +132,7 @@
 					<!--end::Input group-->
 					<!--begin::Actions-->
 					<div class="text-center">
-						<button type="submit" id="kt_sign_up_submit" class="btn btn-lg btn-primary">
+						<button type="submit" id="kt_sign_up_submit" class="btn btn-lg btn-primary" disabled="@IsLoading">
 							<span class="indicator-label">Submit</span>
 							<span class="indicator-progress">Please wait...
 								<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -162,9 +163,34 @@
 
 @code {
 	public UserCommand User { get; set; } = new();
+	bool IsLoading { get; set; }
 
 	async Task Submit()
 	{
-	    if (string.IsNullOrEmpty(User.Password) || string.IsNullOrEmpty(User.ConfirmPassword)) return;
+		if (string.IsNullOrEmpty(User.Password) || string.IsNullOrEmpty(User.ConfirmPassword)) return;
+
+		DisableButtons(true);
+	    var response = await UserService.Post(User);
+	    if (response.IsComplete)
+	    {
+			Navigator.NavigateToLogin();
+	        return;
+	    }
+
+	    if (response.Message == "Email already exists")
+	    {
+	        ToastService.EmailExists();
+	        Navigator.NavigateToLogin();
+	        return;
+	    }
+
+		DisableButtons(false);
+	    ToastService.SignupFailure();
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+	    IsLoading = isLoading;
+		StateHasChanged();
 	}
 }
