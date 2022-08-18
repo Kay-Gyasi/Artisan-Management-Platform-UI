@@ -11,7 +11,7 @@ namespace AMP.UI;
 
 public static class RegisterServices
 {
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.RegisterAutoMapper()
             .AddScoped<NavigationService>()
@@ -26,7 +26,7 @@ public static class RegisterServices
             .AddHttpClient("AmpDevApi", options =>
             {
                 //options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
-                options.BaseAddress = new Uri("http://kofigyasi-001-site2.btempurl.com/api/v1/");
+                options.BaseAddress = new Uri(configuration["ProdApiUrl"]);
             });
         return services;
     }

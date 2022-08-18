@@ -7,7 +7,7 @@ builder.Services.AddServerSideBlazor()
     {
         opts.DetailedErrors = builder.Environment.IsDevelopment();
     });
-builder.Services.AddServices();
+builder.Services.AddServices(builder.Configuration);
 
 WebApplication app;
 try
