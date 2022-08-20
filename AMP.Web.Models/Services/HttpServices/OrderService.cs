@@ -5,6 +5,7 @@ using AMP.Web.Models.Dtos;
 using AMP.Web.Models.PageDtos;
 using AMP.Web.Models.Services.HttpServices.Base;
 using Kessewa.Extension.Shared.HttpServices.Models;
+using Newtonsoft.Json;
 
 namespace AMP.Web.Models.Services.HttpServices
 {
@@ -45,6 +46,12 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<OrderDto> GetAsync(int id) 
             => await _http.GetRequestAsync<OrderDto>($"order/get/{id}",
                 new CancellationToken());
+        public async Task<InsertOrderResponse> Insert(OrderCommand command)
+        {
+            var serializedCommand = JsonConvert.SerializeObject(command);
+            return await _http.GetRequestAsync<InsertOrderResponse>($"order/insert/{serializedCommand}",
+                new CancellationToken());
+        }
 
         public async Task<RequestResponse> Save(OrderCommand command) 
             => await _http.PostRequestAsync("order/save", command, new CancellationToken());

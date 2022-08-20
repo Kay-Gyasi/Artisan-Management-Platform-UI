@@ -5,8 +5,8 @@ namespace AMP.Web.Models.Commands
     public class SigninCommand
     {
         [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        public string Phone { get; set; }
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }

@@ -146,9 +146,9 @@
 				<!--begin::Action-->
 				<a class="btn btn-danger align-self-center float-end" disabled="@IsLoading"
 				   @onclick="Delete">Cancel</a>
-			    <a class="btn btn-success align-self-center float-end me-1"
-                   disabled="@IsLoading" @onclick="InitiatePayment">Make Payment</a>
-			    <a class="btn btn-primary align-self-center float-end me-1"
+				<a class="btn btn-success align-self-center float-end me-1"
+				   disabled="@IsLoading" @onclick="InitiatePayment">Make Payment</a>
+				<a class="btn btn-primary align-self-center float-end me-1"
 				   disabled="@IsLoading" @onclick="Complete">Complete</a>
 				<!--end::Action-->
 			}
@@ -169,30 +169,30 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
+		await AuthStateService.CheckAuthStatus();
 		Order = await OrderService.GetAsync(OrderId);
 		if(Order is not null) Order.Artisan ??= new ArtisanDto();
 		IsArtisanAssigned = Order?.Artisan.Id != 0;
 	}
 
-    void InitiatePayment()
-    {
-        var payment = new PaymentCommand
-        {
+	void InitiatePayment()
+	{
+		var payment = new PaymentCommand
+		{
 			CustomerId = 1,
 			OrderId = 1,
 			AmountPaid = 100
-        };
+		};
 
-        var approvalSite = PaystackService.InitializeTransaction(payment, "kaygyasi715@gmail.com");
-    }
+		var approvalSite = PaystackService.InitializeTransaction(payment, "kaygyasi715@gmail.com");
+	}
 
 	void RemoveAssignedArtisan()
 	{
-	    var parameters = new ModalParameters();
+		var parameters = new ModalParameters();
 		parameters.Add(nameof(UnassignArtisanComponent.OrderId), OrderId);
 
-	    Modal.Show<UnassignArtisanComponent>("Unassign Artisan", parameters);
+		Modal.Show<UnassignArtisanComponent>("Unassign Artisan", parameters);
 	}
 
 	async Task Complete()
