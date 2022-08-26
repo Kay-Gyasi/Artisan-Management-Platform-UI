@@ -1,0 +1,31 @@
+﻿@page "/payment/verify/{OrderId:int}"
+@inject IPaymentService PaymentService
+@inject NavigationService Navigator
+
+<h3>Please wait while we verify your transaction...</h3><br/>
+<h1>You will be redirected once the process is done.</h1>
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+    
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "trxref")]
+    public string? TrxRef { get; set; }
+    
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "reference")]
+    public string? Reference { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        var verify = new VerifyPaymentCommand
+        {
+            Reference = Reference,
+            TransactionReference = TrxRef
+        };
+        var verifyResponse = PaymentService.VerifyTransaction(verify);
+        if(verifyResponse == "success") Navigator.NavigateToPayments();
+    }
+
+}

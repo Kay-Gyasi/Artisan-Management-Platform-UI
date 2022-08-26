@@ -4,8 +4,10 @@ namespace AMP.Web.Models.Commands
 {
     public class PaymentCommand
     {
-        [Required(ErrorMessage = "Field is required")]
-        public int CustomerId { get; set; }
+
+        public int Id { get; set; }
+        public string TransactionReference { get; set; }
+        public string Reference { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         public int OrderId { get; set; }

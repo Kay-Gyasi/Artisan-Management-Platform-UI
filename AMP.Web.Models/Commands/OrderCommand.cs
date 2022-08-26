@@ -28,7 +28,8 @@ namespace AMP.Web.Models.Commands
         public ScopeOfWork Scope { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
-        public DateTime PreferredDate { get; set; } = DateTime.Today;
+        public DateTime PreferredStartDate { get; set; } = DateTime.Today;
+        public DateTime PreferredCompletionDate { get; set; } = DateTime.Today.AddDays(1);
 
         [Required(ErrorMessage = "Field is required")]
         public Address WorkAddress { get; set; } = new Address();

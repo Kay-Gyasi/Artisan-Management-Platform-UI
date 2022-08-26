@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -138,7 +139,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 }
 
                 if(request.StatusCode == HttpStatusCode.Conflict)
-                    return RequestResponse.Error("Email already exists");
+                    return RequestResponse.Error("Phone number already exists");
                 if (request.IsSuccessStatusCode)
                     return RequestResponse.Done("Deleted Successfully");
 

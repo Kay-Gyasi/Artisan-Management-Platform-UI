@@ -25,8 +25,8 @@ public static class RegisterServices
             .AddAuthentication()
             .AddHttpClient("AmpDevApi", options =>
             {
-                //options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
-                options.BaseAddress = new Uri(configuration["ProdApiUrl"]);
+                options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
+                //options.BaseAddress = new Uri(configuration["ProdApiUrl"]);
             });
         return services;
     }

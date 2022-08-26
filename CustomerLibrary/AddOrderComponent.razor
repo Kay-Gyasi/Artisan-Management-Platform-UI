@@ -103,12 +103,12 @@
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label required fw-bold fs-6">Preferred Date</label>
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Preferred Start Date</label>
 		<!--end::Label-->
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
 			<!--begin::Input-->
-			<InputDate @bind-Value="Order.PreferredDate" name="date" aria-label="Select a Date" data-control="select2" data-placeholder="Select a date..." 
+			<InputDate @bind-Value="Order.PreferredStartDate" name="date" aria-label="Select a Date" data-control="select2" data-placeholder="Select a date..." 
 					   class="form-select form-select-solid form-select-lg" />
 			<!--end::Input-->
 			<!--begin::Hint-->
@@ -118,16 +118,22 @@
 		<!--end::Col-->
 	</div>
 	<!--end::Input group-->
+	
 
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label fw-bold fs-6">City</label>
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Preferred Completion Date</label>
 		<!--end::Label-->
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
-			<InputText @bind-Value="Order.WorkAddress.City" name="city" class="form-control form-control-lg form-control-solid" 
-						   placeholder="City" />
+			<!--begin::Input-->
+			<InputDate @bind-Value="Order.PreferredCompletionDate" name="date" aria-label="Select a Date" data-control="select2" data-placeholder="Select a date..." 
+					   class="form-select form-select-solid form-select-lg" />
+			<!--end::Input-->
+			<!--begin::Hint-->
+			<div class="form-text">Please select the date before which you want work to be completed</div>
+			<!--end::Hint-->
 		</div>
 		<!--end::Col-->
 	</div>
@@ -200,15 +206,15 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
-	    Services = await LookupService.Get(LookupType.Service);
+		await AuthStateService.CheckAuthStatus();
+		Services = await LookupService.Get(LookupType.Service);
 	}
 
 	async Task Submit()
 	{
-	    var parameters = new ModalParameters();
-	    parameters.Add(nameof(PostOrderComponent.Order), Order);
+		var parameters = new ModalParameters();
+		parameters.Add(nameof(PostOrderComponent.Order), Order);
 
-	    Modal.Show<PostOrderComponent>("Post Order", parameters);
+		Modal.Show<PostOrderComponent>("Post Order", parameters);
 	}
 }

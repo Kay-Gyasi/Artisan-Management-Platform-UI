@@ -41,7 +41,10 @@ namespace AMP.Web.Models.Services.Toast
         public void SignupFailure() =>
             _toastService.ShowError("Registration failed. Please try again");
 
-        public void EmailExists() =>
-            _toastService.ShowInfo("User with given email exists. Please log in");
+        public void PhoneExists() =>
+            _toastService.ShowInfo("User with given Phone number exists. Please log in");
+
+        public void ShowInvalidAmountSent() =>
+            _toastService.ShowWarning("Invalid amount sent");
     }
 }

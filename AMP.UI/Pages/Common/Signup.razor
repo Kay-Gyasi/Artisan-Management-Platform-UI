@@ -12,8 +12,8 @@
 		<!--begin::Content-->
 		<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
 			<!--begin::Logo-->
-			<a href="../../demo8/dist/index.html" class="mb-12">
-				<img alt="Logo" src="assets/media/logos/logo-1.svg" class="h-40px" />
+			<a href="#" class="mb-12">
+				<img alt="Logo" src="assets/media/logos/xaml.ico" class="h-40px" />
 			</a>
 			<!--end::Logo-->
 			<!--begin::Wrapper-->
@@ -57,12 +57,6 @@
 							<InputText @bind-Value="User.FamilyName" class="form-control form-control-lg form-control-solid" type="text" placeholder="" name="last-name" autocomplete="on"/>
 						</div>
 						<!--end::Col-->
-					</div>
-					<!--end::Input group-->
-					<!--begin::Input group-->
-					<div class="fv-row mb-7">
-						<label class="form-label fw-bolder text-dark fs-6">Email</label>
-						<InputText @bind-Value="User.Contact.EmailAddress" class="form-control form-control-lg form-control-solid" type="email" placeholder="" name="email" autocomplete="on"/>
 					</div>
 					<!--end::Input group-->
 
@@ -170,27 +164,27 @@
 		if (string.IsNullOrEmpty(User.Password) || string.IsNullOrEmpty(User.ConfirmPassword)) return;
 
 		DisableButtons(true);
-	    var response = await UserService.Post(User);
-	    if (response.IsComplete)
-	    {
+		var response = await UserService.Post(User);
+		if (response.IsComplete)
+		{
 			Navigator.NavigateToLogin();
-	        return;
-	    }
+			return;
+		}
 
-	    if (response.Message == "Email already exists")
-	    {
-	        ToastService.EmailExists();
-	        Navigator.NavigateToLogin();
-	        return;
-	    }
+		if (response.Message == "Phone number already exists")
+		{
+			ToastService.PhoneExists();
+			Navigator.NavigateToLogin();
+			return;
+		}
 
 		DisableButtons(false);
-	    ToastService.SignupFailure();
+		ToastService.SignupFailure();
 	}
 
 	void DisableButtons(bool isLoading)
 	{
-	    IsLoading = isLoading;
+		IsLoading = isLoading;
 		StateHasChanged();
 	}
 }

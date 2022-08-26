@@ -17,7 +17,8 @@ namespace AMP.Web.Models.Dtos
         public Urgency Urgency { get; set; }
         public ScopeOfWork Scope { get; set; }
         public OrderStatus Status { get; set; }
-        public DateTime PreferredDate { get; set; }
+        public DateTime PreferredStartDate { get; set; }
+        public DateTime PreferredCompletionDate { get; set; }
         public Address WorkAddress { get; set; } = new Address();
         public CustomerDto Customer { get; set; } = new CustomerDto();
         public ArtisanDto Artisan { get; set; } = new ArtisanDto();

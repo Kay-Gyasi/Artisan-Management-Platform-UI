@@ -2,6 +2,8 @@
 @layout MainLayout
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
+@inject AuthService AuthService
+
 
 <!--begin::Navbar-->
 <div class="card mb-5 mb-xl-10">
@@ -273,7 +275,7 @@
 		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("business")" 
 		   @onclick="@(() => Navigator.NavigateToArtisanBusinessSettings())">Business</a>
 	</li>
-    <!--end::Nav item-->
+	<!--end::Nav item-->
 
 	<!--begin::Nav item-->
 	<li class="nav-item mt-2">
@@ -297,9 +299,9 @@
 	private string? StreetAddress { get; set; }
 	private UserType UserType { get; set; }
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		InitializeProperties();
+		await InitializeProperties();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -307,16 +309,16 @@
 		if (firstRender)
 		{
 			Artisan = await ArtisanService.GetByUserId();
-			InitializeProperties();
+			await InitializeProperties();
 			StateHasChanged();
 		}
 	}
 
-	void InitializeProperties()
+	async Task InitializeProperties()
 	{
-		ImageUrl = Artisan?.User?.Image?.ImageUrl ?? "";
-		UserType = Artisan?.User?.Type ?? UserType.Customer;
-		EmailAddress = Artisan?.User?.Contact?.EmailAddress ?? "";
+		ImageUrl = await AuthService.GetClaim("ImageUrl");
+		UserType = Artisan?.User?.Type ?? UserType.Artisan;
+		EmailAddress = await AuthService.GetClaim("email");
 		BusinessName = Artisan?.BusinessName ?? "";
 		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
 	}
