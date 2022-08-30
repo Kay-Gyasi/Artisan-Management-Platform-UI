@@ -3,11 +3,15 @@ using AMP.Web.Models.Services.HttpServices;
 using Microsoft.Extensions.Configuration;
 using PayStack.Net;
 using System;
+using System.Threading.Tasks;
 
 namespace AMP.Web.Models.Payments
 {
     public class PaymentsService : IPaymentService
     {
+        public const string VerifySuccessMessage = "success";
+        public const string InvalidAmount = "Invalid Amount Sent";
+        public const string DefaultEmail = "kofigyasidev@gmail.com";
         private readonly IConfiguration _configuration;
         private readonly PaymentService _paymentService;
         private readonly string _secretKey;
@@ -23,7 +27,7 @@ namespace AMP.Web.Models.Payments
             PayStack = new PayStackApi(_secretKey);
         }
 
-        public string InitializeTransaction(PaymentCommand command, string email)
+        public async Task<string> InitializeTransaction(PaymentCommand command, string email)
         {
             var request = new TransactionInitializeRequest
             {
@@ -41,15 +45,15 @@ namespace AMP.Web.Models.Payments
 
             // Save to database
             command.Reference = response.Data.Reference;
-            var savePayment = _paymentService.Save(command).Result;
+            var savePayment = await _paymentService.Save(command);     
             return savePayment.IsComplete ? response.Data.AuthorizationUrl : savePayment.Message;
         }
 
-        public string VerifyTransaction(VerifyPaymentCommand command)
+        public async Task<string> VerifyTransaction(VerifyPaymentCommand command)
         {
             var response = PayStack.Transactions.Verify(command.Reference);
             if (response.Data.Status != "success") return response.Data.GatewayResponse;
-            var request = _paymentService.Verify(command).Result;
+            var request = await _paymentService.Verify(command);
             return request.IsComplete ? "success" : request.Message;
         }
 

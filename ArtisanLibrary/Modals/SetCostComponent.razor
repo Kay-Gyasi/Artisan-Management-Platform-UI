@@ -1,0 +1,58 @@
+﻿<EditForm Model="Command">
+<!--begin::Input group-->
+<div class="row mb-6">
+	<!--begin::Label-->
+	<label class="col-lg-4 col-form-label fw-bold fs-6">Cost</label>
+	<!--end::Label-->
+	<!--begin::Col-->
+	<div class="col-lg-8 fv-row">
+		<InputNumber @bind-Value="Command.Cost" name="cost" class="form-control form-control-lg form-control-solid" placeholder="Cost for order" />
+	</div>
+	<!--end::Col-->
+</div>
+<!--end::Input group-->
+</EditForm>
+
+<div class="card-footer">
+	<!--begin::Action-->
+	<a class="btn btn-primary align-self-center float-end" disabled="@IsLoading"
+		@onclick="SetCost">Set</a>		
+	<!--end::Action-->
+</div>
+@code {
+	[Parameter]
+	public int OrderId { get; set; }
+
+	[Parameter]
+	public OrderService OrderService { get; set; }
+
+	[Parameter]
+	public NavigationService Navigator { get; set; }
+
+	[Parameter]
+	public NotificationService ToastService { get; set; }
+
+	bool IsLoading { get; set; }
+
+	public SetCostCommand Command { get; set; } = new();
+
+	async Task SetCost()
+	{
+		DisableButton(true);
+		Command.OrderId = OrderId;
+		var response = await OrderService.SetCost(Command);
+		if (response.IsComplete)
+		{
+			Navigator.NavigateToScheduleDetailForceLoad(OrderId);
+			return;
+		}
+		ToastService.ShowSetCostFailed();
+		DisableButton(false);
+	}
+
+	void DisableButton(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
+}

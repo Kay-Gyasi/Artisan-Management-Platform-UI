@@ -41,6 +41,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToCustomerDisputes() => _navManager.NavigateTo("/customer/disputes");
         public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
         public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/artisan/schedule/{orderId}");
+        public void NavigateToScheduleDetailForceLoad(int orderId) => _navManager.NavigateTo($"/artisan/schedule/{orderId}", true);
         public void NavigateToRequestDetail(int orderId) => _navManager.NavigateTo($"/artisans/requests/{orderId}");
         public void NavigateToProposalDetail(int orderId) => _navManager.NavigateTo($"/artisan/proposals/{orderId}");
         public void NavigateToOrderRequests() => _navManager.NavigateTo("/artisans/requests");
@@ -50,6 +51,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
         public void NavigateToCustomerOrderHistory() => _navManager.NavigateTo("customers/orders/history");
         public void NavigateToViewOrderDetail(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}");
+        public void NavigateToViewOrderDetailForceLoad(int orderId) => _navManager.NavigateTo($"customers/orders/{orderId}", true);
         public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
         public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
         public void NavigateToLogin() => _navManager.NavigateTo("login");

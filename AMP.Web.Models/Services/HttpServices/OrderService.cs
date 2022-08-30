@@ -61,6 +61,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> Complete(int orderId) 
             => await _http.PutRequestAsync("order/complete", orderId, new CancellationToken());
+        
+        public async Task<RequestResponse> ArtisanComplete(int orderId) 
+            => await _http.PutRequestAsync("order/artisancomplete", orderId, new CancellationToken());
 
         public async Task<RequestResponse> Accept(int orderId) 
             => await _http.PutRequestAsync("order/accept", orderId, new CancellationToken());
@@ -73,6 +76,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> SoftDelete(int id)
             => await _http.DeleteRequestAsync($"order/delete/{id}", new CancellationToken());
+        
+        public async Task<RequestResponse> SetCost(SetCostCommand command)
+            => await _http.PutRequestAsync("order/setcost", command, new CancellationToken());
     }
 }
 

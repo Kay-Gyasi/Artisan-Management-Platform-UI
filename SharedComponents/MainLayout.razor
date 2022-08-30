@@ -1,15 +1,14 @@
 ﻿@inherits LayoutComponentBase
-@using Blazored.Toast.Configuration
-
 
 <BlazoredToasts Position="ToastPosition.BottomRight"
-				Timeout="5"
-				IconType="IconType.FontAwesome"
-				ErrorIcon="error_outline"
-				InfoIcon="school"
-				SuccessIcon="done_outline"
-				WarningIcon="warning" 
-				MaxToastCount="1" />
+			Timeout="5"
+			IconType="IconType.FontAwesome"
+			ErrorIcon="error_outline"
+			InfoIcon="school"
+			RemoveToastsOnNavigation=true
+			SuccessIcon="done_outline"
+			WarningIcon="warning" 
+			MaxToastCount="1" />
 
 	<!--begin::Main-->
 	<!--begin::Root-->

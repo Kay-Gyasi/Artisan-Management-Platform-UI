@@ -82,6 +82,34 @@
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
+
+
+		<!--begin::Input group-->
+		<div class="row mb-7">
+			<!--begin::Label-->
+			<label class="col-lg-4 fw-bold text-muted">Cost</label>
+			<!--end::Label-->
+			<!--begin::Col-->
+			<div class="col-lg-8 fv-row">
+				<span class="fw-bold text-gray-800 fs-6">@CostView()</span>
+			</div>
+			<!--end::Col-->
+		</div>
+		<!--end::Input group-->
+
+
+		<!--begin::Input group-->
+		<div class="row mb-7">
+			<!--begin::Label-->
+			<label class="col-lg-4 fw-bold text-muted">Payment Made</label>
+			<!--end::Label-->
+			<!--begin::Col-->
+			<div class="col-lg-8 fv-row">
+				<span class="fw-bold text-gray-800 fs-6">@PaymentMade()</span>
+			</div>
+			<!--end::Col-->
+		</div>
+		<!--end::Input group-->
 		
 		<!--begin::Input group-->
 		<div class="row mb-7">
@@ -145,7 +173,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bold fs-6 text-gray-800 text-hover-primary">@Order?.WorkAddress.City, @Order?.WorkAddress.StreetAddress</span>
+				<span class="fw-bold fs-6 text-gray-800 text-hover-primary">@Order?.WorkAddress.Town, @Order?.WorkAddress.StreetAddress</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -154,17 +182,29 @@
 		<div class="card-footer">
 			@if (!IsCompleted())
 			{
-				<a class="btn btn-danger align-self-center float-end ms-1" disabled="@IsLoading"
+				if(!Order.IsRequestAccepted){
+					<a class="btn btn-danger align-self-center float-end ms-1" disabled="@IsLoading"
 				   @onclick="Delete">Cancel</a>
-				<div class="btn-group float-end" disabled="@IsLoading">
-					<input type="button" class="btn btn-primary" @onclick="InitiatePayment" value="Make Payment" disabled="@IsLoading"/>
-					<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-						<span class="visually-hidden">Toggle Dropdown</span>
-					</button>
-					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" @onclick="Complete">Complete</a></li>
-					</ul>
-				</div>
+				}
+			
+				@if(IsArtisanAssigned)
+				{
+					<div class="btn-group float-end" disabled="@IsLoading">
+						<input type="button" class="btn btn-primary" @onclick="InitiatePayment" value="Make Payment" disabled="@IsLoading"/>
+						<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+							<span class="visually-hidden">Toggle Dropdown</span>
+						</button>
+						@if(Order.Cost > 0)
+						{
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" @onclick="Complete">Forward Payment To Artisan</a></li>
+							</ul>
+						}
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" @onclick="Complete">Complete</a></li>
+						</ul>
+					</div>
+				}			
 				<!--end::Actions-->
 			}
 		</div>
@@ -175,7 +215,6 @@
 @code {
 
 	// TODO:: Create feature for setting cost of order and test payment
-	// TODO:: Use caching to optimize performance
 
 	[CascadingParameter]
 	IModalService Modal { get; set; }
@@ -196,17 +235,29 @@
 
 	async Task InitiatePayment()
 	{
+		if(Order.Cost <= 0)
+		{
+			ToastService.CostNotSet();
+			return;
+		}
+		
+		if((Order.Cost - Order.PaymentMade) <= 0)
+		{
+			ToastService.ShowInvalidAmountSent();
+			return;
+		}
+
 		if (Order is null) return;
 		var payment = new PaymentCommand
 		{
 			OrderId = Order.Id,
-			AmountPaid = Order.Cost
+			AmountPaid = Order.Cost - Order.PaymentMade
 		};
 
 		var email = await AuthStateService.GetClaim("email");
-		if (string.IsNullOrEmpty(email)) email = "kofigyasidev@gmail.com";
-		var approvalSite = PaymentService.InitializeTransaction(payment, email);
-		if (approvalSite == "Invalid Amount Sent")
+		if (string.IsNullOrEmpty(email)) email = PaymentsService.DefaultEmail;
+		var approvalSite = await PaymentService.InitializeTransaction(payment, email);
+		if (approvalSite == PaymentsService.InvalidAmount)
 		{
 			ToastService.ShowInvalidAmountSent();
 			return;
@@ -257,5 +308,15 @@
 	{
 		IsLoading = isLoading;
 		StateHasChanged();
+	}
+
+	string CostView()
+	{
+		return Order?.Cost <= 0 ? "Not Set" : Order.Cost.ToString();
+	}
+	
+	string PaymentMade()
+	{
+		return Order?.PaymentMade <= 0 ? "No payment made" : Order.PaymentMade.ToString();
 	}
 }

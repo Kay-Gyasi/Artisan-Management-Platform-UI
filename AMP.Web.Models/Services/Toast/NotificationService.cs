@@ -28,6 +28,9 @@ namespace AMP.Web.Models.Services.Toast
 
         public void ShowOrderCompleteFailed() 
             => _toastService.ShowSuccess("Order completion failed");
+        
+        public void ShowSetCostFailed() 
+            => _toastService.ShowSuccess("Cost set operation failed");
 
         public void DeleteFailed() 
             => _toastService.ShowError("Delete failed");
@@ -46,5 +49,8 @@ namespace AMP.Web.Models.Services.Toast
 
         public void ShowInvalidAmountSent() =>
             _toastService.ShowWarning("Invalid amount sent");
+        
+        public void CostNotSet() =>
+            _toastService.ShowInfo("Cost not set on this order by assigned artisan");
     }
 }

@@ -24,7 +24,7 @@
         {
             IsArtisanAssigned = false;
             ToastService.ShowUnassignArtisanSuccess();
-            Navigator.NavigateToViewOrderDetail(OrderId);
+            Navigator.NavigateToViewOrderDetailForceLoad(OrderId);
             return;
         }
         ToastService.ShowUnassignArtisanFailure();
