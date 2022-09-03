@@ -156,7 +156,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
 		Order = await OrderService.GetAsync(OrderId);
 	}
 

@@ -22,6 +22,7 @@ public static class RegisterServices
             .AddScoped<NotificationService>()
             .RegisterHttpServices()
             .AddStorage()
+            .AddStores()
             .AddAuthentication()
             .AddHttpClient("AmpDevApi", options =>
             {

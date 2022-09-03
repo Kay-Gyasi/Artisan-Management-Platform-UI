@@ -7,7 +7,7 @@ namespace AMP.Web.Models.Commands
         [Required(ErrorMessage = "Field is required")]
         public int ArtisanId { get; set; }
 
-        public int CustomerId { get; set; }
+        public int UserId { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         [Range(0, 5, ErrorMessage = "Input should be between 0 and 5")]

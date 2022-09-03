@@ -3,7 +3,9 @@
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
 @inject AuthService AuthService
-
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject ArtisanStore ArtisanStore
 
 <!--begin::Navbar-->
 <div class="card mb-5 mb-xl-10">
@@ -279,6 +281,13 @@
 
 	<!--begin::Nav item-->
 	<li class="nav-item mt-2">
+		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("reviews")"
+		   @onclick="@(() => Navigator.NavigateToArtisanReviews())">Reviews</a>
+	</li>
+	<!--end::Nav item-->
+
+	<!--begin::Nav item-->
+	<li class="nav-item mt-2">
 		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("image")" 
 		   @onclick="@(() => Navigator.NavigateToArtisanImage())">Image</a>
 	</li>
@@ -301,6 +310,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		ArtisanStore.AddStateChangeListener(UpdateView);
+		Artisan = ArtisanStore.GetState().Artisan;
 		await InitializeProperties();
 	}
 
@@ -308,9 +319,10 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetByUserId();
+			await GetArtisan();
+			Artisan = ArtisanStore.GetState().Artisan;
 			await InitializeProperties();
-			StateHasChanged();
+			UpdateView();
 		}
 	}
 
@@ -321,6 +333,21 @@
 		EmailAddress = await AuthService.GetClaim("email");
 		BusinessName = Artisan?.BusinessName ?? "";
 		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
+	}
+
+	private async Task GetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new GetByUserIdAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ArtisanStore.RemoveStateChangeListener(UpdateView);
 	}
 }
 

@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Commands;
+using AMP.Web.Models.PageDtos;
 using AMP.Web.Models.Services.HttpServices.Base;
 using Kessewa.Extension.Shared.HttpServices.Models;
 
@@ -21,6 +22,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<RequestResponse> Verify(VerifyPaymentCommand command)
             => await _http.PutRequestAsync("payment/verify", command, new CancellationToken());
+
+        public async Task<PaginatedList<PaymentPageDto>> GetPage(PaginatedQuery paginated)
+            => await _http.GetPageRequestAsync<PaymentPageDto>("payment/getpage", paginated, new CancellationToken());
     }
 }
 

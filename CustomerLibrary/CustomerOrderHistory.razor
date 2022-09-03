@@ -75,7 +75,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
 	    Orders.Data = new();
 		Orders = await OrderService.GetOrderHistoryPage(Query);
 	}

@@ -7,7 +7,7 @@
 
 <PageTitle>Artisan Profile View</PageTitle>
 
-<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan"></CustomerViewArtisanLayout>
+<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan" OrderId="OrderId"></CustomerViewArtisanLayout>
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -109,7 +109,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
 	    Artisan = await ArtisanService.GetAsync(ArtisanId);
 	}
 

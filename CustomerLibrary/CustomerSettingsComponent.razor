@@ -1,11 +1,13 @@
 ﻿@page "/account/customer/settings"
-@using AMP.Web.Models.ValueObjects
 @layout CustomerProfileLayout
 @inject AuthService AuthStateService
 @inject CustomerService CustomerService
 @inject NotificationService ToastService
 @inject UserService UserService
 @inject IMapper Mapper
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject CustomerStore CustomerStore
 
 <PageTitle>Settings</PageTitle>
 
@@ -287,7 +289,10 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		CustomerStore.AddStateChangeListener(UpdateView);
+		Customer = Mapper.Map<CustomerCommand>(CustomerStore.GetState().Customer);
 		InitializeProperties();
 	}
 
@@ -295,7 +300,8 @@
 	{
 		if (firstRender)
 		{
-			var customer = await CustomerService.GetByUserId();
+			await GetCustomer();
+			var customer = CustomerStore.GetState().Customer;
 			Customer = Mapper.Map<CustomerCommand>(customer);
 			User = Mapper.Map<UserCommand>(customer.User);
 
@@ -306,10 +312,10 @@
 					Langs.Add(lang.Name);
 				}
 			}
-			
+
 			InitializeProperties();
-		    User.Address ??= new Address();
-			StateHasChanged();
+			User.Address ??= new Address();
+			UpdateView();
 		}
 	}
 
@@ -342,7 +348,7 @@
 		StateHasChanged();
 		User.Type = UserType.Customer;
 		var langs = from c in Langs
-			select new LanguagesCommand()
+					select new LanguagesCommand()
 			{
 				Name = c
 			};
@@ -353,10 +359,36 @@
 		StateHasChanged();
 		if (response.IsComplete)
 		{
+			await ResetCustomer();
 			ToastService.SaveSuccess();
+			await GetCustomer();
+			var customer = CustomerStore.GetState().Customer;
+			Customer = Mapper.Map<CustomerCommand>(customer);
+			User = Mapper.Map<UserCommand>(customer.User);
+			UpdateView();
 			return;
 		}
 		ToastService.SaveFailure();
+	}
+
+	private async Task GetCustomer()
+	{
+		await ActionDispatcher.Dispatch(new GetCustomerByUserIdAction());
+	}
+
+	private async Task ResetCustomer()
+	{
+		await ActionDispatcher.Dispatch(new ResetCustomerAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		CustomerStore.RemoveStateChangeListener(UpdateView);
 	}
 }
 

@@ -8,11 +8,10 @@ namespace AMP.Web.Models.PageDtos
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
+        public int? ArtisanId { get; set; }
+        public bool IsRequestAccepted { get; set; }
         public string Description { get; set; }
-        public ScopeOfWork Scope { get; set; }
-        public DateTime PreferredStartDate { get; set; }
-        public DateTime PreferredCompletionDate { get; set; }
-        public Address WorkAddress { get; set; } = new Address();
+        public Address WorkAddress { get; set; }
         public ServicePageDto Service { get; set; } = new ServicePageDto();
     }
 }

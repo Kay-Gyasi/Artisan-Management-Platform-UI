@@ -1,5 +1,8 @@
 ﻿@page "/account/artisan/overview"
 @inject NavigationService Navigator
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject ArtisanStore ArtisanStore
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
 @layout ArtisanProfileLayout
@@ -131,7 +134,11 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AuthStateService.CheckAuthStatus();
+
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		ArtisanStore.AddStateChangeListener(UpdateView);
+		Artisan = ArtisanStore.GetState().Artisan;
 		InitializeProperties();
 	}
 
@@ -139,9 +146,10 @@
 	{
 		if (firstRender)
 		{
-			Artisan = await ArtisanService.GetByUserId();
+			await GetArtisan();
+			Artisan = ArtisanStore.GetState().Artisan;
 			InitializeProperties();
-			StateHasChanged();
+			UpdateView();
 		}
 	}
 
@@ -153,5 +161,20 @@
 		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
 		Country = Artisan?.User?.Address?.Country.ToString() ?? "";
 		Phone = Artisan?.User?.Contact?.PrimaryContact ?? "";
+	}
+
+	private async Task GetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new GetByUserIdAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ArtisanStore.RemoveStateChangeListener(UpdateView);
 	}
 }

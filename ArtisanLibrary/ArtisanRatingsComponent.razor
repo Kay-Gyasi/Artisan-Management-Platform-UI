@@ -1,0 +1,53 @@
+﻿@page "/account/artisan/reviews"
+@inject NavigationService Navigator
+@inject ArtisanService ArtisanService
+@inject AuthService AuthStateService
+@inject OrderService OrderService
+@inject NotificationService ToastService
+@inject RatingService RatingService
+
+<PageTitle>Reviews</PageTitle>
+
+<ArtisanProfileLayout></ArtisanProfileLayout>
+
+<!--begin::Container-->
+
+	<!--begin::Row-->
+<div class="row g-5 g-xl-8">
+	
+	@foreach (var review in Ratings.Data)
+	{
+		<div class="col-xl-4" style="cursor:pointer">
+			<!--begin::Statistics Widget 1-->
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+				<!--begin::Body-->
+				<div class="card-body">
+					<a class="card-title fw-bolder text-muted text-hover-primary fs-4">@review.Customer.User.DisplayName</a>
+					<div class="fw-bolder text-primary my-6">@review.Description</div>
+					<p class="text-dark-75 fw-bold fs-5 m-0">@review.Votes.ToString()/5</p>
+				</div>
+				<!--end::Body-->
+			</div>
+			<!--end::Statistics Widget 1-->
+		</div>
+	}
+</div>
+	<!--end::Row-->
+
+<!--end::Container-->
+
+
+@code {
+	ArtisanDto Artisan { get; set; } = new();
+	PaginatedList<RatingPageDto> Ratings { get; set; } = new();
+	PaginatedQuery Query { get; set; } = PaginatedQuery.Build(0, 1, 20);
+
+	protected override async Task OnInitializedAsync()
+	{
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		Artisan = await ArtisanService.GetByUserId();
+		Ratings.Data = new();
+		Ratings = await RatingService.GetArtisanRatingPage(Query);
+	}
+}

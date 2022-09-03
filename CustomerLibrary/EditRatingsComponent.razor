@@ -1,0 +1,140 @@
+﻿@page "/customer/edit-review/{RatingId:int}"
+@inject AuthService AuthStateService
+@inject ArtisanService ArtisanService
+@inject RatingService RatingService
+@inject NotificationService ToastService
+@inject NavigationService Navigator
+@inject IMapper Mapper
+
+<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+	<!--begin::Card header-->
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+		<!--begin::Card title-->
+		<div class="card-title m-0">
+			<h3 class="fw-bolder m-0">Edit Review</h3>
+		</div>
+		<!--end::Card title-->
+	</div>
+	<!--begin::Card header-->
+	<!--begin::Content-->
+	<div id="kt_account_profile_details" class="collapse show">
+		<!--begin::Form-->
+	<EditForm Model="Rating" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
+	<DataAnnotationsValidator />
+	<!--begin::Card body-->
+	<div class="card-body border-top p-9">
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Artisan</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputSelect @bind-Value="Rating.ArtisanId" name="artisan" class="form-control form-control-lg form-control-solid"
+						 placeholder="Artisan against whom dispute is being held">
+				<option value="">--Select an artisan--</option>
+				@foreach(var artisan in Artisans)
+				{
+					<option value="@artisan.Id">@artisan.Name</option>
+				}
+			</InputSelect>
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Votes (0-5)</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputNumber @bind-Value="Rating.Votes" name="votes" class="form-control form-control-lg form-control-solid" 
+						 placeholder="No. of votes" />
+			<ValidationMessage For="() => Rating.Votes"></ValidationMessage>
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputTextArea @bind-Value="Rating.Description" name="description" class="form-control form-control-lg form-control-solid" 
+						   placeholder="Description" style="min-height: 20vh;" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	</div>
+	<!--end::Card body-->
+	<!--begin::Actions-->
+	<div class="card-footer d-flex justify-content-end py-6 px-9">
+		<button type="button" class="btn btn-danger btn-active-light-primary me-2" disabled="@IsLoading"
+		@onclick="Delete">Delete</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit" disabled="@IsLoading">Save changes</button>
+	</div>
+	<!--end::Actions-->
+	</EditForm>
+		<!--end::Form-->
+	</div>
+	<!--end::Content-->
+</div>
+<!--end::Basic info-->
+
+@code {
+	[Parameter]
+	public int RatingId { get; set; } // change to string number / random number generated during insertion
+	public RatingCommand Rating { get; set; } = new();
+	public List<Lookup> Artisans { get; set; } = new();
+	bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
+		Rating = Mapper.Map<RatingCommand>(await RatingService.Get(RatingId));
+	}
+
+	async Task Submit()
+	{
+		DisableButtons(true);
+		var response = await RatingService.Save(Rating);
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+			Navigator.NavigateToReviews();
+			return;
+		}
+
+		ToastService.SaveFailure();
+	}
+	
+	async Task Delete()
+	{
+		DisableButtons(true);
+		var response = await RatingService.Delete(RatingId);
+		if (response.IsComplete)
+		{
+			Navigator.NavigateToReviews();
+			return;
+		}
+
+		ToastService.DeleteFailed();
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
+}

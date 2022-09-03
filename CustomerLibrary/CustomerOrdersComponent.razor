@@ -3,6 +3,9 @@
 @inject AuthService AuthStateService
 @inject OrderService OrderService
 @inject IMapper Mapper
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject OrderStore OrderStore
 
 <PageTitle>Orders</PageTitle>
 
@@ -60,6 +63,17 @@
 				<!--begin::Body-->
 				<div class="card-body">
 					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
+					@if (!IsArtisanAssigned(order))
+					{
+						<span class="badge badge-danger ms-1">Unassigned</span>
+					}
+					else
+					{
+						if (!order.IsRequestAccepted)
+						{
+							<span class="badge badge-info ms-1">Pending acceptance</span>
+						}	
+					}
 					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.Town, @order.WorkAddress?.StreetAddress</div>
 					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
 				</div>
@@ -80,16 +94,19 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-	    await AuthStateService.CheckAuthStatus();
-	    Orders.Data = new();
-		Orders = await OrderService.GetCustomerOrderPage(Query);
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		Orders.Data = new();
+		OrderStore.AddStateChangeListener(UpdateView);
+		await GetOrders();
+		Orders = OrderStore.GetState().Orders;
 	}
 
-	async Task Submit()
+	void Submit()
 	{
 		DisableButton(true);
 		Query.ThenSearch(SearchObj.SearchTerm);
-		Orders = await OrderService.GetCustomerOrderPage(Query);
+		Orders = OrderStore.GetState().Orders;
 		DisableButton(false);
 	}
 
@@ -97,6 +114,23 @@
 	{
 		IsLoading = isLoading;
 		StateHasChanged();
+	}
+
+	bool IsArtisanAssigned(OrderPageDto order) => order.ArtisanId != null ? true : false;
+
+	private async Task GetOrders()
+	{
+		await ActionDispatcher.Dispatch(new GetOrderPageAction(Query));
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		OrderStore.RemoveStateChangeListener(UpdateView);
 	}
 }
 

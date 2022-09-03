@@ -5,9 +5,11 @@
 @inject ArtisanService ArtisanService
 @inject UserService UserService
 @inject IMapper Mapper
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject ArtisanStore ArtisanStore
 
 <PageTitle>Settings</PageTitle>
-
 
 @*<ArtisanProfileLayout></ArtisanProfileLayout>
 *@<!--begin::Basic info-->
@@ -288,7 +290,10 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		ArtisanStore.AddStateChangeListener(UpdateView);
+		Artisan = Mapper.Map<ArtisanCommand>(ArtisanStore.GetState().Artisan);
 		InitializeProperties();
 	}
 
@@ -296,7 +301,8 @@
 	{
 		if (firstRender)
 		{
-			var artisan = await ArtisanService.GetByUserId();
+			await GetArtisan();
+			var artisan = ArtisanStore.GetState().Artisan;
 			Artisan = Mapper.Map<ArtisanCommand>(artisan);
 			User = Mapper.Map<UserCommand>(artisan.User);
 
@@ -307,9 +313,9 @@
 					Langs.Add(lang.Name);
 				}
 			}
-			
+
 			InitializeProperties();
-			StateHasChanged();
+			UpdateView();
 		}
 	}
 
@@ -342,7 +348,7 @@
 		StateHasChanged();
 		User.Type = UserType.Artisan;
 		var langs = from c in Langs
-			select new LanguagesCommand()
+					select new LanguagesCommand()
 			{
 				Name = c
 			};
@@ -353,9 +359,35 @@
 		StateHasChanged();
 		if (response.IsComplete)
 		{
+			await ResetArtisan();
 			ToastService.SaveSuccess();
+			await GetArtisan();
+			var artisan = ArtisanStore.GetState().Artisan;
+			Artisan = Mapper.Map<ArtisanCommand>(artisan);
+			User = Mapper.Map<UserCommand>(artisan.User);
+			UpdateView();
 			return;
 		}
 		ToastService.SaveFailure();
+	}
+
+	private async Task GetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new GetByUserIdAction());
+	}
+
+	private async Task ResetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new ResetArtisanAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ArtisanStore.RemoveStateChangeListener(UpdateView);
 	}
 }

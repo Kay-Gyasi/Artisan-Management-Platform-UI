@@ -2,6 +2,10 @@
 @layout MainLayout
 @inject NavigationService Navigator
 @inject CustomerService CustomerService
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject CustomerStore CustomerStore
+
 
 	<!--begin::Navbar-->
 <div class="card mb-5 mb-xl-10">
@@ -182,6 +186,8 @@
 
 	protected override void OnInitialized()
 	{
+		CustomerStore.AddStateChangeListener(UpdateView);
+		Customer = CustomerStore.GetState().Customer;
 		InitializeProperties();
 	}
 
@@ -189,9 +195,10 @@
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetByUserId();
+			await GetCustomer();
+			Customer = CustomerStore.GetState().Customer;
 			InitializeProperties();
-			StateHasChanged();
+			UpdateView();
 		}
 	}
 
@@ -201,5 +208,20 @@
 		UserType = Customer?.User.Type ?? UserType.Customer;
 		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
 		StreetAddress = Customer?.User.Address?.StreetAddress ?? "";
+	}
+
+	private async Task GetCustomer()
+	{
+		await ActionDispatcher.Dispatch(new GetCustomerByUserIdAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		CustomerStore.RemoveStateChangeListener(UpdateView);
 	}
 }

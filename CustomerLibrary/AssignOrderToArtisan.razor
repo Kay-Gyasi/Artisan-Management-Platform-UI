@@ -279,12 +279,13 @@
 	public PaginatedQuery Query { get; set; } = PaginatedQuery.Build(0, 1, 10);
 	public List<ArtisanPageDto> Artisans { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        await AuthStateService.CheckAuthStatus();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		Query.ThenSearch(Service);
 		var artisans = await ArtisanService.GetPage(Query);

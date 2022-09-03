@@ -190,19 +190,24 @@
 				@if(IsArtisanAssigned)
 				{
 					<div class="btn-group float-end" disabled="@IsLoading">
-						<input type="button" class="btn btn-primary" @onclick="InitiatePayment" value="Make Payment" disabled="@IsLoading"/>
-						<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-							<span class="visually-hidden">Toggle Dropdown</span>
-						</button>
-						@if(Order.Cost > 0)
+					
+						@if(Order.Cost > 0 && Order.PaymentMade > 0 && Order.Cost <= Order.PaymentMade)
 						{
+							<input type="button" class="btn btn-primary" @onclick="Complete" value="Complete" disabled="@IsLoading"/>
+							@*<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+								<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
 							<ul class="dropdown-menu">
 								<li><a class="dropdown-item" @onclick="Complete">Forward Payment To Artisan</a></li>
-							</ul>
+							</ul>*@
 						}
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" @onclick="Complete">Complete</a></li>
-						</ul>
+						else
+						{
+							<input type="button" class="btn btn-primary" @onclick="InitiatePayment" value="Make Payment" disabled="@IsLoading"/>
+							@*<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+								<span class="visually-hidden">Toggle Dropdown</span>
+							</button>*@
+						}
 					</div>
 				}			
 				<!--end::Actions-->
@@ -227,7 +232,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AuthStateService.CheckAuthStatus();
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
 		Order = await OrderService.GetAsync(OrderId);
 		if(Order != null) Order.Artisan ??= new ArtisanDto();
 		IsArtisanAssigned = Order?.Artisan.Id != 0;
@@ -279,6 +285,8 @@
 		var response = await OrderService.Complete(OrderId);
 		if (response.IsComplete)
 		{
+
+			// Forward payment to artisan
 			Navigator.NavigateToCustomerOrderList();
 			return;
 		}

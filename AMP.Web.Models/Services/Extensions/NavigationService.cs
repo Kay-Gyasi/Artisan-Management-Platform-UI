@@ -27,9 +27,11 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
         public void NavigateToCustomerViewArtisanProfile(int artisanId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}");
         public void NavigateToCustomerViewArtisanForOrder(int artisanId, int orderId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}/{orderId}");
+        public void NavigateToCustomerViewArtisanRating(int artisanId, int orderId) => _navManager.NavigateTo($"/customers/view-artisan/reviews/{artisanId}/{orderId}");
         public void NavigateToCustomerProfileOverview() => _navManager.NavigateTo("/account/customer/overview");
         public void NavigateToArtisanProfileSettings() => _navManager.NavigateTo("/account/artisan/settings");
         public void NavigateToArtisanBusinessSettings() => _navManager.NavigateTo("/account/artisan/business");
+        public void NavigateToArtisanReviews() => _navManager.NavigateTo("/account/artisan/reviews");
         public void NavigateToCustomerProfileSettings() => _navManager.NavigateTo("/account/customer/settings");
         public void NavigateToCustomerProposals() => _navManager.NavigateTo("/customers/proposals");
         public void NavigateToViewArtisans() => _navManager.NavigateTo("/users/artisans");
@@ -37,7 +39,9 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToSearchUser() => _navManager.NavigateTo("/users/search");
         public void NavigateToApprovalWaitlist() => _navManager.NavigateTo("/users/artisans/waitlist");
         public void NavigateToOrderList() => _navManager.NavigateTo("/orders");
-        public void NavigateToAddReview() => _navManager.NavigateTo("/customer/review");
+        public void NavigateToReviews() => _navManager.NavigateTo("/customer/reviews");
+        public void NavigateToAddReview() => _navManager.NavigateTo("/customer/add-review");
+        public void NavigateToEditReview(int id) => _navManager.NavigateTo($"/customer/edit-review/{id}");
         public void NavigateToCustomerDisputes() => _navManager.NavigateTo("/customer/disputes");
         public void NavigateToOrderDetail(int orderId) => _navManager.NavigateTo($"/orders/{orderId}");
         public void NavigateToScheduleDetail(int orderId) => _navManager.NavigateTo($"/artisan/schedule/{orderId}");

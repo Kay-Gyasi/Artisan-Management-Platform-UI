@@ -3,6 +3,9 @@
 @inject NavigationService Navigator
 @inject AuthService AuthStateService
 @inject CustomerService CustomerService
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject CustomerStore CustomerStore
 
 <PageTitle>Profile Overview</PageTitle>
 
@@ -127,17 +130,21 @@
 	private string? Phone { get; set; }
 	private string? Country { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await AuthStateService.CheckAuthStatus();
-        InitializeProperties();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		CustomerStore.AddStateChangeListener(UpdateView);
+		Customer = CustomerStore.GetState().Customer;
+		InitializeProperties();
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			Customer = await CustomerService.GetByUserId();
+			await GetCustomer();
+			Customer =  CustomerStore.GetState().Customer;
 			InitializeProperties();
 			StateHasChanged();
 		}
@@ -157,5 +164,20 @@
 		var surname = Customer?.User.FamilyName ?? "";
 		var firstname = Customer?.User.FirstName ?? "";
 		return firstname + " " + surname; // trim names in backend
+	}
+
+	private async Task GetCustomer()
+	{
+		await ActionDispatcher.Dispatch(new GetCustomerByUserIdAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		CustomerStore.RemoveStateChangeListener(UpdateView);
 	}
 }

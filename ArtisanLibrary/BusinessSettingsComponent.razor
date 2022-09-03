@@ -7,9 +7,11 @@
 @inject LookupService LookupService
 @inject UserService UserService
 @inject IMapper Mapper
+@implements IDisposable
+@inject IActionDispatcher ActionDispatcher
+@inject ArtisanStore ArtisanStore
 
 <PageTitle>Business Settings</PageTitle>
-
 
 @*<ArtisanProfileLayout></ArtisanProfileLayout>
 *@<!--begin::Basic info-->
@@ -113,25 +115,29 @@
 	bool IsLoading { get; set; }
 
 
-    protected override void OnInitialized()
-    {
-        InitializeProperties();
-    }
+	protected override void OnInitialized()
+	{
+		InitializeProperties();
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        await AuthStateService.CheckAuthStatus();
-        InitializeProperties();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var isLoggedIn = await AuthStateService.CheckAuthStatus();
+		if (!isLoggedIn) return;
+		ArtisanStore.AddStateChangeListener(UpdateView);
+		Artisan = Mapper.Map<ArtisanCommand>(ArtisanStore.GetState().Artisan);
+		InitializeProperties();
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			var artisan = await ArtisanService.GetByUserId();
-			Services = await LookupService.Get(LookupType.Service);
+			await GetArtisan();
+			var artisan = ArtisanStore.GetState().Artisan;
 			Artisan = Mapper.Map<ArtisanCommand>(artisan);
 			User = Mapper.Map<UserCommand>(artisan.User);
+			Services = await LookupService.Get(LookupType.Service);
 
 			if (Artisan?.Services is not null)
 			{
@@ -141,9 +147,8 @@
 				}
 			}
 
-
 			InitializeProperties();
-			StateHasChanged();
+			UpdateView();
 		}
 	}
 
@@ -171,7 +176,7 @@
 		IsLoading = true;
 		StateHasChanged();
 		var servs = from c in Servs
-			select new ServiceCommand()
+					select new ServiceCommand()
 			{
 				Name = c
 			};
@@ -182,9 +187,36 @@
 		StateHasChanged();
 		if (response.IsComplete)
 		{
+			await ResetArtisan();
 			ToastService.SaveSuccess();
+			await GetArtisan();
+			var artisan = ArtisanStore.GetState().Artisan;
+			Services = await LookupService.Get(LookupType.Service);
+			Artisan = Mapper.Map<ArtisanCommand>(artisan);
+			User = Mapper.Map<UserCommand>(artisan.User);
+			UpdateView(); 
 			return;
 		}
 		ToastService.SaveFailure();
+	}
+
+	private async Task GetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new GetByUserIdAction());
+	}
+
+	private async Task ResetArtisan()
+	{
+		await ActionDispatcher.Dispatch(new ResetArtisanAction());
+	}
+
+	private void UpdateView()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ArtisanStore.RemoveStateChangeListener(UpdateView);
 	}
 }

@@ -6,6 +6,7 @@ using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
 using AMP.Web.Models.PageDtos;
 using AMP.Web.Models.Services.HttpServices.Base;
+using AMP.Web.Models.ViewModels;
 using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices
@@ -20,8 +21,6 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        // NOTE:: When registering users save first in the application database and use the Id of the inserted user as a claim
-        // in the identity server
         public async Task<ArtisanDto> GetAsync(int id)
         {
             return await _http.GetRequestAsync<ArtisanDto>($"artisan/get/{id}",
@@ -32,6 +31,12 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<ArtisanDto> GetByUserId()
         {
             return await _http.GetRequestAsync<ArtisanDto>($"artisan/GetByUser",
+                new CancellationToken());
+        }
+        
+        public async Task<List<Lookup>> GetArtisansWorkedForCustomer()
+        {
+            return await _http.GetRequestAsync<List<Lookup>>($"artisan/GetArtisansWorkedForCustomer",
                 new CancellationToken());
         }
 
