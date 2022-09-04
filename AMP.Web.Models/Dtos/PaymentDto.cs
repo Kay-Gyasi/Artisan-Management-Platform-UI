@@ -2,8 +2,8 @@
 {
     public class PaymentDto
     {
-        public int Id { get; set; }
-        public int OrderId { get; set; }
+        public string Id { get; set; }
+        public string OrderId { get; set; }
         public decimal AmountPaid { get; set; }
         public bool IsVerified { get; set; }
         public bool IsForwarded { get; set; }

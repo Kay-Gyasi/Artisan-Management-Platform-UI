@@ -23,7 +23,7 @@
 	<!--begin::Content-->
 	<div id="kt_account_profile_details" class="collapse show">
 		<!--begin::Form-->
-	<EditForm Model="Order" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
+	<EditForm Model="Order" id="kt_account_profile_details_form" class="form" OnSubmit="Submit">
 	<DataAnnotationsValidator />
 	<!--begin::Card body-->
 	<div class="card-body border-top p-9">
@@ -211,7 +211,7 @@
 		Services = await LookupService.Get(LookupType.Service);
 	}
 
-	async Task Submit()
+	void Submit()
 	{
 		var parameters = new ModalParameters();
 		parameters.Add(nameof(PostOrderComponent.Order), Order);

@@ -1,4 +1,4 @@
-﻿@page "/orders/{OrderId:int}"
+﻿@page "/orders/{OrderId}"
 @inject OrderService OrderService
 @inject AuthService AuthStateService
 
@@ -118,7 +118,7 @@
 
 @code {
 	[Parameter]
-	public int OrderId { get; set; }
+	public string OrderId { get; set; }
 
 	private OrderDto? Order { get; set; } = new();
 

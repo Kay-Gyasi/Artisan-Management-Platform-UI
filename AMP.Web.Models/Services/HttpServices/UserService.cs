@@ -20,7 +20,7 @@ namespace AMP.Web.Models.Services.HttpServices
         }
 
 
-        public async Task<UserDto> GetAsync(int userId) =>
+        public async Task<UserDto> GetAsync(string userId) =>
             await _http.GetRequestAsync<UserDto>($"user/get/{userId}", new CancellationToken());
 
         public async Task<RequestResponse> Save(UserCommand command) =>
@@ -29,7 +29,7 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<RequestResponse> Post(UserCommand command) =>
             await _http.PostRequestAsync("user/post", command, new CancellationToken());
 
-        public async Task<RequestResponse> Delete(int id) =>
+        public async Task<RequestResponse> Delete(string id) =>
             await _http.DeleteRequestAsync($"user/delete/{id}", new CancellationToken());
 
         public async Task<SigninResponse?> Login(SigninCommand command) =>

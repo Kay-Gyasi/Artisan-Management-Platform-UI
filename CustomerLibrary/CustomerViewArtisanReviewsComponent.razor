@@ -1,4 +1,4 @@
-﻿@page "/customers/view-artisan/reviews/{ArtisanId:int}/{OrderId:int}/"
+﻿@page "/customers/view-artisan/reviews/{ArtisanId}/{OrderId}"
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
@@ -8,7 +8,7 @@
 
 <PageTitle>Artisan Reviews</PageTitle>
 
-<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan" OrderId="OrderId"></CustomerViewArtisanLayout>
+<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan" OrderId="@OrderId" ArtisanId="@ArtisanId"></CustomerViewArtisanLayout>
 
 <!--begin::Container-->
 
@@ -40,9 +40,9 @@
 @code {
 	CustomerViewArtisanLayout artisanLayout;
 	[Parameter]
-	public int ArtisanId { get; set; }
+	public string ArtisanId { get; set; }
 	[Parameter]
-	public int OrderId { get; set; }
+	public string OrderId { get; set; }
 	ArtisanDto Artisan { get; set; } = new();
 
 	PaginatedList<RatingPageDto> Ratings { get; set; } = new();
@@ -54,7 +54,7 @@
 		if (!isLoggedIn) return;
 		Artisan = await ArtisanService.GetAsync(ArtisanId);
 		Ratings.Data = new();
-		Query.OtherJson = ArtisanId.ToString();
+		Query.OtherJson = ArtisanId;
 		Ratings = await RatingService.GetArtisanRatingPage(Query);
 	}
 

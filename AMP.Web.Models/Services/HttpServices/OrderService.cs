@@ -43,7 +43,7 @@ namespace AMP.Web.Models.Services.HttpServices
             => await _http.GetPageRequestAsync<OrderPageDto>
                 ($"order/GetCustomerOrderPage", query, new CancellationToken());
 
-        public async Task<OrderDto> GetAsync(int id) 
+        public async Task<OrderDto> GetAsync(string id) 
             => await _http.GetRequestAsync<OrderDto>($"order/get/{id}",
                 new CancellationToken());
         public async Task<InsertOrderResponse> Insert(OrderCommand command)
@@ -56,25 +56,25 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<RequestResponse> Save(OrderCommand command) 
             => await _http.PostRequestAsync("order/save", command, new CancellationToken());
 
-        public async Task<RequestResponse> UnassignArtisan(int orderId) 
+        public async Task<RequestResponse> UnassignArtisan(string orderId) 
             => await _http.PutRequestAsync("order/unassignArtisan", orderId, new CancellationToken());
 
-        public async Task<RequestResponse> Complete(int orderId) 
+        public async Task<RequestResponse> Complete(string orderId) 
             => await _http.PutRequestAsync("order/complete", orderId, new CancellationToken());
         
-        public async Task<RequestResponse> ArtisanComplete(int orderId) 
+        public async Task<RequestResponse> ArtisanComplete(string orderId) 
             => await _http.PutRequestAsync("order/artisancomplete", orderId, new CancellationToken());
 
-        public async Task<RequestResponse> Accept(int orderId) 
+        public async Task<RequestResponse> Accept(string orderId) 
             => await _http.PutRequestAsync("order/accept", orderId, new CancellationToken());
         
-        public async Task<RequestResponse> Cancel(int orderId) 
+        public async Task<RequestResponse> Cancel(string orderId) 
             => await _http.PutRequestAsync("order/cancel", orderId, new CancellationToken());
 
-        public async Task<RequestResponse> AssignArtisan(int orderId, int artisanId) 
+        public async Task<RequestResponse> AssignArtisan(string orderId, string artisanId) 
             => await _http.PutRequestAsync($"order/assignArtisan/{artisanId}", orderId, new CancellationToken());
 
-        public async Task<RequestResponse> SoftDelete(int id)
+        public async Task<RequestResponse> SoftDelete(string id)
             => await _http.DeleteRequestAsync($"order/delete/{id}", new CancellationToken());
         
         public async Task<RequestResponse> SetCost(SetCostCommand command)

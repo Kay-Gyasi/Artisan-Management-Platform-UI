@@ -5,11 +5,11 @@ namespace AMP.Web.Models.Commands
 {
     public class DisputeCommand
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public DisputeStatus Status { get; set; }
 
         [Required]
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         [Required]
         public string Details { get; set; }

@@ -21,6 +21,7 @@ namespace AMP.Web.Models.Stores.Base
 
         protected void BroadcastStateChange()
         {
+            if (_listeners == null) return;
             _listeners.Invoke();
         }
 

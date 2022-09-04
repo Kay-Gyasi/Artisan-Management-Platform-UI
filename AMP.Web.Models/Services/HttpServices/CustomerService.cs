@@ -17,7 +17,7 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<CustomerDto> GetAsync(int id)
+        public async Task<CustomerDto> GetAsync(string id)
         {
             return await _http.GetRequestAsync<CustomerDto>
                 ($"customer/get/{id}", new CancellationToken());

@@ -24,13 +24,13 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<PaginatedList<RatingPageDto>> GetArtisanRatingPage(PaginatedQuery paginated)
             => await _http.GetPageRequestAsync<RatingPageDto>("rating/GetArtisanRatingPage", paginated, new CancellationToken());
 
-        public async Task<RatingDto> Get(int id)
+        public async Task<RatingDto> Get(string id)
             => await _http.GetRequestAsync<RatingDto>($"rating/get/{id}", new CancellationToken());
 
         public async Task<RequestResponse> Save(RatingCommand command)
             => await _http.PostRequestAsync("rating/save", command, new CancellationToken());
 
-        public async Task<RequestResponse> Delete(int id)
+        public async Task<RequestResponse> Delete(string id)
             => await _http.DeleteRequestAsync($"rating/delete/{id}", new CancellationToken());
     }
 }

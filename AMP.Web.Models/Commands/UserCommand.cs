@@ -10,13 +10,13 @@ namespace AMP.Web.Models.Commands
 {
     public class UserCommand
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required(ErrorMessage = "Field is required")]
         public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         public string FamilyName { get; set; }
-        public int? ImageId { get; set; }
+        public string? ImageId { get; set; }
         public string? OtherName { get; set; }
         public string? DisplayName { get; set; }
         public string? MomoNumber { get; set; }
@@ -42,8 +42,8 @@ namespace AMP.Web.Models.Commands
 
     public class ImageCommand
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Id { get; set; }
+        public string UserId { get; set; }
         public string PublicId { get; set; }
         public string ImageUrl { get; set; }
         public IFormFile Image { get; set; }
@@ -51,8 +51,8 @@ namespace AMP.Web.Models.Commands
 
     public class ImageDto
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Id { get; set; }
+        public string UserId { get; set; }
         public string PublicId { get; set; }
         public string ImageUrl { get; set; }
     }

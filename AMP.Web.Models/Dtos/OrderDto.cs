@@ -6,13 +6,13 @@ namespace AMP.Web.Models.Dtos
 {
     public class OrderDto
     {
-        public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int? ArtisanId { get; set; }
+        public string Id { get; set; }
+        public string CustomerId { get; set; }
+        public string? ArtisanId { get; set; }
         public bool IsArtisanComplete { get; set; }
         public bool IsRequestAccepted { get; set; }
-        public int ServiceId { get; set; }
-        public int? PaymentId { get; set; }
+        public string ServiceId { get; set; }
+        public string? PaymentId { get; set; }
         public string Description { get; set; }
         public decimal Cost { get; set; }
         public decimal PaymentMade { get; set; }

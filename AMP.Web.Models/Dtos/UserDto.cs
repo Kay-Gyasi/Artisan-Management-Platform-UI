@@ -7,7 +7,7 @@ namespace AMP.Web.Models.Dtos
 {
     public class UserDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string? UserNo { get; set; }
         public string? FirstName { get; set; }
         public string? FamilyName { get; set; }
@@ -28,13 +28,13 @@ namespace AMP.Web.Models.Dtos
 
     public class LanguagesDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
     }
     
     public class LanguagesCommand
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/customers/orders/{OrderId:int}"
+﻿@page "/customers/orders/{OrderId}"
 @inject OrderService OrderService
 @inject NavigationService Navigator
 @inject NotificationService ToastService
@@ -224,7 +224,7 @@
 	[CascadingParameter]
 	IModalService Modal { get; set; }
 	[Parameter]
-	public int OrderId { get; set; }
+	public string OrderId { get; set; }
 	bool IsLoading { get; set; }
 	bool IsArtisanAssigned { get; set; }
 
@@ -236,7 +236,7 @@
 		if (!isLoggedIn) return;
 		Order = await OrderService.GetAsync(OrderId);
 		if(Order != null) Order.Artisan ??= new ArtisanDto();
-		IsArtisanAssigned = Order?.Artisan.Id != 0;
+		IsArtisanAssigned = !string.IsNullOrEmpty(Order?.Artisan.Id);
 	}
 
 	async Task InitiatePayment()

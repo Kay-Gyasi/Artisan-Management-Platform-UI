@@ -1,4 +1,4 @@
-﻿@page "/payment/verify/{OrderId:int}"
+﻿@page "/payment/verify/{OrderId}"
 @inject IPaymentService PaymentService
 @inject NavigationService Navigator
 
@@ -7,7 +7,7 @@
 
 @code {
     [Parameter]
-    public int OrderId { get; set; }
+    public string OrderId { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "trxref")]

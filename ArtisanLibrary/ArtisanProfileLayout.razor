@@ -310,6 +310,8 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		var isLoggedIn = await AuthService.CheckAuthStatus();
+		if (!isLoggedIn) return;
 		ArtisanStore.AddStateChangeListener(UpdateView);
 		Artisan = ArtisanStore.GetState().Artisan;
 		await InitializeProperties();

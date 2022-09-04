@@ -28,7 +28,7 @@
 	async Task PostOrder()
 	{
 		Navigator.NavigateToAddOrder();
-		Order.UserId = Convert.ToInt32(await AuthStateService.GetClaim("nameid"));
+		Order.UserId = await AuthStateService.GetClaim("nameid");
 		if (Order.UserId == default || Order.ServiceId == default || string.IsNullOrEmpty(Order.WorkAddress.StreetAddress)) return;
 		DisableButtons(true);
 		var response = await OrderService.Insert(Order);

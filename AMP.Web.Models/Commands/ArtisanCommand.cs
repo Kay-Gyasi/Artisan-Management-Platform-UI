@@ -5,9 +5,9 @@ namespace AMP.Web.Models.Commands
 {
     public class ArtisanCommand
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required(ErrorMessage = "Field is required")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         public string? BusinessName { get; set; }

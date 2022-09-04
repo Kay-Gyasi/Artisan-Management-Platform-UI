@@ -5,6 +5,6 @@ namespace AMP.Web.Models.Commands
     public class CustomerCommand
     {
         [Required(ErrorMessage = "Field is required")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

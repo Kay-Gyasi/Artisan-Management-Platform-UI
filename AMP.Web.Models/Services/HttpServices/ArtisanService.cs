@@ -21,7 +21,7 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<ArtisanDto> GetAsync(int id)
+        public async Task<ArtisanDto> GetAsync(string id)
         {
             return await _http.GetRequestAsync<ArtisanDto>($"artisan/get/{id}",
                 new CancellationToken());
@@ -51,7 +51,7 @@ namespace AMP.Web.Models.Services.HttpServices
             return await _http.PostRequestAsync("artisan/save", command, new CancellationToken());
         }
 
-        public async Task<RequestResponse> Delete(int id)
+        public async Task<RequestResponse> Delete(string id)
         {
             return await _http.DeleteRequestAsync($"artisan/delete/{id}", new CancellationToken());
         }

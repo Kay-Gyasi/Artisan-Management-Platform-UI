@@ -7,16 +7,16 @@ namespace AMP.Web.Models.Commands
 {
     public class OrderCommand
     {
-        public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public string Id { get; set; }
+        public string CustomerId { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
-        public int ServiceId { get; set; }
-        public int? ArtisanId { get; set; }
-        public int? PaymentId { get; set; }
+        public string ServiceId { get; set; }
+        public string? ArtisanId { get; set; }
+        public string? PaymentId { get; set; }
 
         [Required(ErrorMessage = "Field is required")]
         public string Description { get; set; }

@@ -12,19 +12,16 @@ namespace AMP.Web.Models.Payments
         public const string VerifySuccessMessage = "success";
         public const string InvalidAmount = "Invalid Amount Sent";
         public const string DefaultEmail = "kofigyasidev@gmail.com";
-        private readonly IConfiguration _configuration;
         private readonly PaymentService _paymentService;
-        private readonly string _secretKey;
 
         private PayStackApi PayStack { get; }
 
         public PaymentsService(IConfiguration configuration, PaymentService paymentService)
         {
-            _configuration = configuration;
             _paymentService = paymentService;
-            _secretKey = _configuration["PaystackTest:SecretKey"];
+            var secretKey = configuration["PaystackTest:SecretKey"];
             //_secretKey = _configuration["PaystackLive:SecretKey"];
-            PayStack = new PayStackApi(_secretKey);
+            PayStack = new PayStackApi(secretKey);
         }
 
         public async Task<string> InitializeTransaction(PaymentCommand command, string email)
@@ -36,8 +33,8 @@ namespace AMP.Web.Models.Payments
                 Email = email,
                 Reference = Generate().ToString(),
                 Currency = "GHS",
-                CallbackUrl = $"http://artisan-management-platform.com/payment/verify/{command.OrderId}"
-                //CallbackUrl = $"https://localhost:7194/payment/verify/{command.OrderId}"
+                //CallbackUrl = $"http://artisan-management-platform.com/payment/verify/{command.OrderId}"
+                CallbackUrl = $"https://localhost:7194/payment/verify/{command.OrderId}"
             };
 
             var response = PayStack.Transactions.Initialize(request);
@@ -45,7 +42,7 @@ namespace AMP.Web.Models.Payments
 
             // Save to database
             command.Reference = response.Data.Reference;
-            var savePayment = await _paymentService.Save(command);     
+            var savePayment = await _paymentService.Save(command);
             return savePayment.IsComplete ? response.Data.AuthorizationUrl : savePayment.Message;
         }
 

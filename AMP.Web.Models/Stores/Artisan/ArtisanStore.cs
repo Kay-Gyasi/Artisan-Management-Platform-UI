@@ -49,7 +49,7 @@ namespace AMP.Web.Models.Stores.Artisan
 
         private async Task GetArtisanByUserId()
         {
-            if (_state.Artisan.Id > 0) return;
+            if (!string.IsNullOrEmpty(_state.Artisan?.Id)) return;
             var artisan = await _artisanService.GetByUserId();
             _state = new ArtisanState(artisan);
             BroadcastStateChange();

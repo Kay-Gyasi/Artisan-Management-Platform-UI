@@ -49,7 +49,7 @@ namespace AMP.Web.Models.Stores.Customer
 
         private async Task GetCustomerByUserId()
         {
-            if (_state.Customer.Id > 0) return;
+            if (!string.IsNullOrEmpty(_state.Customer?.Id)) return;
             var customer = await _customerService.GetByUserId();
             _state = new CustomerState(customer);
             BroadcastStateChange();

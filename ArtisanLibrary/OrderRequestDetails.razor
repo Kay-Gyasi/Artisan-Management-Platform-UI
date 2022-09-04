@@ -1,4 +1,4 @@
-﻿@page "/artisans/requests/{OrderId:int}"
+﻿@page "/artisans/requests/{OrderId}"
 @inject NavigationService Navigator
 @inject OrderService OrderService
 @inject AuthService AuthStateService
@@ -126,7 +126,7 @@
 
 @code {
 	[Parameter]
-	public int OrderId { get; set; }
+	public string OrderId { get; set; }
 	bool IsLoading { get; set; }
 	private OrderDto? Order { get; set; } = new();
 

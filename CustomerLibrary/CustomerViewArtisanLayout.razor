@@ -154,14 +154,14 @@
 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
 	<!--begin::Nav item-->
 	<li class="nav-item mt-2">
-		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("view-artisan")" 
-		   @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(Artisan.Id, OrderId))">Overview</a>
+		<a class="nav-link text-active-primary ms-0 me-10 py-5" 
+		@onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(Artisan.Id, OrderId))">Overview</a>
 	</li>
 	<!--end::Nav item-->
 	<!--begin::Nav item-->
 	<li class="nav-item mt-2">
-		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("reviews")"
-		   @onclick="@(() => Navigator.NavigateToCustomerViewArtisanRating(Artisan.Id, OrderId))">Reviews</a>
+		<a class="nav-link text-active-primary ms-0 me-10 py-5"
+		@onclick="@(() => Navigator.NavigateToCustomerViewArtisanRating(Artisan.Id, OrderId))">Reviews</a>
 	</li>
 	<!--end::Nav item-->
 </ul>
@@ -176,10 +176,24 @@
 
 	[Parameter]
 	public ArtisanDto Artisan { get; set; } = new();
-	
+
 	[Parameter]
-	public int OrderId { get; set; }	
+	public string ArtisanId { get; set; }
+
+	[Parameter]
+	public string OrderId { get; set; }	
 
 	private UserType UserType { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if(firstRender)
+		{
+
+			Artisan = await ArtisanService.GetAsync(ArtisanId);
+			StateHasChanged();			
+		}
+	}
+
 }
 

@@ -4,8 +4,8 @@ namespace AMP.Web.Models.Dtos
 {
     public class CustomerDto
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Id { get; set; }
+        public string UserId { get; set; }
         public UserDto User { get; set; } = new UserDto();
         public List<RatingDto> Ratings { get; set; } = new List<RatingDto>();
         public List<OrderDto> Orders { get; set; } = new List<OrderDto>();
