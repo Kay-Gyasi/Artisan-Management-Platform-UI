@@ -9,6 +9,7 @@
         Payment,
         Rating,
         Service,
-        User
+        User,
+        ArtisanServices
     }
 }

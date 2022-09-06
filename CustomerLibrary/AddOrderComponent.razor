@@ -208,7 +208,7 @@
 	{
 		var isLoggedIn = await AuthStateService.CheckAuthStatus();
 		if (!isLoggedIn) return;
-		Services = await LookupService.Get(LookupType.Service);
+		Services = await LookupService.Get(LookupType.ArtisanServices);
 	}
 
 	void Submit()

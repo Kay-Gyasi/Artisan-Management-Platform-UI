@@ -321,6 +321,8 @@
 
 	void InitializeProperties()
 	{
+		User.Contact ??= new Contact();
+		User.Address ??= new Address();
 		EmailAddress = User?.Contact?.EmailAddress ?? "";
 		ImageUrl = User?.Image?.ImageUrl ?? "";
 		UserName = User?.DisplayName;

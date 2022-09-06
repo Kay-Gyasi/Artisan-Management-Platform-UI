@@ -173,13 +173,13 @@
 						<!--begin::User details-->
 						<div class="d-flex flex-column">
 							<a href="../../demo8/dist/apps/user-management/users/view.html" class="text-gray-800 text-hover-primary mb-1">@artisan.BusinessName</a>
-							<span>@artisan.User.Contact.EmailAddress</span>
+							<span>@artisan.User?.Contact?.EmailAddress</span>
 						</div>
 						<!--begin::User details-->
 					</td>
 					<!--end::User=-->
 					<!--begin::Role=-->
-					<td>@artisan.User.Address.City, @artisan.User.Address.StreetAddress</td>
+					<td>@artisan.User?.Address?.City, @artisan.User?.Address?.StreetAddress</td>
 					<!--end::Role=-->
 					<!--begin::Last login=-->
 					<td>

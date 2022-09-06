@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Commands;
+using AMP.Web.Models.Dtos;
 using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices.Base
@@ -17,6 +18,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             CancellationToken cancellationToken);
         Task<SigninResponse?> PostLoginAsync(SigninCommand command, CancellationToken cancellationToken);
         //Task<IAuthorityClaims> GetClaimsAsync();
+        Task<InsertOrderResponse> PostOrderAsync(string path, OrderCommand command, CancellationToken cancellationToken);
     }
 }
 

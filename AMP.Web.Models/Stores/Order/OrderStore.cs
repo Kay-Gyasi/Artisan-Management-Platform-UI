@@ -50,7 +50,7 @@ namespace AMP.Web.Models.Stores.Order
 
         private async Task GetPage(PaginatedQuery query)
         {
-            if (string.IsNullOrEmpty(query.Search) && _state.Orders.Data.Count != 0) return;
+            if (string.IsNullOrEmpty(query.Search) && _state.Orders?.Data?.Count != 0) return;
             var orders = await _orderService.GetCustomerOrderPage(query);
             _state = new OrderState(orders);
             BroadcastStateChange();

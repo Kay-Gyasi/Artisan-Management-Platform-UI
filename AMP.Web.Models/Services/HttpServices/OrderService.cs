@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
 using AMP.Web.Models.PageDtos;
@@ -48,9 +50,7 @@ namespace AMP.Web.Models.Services.HttpServices
                 new CancellationToken());
         public async Task<InsertOrderResponse> Insert(OrderCommand command)
         {
-            var serializedCommand = JsonConvert.SerializeObject(command);
-            return await _http.GetRequestAsync<InsertOrderResponse>($"order/insert/{serializedCommand}",
-                new CancellationToken());
+            return await _http.PostOrderAsync("order/insert", command, new CancellationToken());
         }
 
         public async Task<RequestResponse> Save(OrderCommand command) 

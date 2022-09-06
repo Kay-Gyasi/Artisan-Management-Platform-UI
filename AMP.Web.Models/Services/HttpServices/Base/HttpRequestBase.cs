@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Commands;
+using AMP.Web.Models.Dtos;
 using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -46,6 +47,30 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                     return await request.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
                 throw new HttpRequestFailedException($"{nameof(GetRequestAsync)} for {nameof(T)} failed!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+        }
+        
+        public async Task<InsertOrderResponse> PostOrderAsync(string path, OrderCommand command, CancellationToken cancellationToken)
+        {
+            try
+            {
+                using var client = await CreateClient();
+                var request = await client.PostAsJsonAsync(path, command, cancellationToken);
+                if (request.ReasonPhrase == "Unauthorized")
+                {
+                    _navigationService.NavigateToLogin();
+                    await _auth.SetTokenAsync(null);
+                    return default;
+                }
+                if (request.IsSuccessStatusCode)
+                    return await request.Content.ReadFromJsonAsync<InsertOrderResponse>(cancellationToken: cancellationToken);
+
+                throw new HttpRequestFailedException($"{nameof(GetRequestAsync)} for {nameof(InsertOrderResponse)} failed!");
             }
             catch (Exception e)
             {

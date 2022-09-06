@@ -300,7 +300,7 @@
 		var response = await OrderService.SoftDelete(OrderId);
 		if (response.IsComplete)
 		{
-			Navigator.NavigateToCustomerOrderList();
+			Navigator.NavigateToCustomerOrderListForceLoad();
 			return;
 		}
 		ToastService.DeleteFailed();

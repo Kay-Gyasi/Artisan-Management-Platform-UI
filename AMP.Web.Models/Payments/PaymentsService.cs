@@ -33,8 +33,8 @@ namespace AMP.Web.Models.Payments
                 Email = email,
                 Reference = Generate().ToString(),
                 Currency = "GHS",
-                //CallbackUrl = $"http://artisan-management-platform.com/payment/verify/{command.OrderId}"
-                CallbackUrl = $"https://localhost:7194/payment/verify/{command.OrderId}"
+                CallbackUrl = $"http://artisan-management-platform.com/payment/verify/{command.OrderId}"
+                //CallbackUrl = $"https://localhost:7194/payment/verify/{command.OrderId}"
             };
 
             var response = PayStack.Transactions.Initialize(request);
