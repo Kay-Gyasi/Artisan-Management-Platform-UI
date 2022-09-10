@@ -60,6 +60,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToAddOrder() => _navManager.NavigateTo("customers/add-order");
         public void NavigateToDashboard() => _navManager.NavigateTo("dashboard");
         public void NavigateToLogin() => _navManager.NavigateTo("login");
+        public void NavigateToLoginForceLoad() => _navManager.NavigateTo("login", true);
         public void NavigateToSignup() => _navManager.NavigateTo("signup");
         public void NavigateToPayments() => _navManager.NavigateTo("payments");
         public void NavigateToPaymentAuthorizationUrl(string authUrl) => _navManager.NavigateTo(authUrl, true);

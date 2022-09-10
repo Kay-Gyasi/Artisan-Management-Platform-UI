@@ -72,7 +72,11 @@
 						if (!order.IsRequestAccepted)
 						{
 							<span class="badge badge-info ms-1">Pending acceptance</span>
-						}	
+						}
+						else
+						{
+							<span class="badge badge-success ms-1">Accepted</span>
+						}
 					}
 					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.Town, @order.WorkAddress?.StreetAddress</div>
 					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>

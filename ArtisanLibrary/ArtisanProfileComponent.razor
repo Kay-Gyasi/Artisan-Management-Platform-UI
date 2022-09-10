@@ -137,20 +137,11 @@
 
 		var isLoggedIn = await AuthStateService.CheckAuthStatus();
 		if (!isLoggedIn) return;
-		ArtisanStore.AddStateChangeListener(UpdateView);
+		await GetArtisan();
 		Artisan = ArtisanStore.GetState().Artisan;
 		InitializeProperties();
-	}
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-		{
-			await GetArtisan();
-			Artisan = ArtisanStore.GetState().Artisan;
-			InitializeProperties();
-			UpdateView();
-		}
+		ArtisanStore.AddStateChangeListener(UpdateView);
+		//Artisan = ArtisanStore.GetState().Artisan;
 	}
 
 	void InitializeProperties()

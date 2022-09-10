@@ -13,6 +13,8 @@ namespace AMP.Web.Models.Services.Toast
 
         public void SaveSuccess() 
             => _toastService.ShowSuccess("Save completed");
+        public void ShowSignupComplete() 
+            => _toastService.ShowSuccess("Signup completed. Please log in");
 
         public void SaveFailure() 
             => _toastService.ShowError("Save failed");
@@ -46,6 +48,8 @@ namespace AMP.Web.Models.Services.Toast
 
         public void PhoneExists() =>
             _toastService.ShowInfo("User with given Phone number exists. Please log in");
+        public void ShowInvalidPhone() =>
+            _toastService.ShowError("Please enter a valid phone number");
 
         public void ShowInvalidAmountSent() =>
             _toastService.ShowWarning("Invalid amount sent");

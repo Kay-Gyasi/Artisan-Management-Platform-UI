@@ -21,7 +21,7 @@ namespace AMP.Web.Models.Services
             var authState = await _provider.GetAuthenticationStateAsync();
             if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform"))
             {
-                _navigation.NavigateToLogin();
+                _navigation.NavigateToLoginForceLoad();
                 return false;
             }
             return true;

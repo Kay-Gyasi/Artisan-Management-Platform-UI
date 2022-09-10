@@ -19,6 +19,7 @@ namespace AMP.Web.Models.Services.Extensions
                     x => x.MapFrom(a => a.WorkAddress));
             CreateMap<CustomerPageDto, CustomerDto>().ReverseMap();
             CreateMap<CustomerCommand, CustomerDto>().ReverseMap();
+            CreateMap<ImageCommand, ImageDto>().ReverseMap();
             CreateMap<ServicePageDto, ServiceDto>().ReverseMap();
             CreateMap<ServiceCommand, ServiceDto>().ReverseMap();
             CreateMap<RatingCommand, RatingDto>().ReverseMap();

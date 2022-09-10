@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Authentication;
@@ -12,6 +13,7 @@ using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using RestSharp;
 
 namespace AMP.Web.Models.Services.HttpServices.Base
 {
@@ -201,6 +203,24 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 Console.WriteLine(e.Message);
                 throw;
             }
+        }
+
+        public async Task UploadImageAsync(string filePath, CancellationToken cancellationToken)
+        {
+            var client = new RestClient("https://localhost:7149/api/v1/image/upload");
+            //client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Authorization", $"Bearer {await _auth.GetTokenAsync()}");
+            var builder = new StringBuilder();
+            if (!filePath.StartsWith("/"))
+            {
+                builder.Append("/");
+            }
+            builder.Append(filePath.Replace("\\", "/"));
+            filePath = builder.ToString();
+            request.AddFile("file", filePath);
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
         }
 
         //public async Task<IAuthorityClaims> GetClaimsAsync()
