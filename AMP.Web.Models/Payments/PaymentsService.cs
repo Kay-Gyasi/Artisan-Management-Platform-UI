@@ -1,23 +1,27 @@
 ﻿using AMP.Web.Models.Commands;
 using AMP.Web.Models.Services.HttpServices;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PayStack.Net;
 using System;
 using System.Threading.Tasks;
 
 namespace AMP.Web.Models.Payments
 {
+    // TODO:: If error occurs in production check if from ILogger injection
     public class PaymentsService : IPaymentService
     {
         public const string VerifySuccessMessage = "success";
         public const string InvalidAmount = "Invalid Amount Sent";
         public const string DefaultEmail = "kofigyasidev@gmail.com";
+        private readonly ILogger<PaymentsService> _logger;
         private readonly PaymentService _paymentService;
 
         private PayStackApi PayStack { get; }
 
-        public PaymentsService(IConfiguration configuration, PaymentService paymentService)
+        public PaymentsService(IConfiguration configuration, ILogger<PaymentsService> logger, PaymentService paymentService)
         {
+            _logger = logger;
             _paymentService = paymentService;
             var secretKey = configuration["PaystackTest:SecretKey"];
             //_secretKey = _configuration["PaystackLive:SecretKey"];
@@ -38,7 +42,11 @@ namespace AMP.Web.Models.Payments
             };
 
             var response = PayStack.Transactions.Initialize(request);
-            if (!response.Status) return response.Message;
+            if (!response.Status)
+            {
+                _logger.LogError(response.Message);
+                return response.Message;
+            }
 
             // Save to database
             command.Reference = response.Data.Reference;
@@ -49,7 +57,11 @@ namespace AMP.Web.Models.Payments
         public async Task<string> VerifyTransaction(VerifyPaymentCommand command)
         {
             var response = PayStack.Transactions.Verify(command.Reference);
-            if (response.Data.Status != "success") return response.Data.GatewayResponse;
+            if (response.Data.Status != "success")
+            {
+                _logger.LogError(response.Data.GatewayResponse);
+                return response.Data.GatewayResponse;
+            }
             var request = await _paymentService.Verify(command);
             return request.IsComplete ? "success" : request.Message;
         }

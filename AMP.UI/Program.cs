@@ -1,4 +1,12 @@
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
+WebApplication app;
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Configuration.AddUserSecrets<Program>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -9,14 +17,19 @@ builder.Services.AddServerSideBlazor()
     });
 builder.Services.AddServices(builder.Configuration);
 
-WebApplication app;
 try
 {
+    logger.Information("Amp UI starting up...");
+    builder.Host.UseSerilog(logger);
+    builder.Logging.ClearProviders();
+    builder.Logging.AddSerilog(logger);
+
     app = builder.Build();
+    logger.Information("Amp UI started");
 }
 catch (Exception e)
 {
-    Console.WriteLine(e);
+    logger.Fatal(e.Message);
     throw;
 }
 

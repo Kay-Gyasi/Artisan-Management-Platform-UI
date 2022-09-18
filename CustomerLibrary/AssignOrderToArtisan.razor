@@ -172,7 +172,8 @@
 						<!--end::Avatar-->
 						<!--begin::User details-->
 						<div class="d-flex flex-column">
-							<a href="../../demo8/dist/apps/user-management/users/view.html" class="text-gray-800 text-hover-primary mb-1">@artisan.BusinessName</a>
+							<a @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(@artisan.Id, @OrderId))"
+								class="text-gray-800 text-hover-primary mb-1">@artisan.BusinessName</a>
 							<span>@artisan.User?.Contact?.EmailAddress</span>
 						</div>
 						<!--begin::User details-->
