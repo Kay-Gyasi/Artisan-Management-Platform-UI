@@ -24,7 +24,7 @@ namespace AMP.Web.Models.Services.HttpServices
             => await _http.PutRequestAsync("payment/verify", command, new CancellationToken());
 
         public async Task<PaginatedList<PaymentPageDto>> GetPage(PaginatedQuery paginated)
-            => await _http.GetPageRequestAsync<PaymentPageDto>("payment/getpage", paginated, new CancellationToken());
+            => await _http.GetPageRequestAsync<PaymentPageDto>("payment/getPage", paginated, new CancellationToken());
     }
 }
 

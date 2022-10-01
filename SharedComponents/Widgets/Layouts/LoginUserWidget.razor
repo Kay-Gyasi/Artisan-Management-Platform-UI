@@ -274,6 +274,7 @@
         Role = await AuthService.GetClaim("role");
         Email = await AuthService.GetClaim("email");
         ImageUrl = await AuthService.GetClaim("ImageUrl");
+        if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
     }
 }
 

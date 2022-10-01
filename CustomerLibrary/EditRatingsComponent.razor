@@ -99,8 +99,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
 		Rating = Mapper.Map<RatingCommand>(await RatingService.Get(RatingId));
 	}

@@ -28,10 +28,7 @@ namespace AMP.Web.Models.Stores.Order
             actionDispatcher.Subscribe(HandleActions);
         }
 
-        public OrderState GetState()
-        {
-            return _state;
-        }
+        public OrderState GetState() => _state;
 
         private async Task HandleActions(IOrderAction action)
         {
@@ -56,10 +53,7 @@ namespace AMP.Web.Models.Stores.Order
             BroadcastStateChange();
         }
 
-        private void Reset()
-        {
-            _state = new OrderState(new PaginatedList<OrderPageDto>());
-        }
+        private void Reset() => _state = new OrderState(new PaginatedList<OrderPageDto>());
     }
 
 }

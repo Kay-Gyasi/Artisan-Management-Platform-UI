@@ -1,14 +1,11 @@
 ﻿@page "/payments"
-@inject NavigationService Navigator
 @inject AuthService AuthStateService
 @inject PaymentService PaymentService
-@inject IMapper Mapper
 
 <PageTitle>Orders</PageTitle>
 
 <!--begin::Form-->
-<EditForm Model="SearchObj" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
+<EditForm Model="SearchObj" OnSubmit="Submit">
 	<!--begin::Card-->
 	<div class="card mb-7">
 		<!--begin::Card body-->
@@ -50,14 +47,21 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
-					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">Transaction Reference: @payment.TransactionReference</a>
+					<a href="/payments" class="card-title fw-bolder text-muted text-hover-primary fs-4">Transaction Reference: @payment.TransactionReference</a>
 @*					<div class="fw-bolder text-primary my-6">Transaction Reference: @payment.TransactionReference</div>
-*@					<p class="text-dark-75 fw-bold fs-5 m-0">Order Id: @payment.Id</p>
+*@					
+					@if (IsForwardedToArtisan(payment))
+					{
+						<span class="badge badge-success ms-1">Forwarded</span>
+					}
+					else
+					{
+						<span class="badge badge-danger ms-1">Withheld</span>
+					}
 					<p class="text-dark-75 fw-bold fs-5 m-0">Amount: @payment.AmountPaid</p>
-					<p class="text-dark-75 fw-bold fs-5 m-0">@IsForwardedToArtisan(payment)</p>
 				</div>
 				<!--end::Body-->
 			</div>
@@ -77,8 +81,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Payments.Data = new();
 		Payments = await PaymentService.GetPage(Query);
 	}
@@ -97,6 +100,5 @@
 		StateHasChanged();
 	}
 
-	string IsForwardedToArtisan(PaymentPageDto dto) 
-		=> dto.IsForwarded ? "Has been forwarded to artisan" : "Yet to be forwarded to artisan";
+	static bool IsForwardedToArtisan(PaymentPageDto dto) => dto.IsForwarded;
 }

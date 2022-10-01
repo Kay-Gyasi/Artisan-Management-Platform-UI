@@ -16,15 +16,10 @@ namespace AMP.Web.Models.Services
             _navigation = navigation;
         }
 
-        public async Task<bool> CheckAuthStatus()
+        public async Task CheckAuthStatus()
         {
             var authState = await _provider.GetAuthenticationStateAsync();
-            if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform"))
-            {
-                _navigation.NavigateToLoginForceLoad();
-                return false;
-            }
-            return true;
+            if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform")) _navigation.NavigateToLoginForceLoad();
         }
 
         public async Task<string?> GetClaim(string claim)

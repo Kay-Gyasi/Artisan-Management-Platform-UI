@@ -1,6 +1,7 @@
 ﻿@using AMP.Web.Models.Authentication
 @using SharedComponents.Modals
 @inject NavigationService Navigator
+@inject AuthService AuthService
 
 
 <div class="aside-menu flex-column-fluid">
@@ -14,7 +15,7 @@
 	</div>
 </div>
 <div class="menu-item">
-	<a class="menu-link active" @onclick="@(() => Navigator.NavigateToDashboard())">
+	<a class="menu-link @(Navigator.IsActive("dashboard"))" @onclick="(async () => await Actor(Navigator.NavigateToDashboard))">
 		<span class="menu-icon">
 			<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
 			<span class="svg-icon svg-icon-2">
@@ -56,7 +57,7 @@
 		<div class="menu-sub menu-sub-accordion">
 
 			<div class="menu-item">
-				<a class="menu-link" @onclick="@(() => Navigator.NavigateToViewArtisans())">
+				<a class="menu-link" @onclick="(async () => await Actor(Navigator.NavigateToViewArtisans))">
 					<span class="menu-bullet">
 						<span class="bullet bullet-dot"></span>
 					</span>
@@ -65,7 +66,7 @@
 			</div>
 
 			<div class="menu-item">
-				<a class="menu-link" @onclick="@(() => Navigator.NavigateToViewCustomers())">
+				<a class="menu-link" @onclick="(async () => await Actor(Navigator.NavigateToViewCustomers))">
 					<span class="menu-bullet">
 						<span class="bullet bullet-dot"></span>
 					</span>
@@ -74,7 +75,7 @@
 			</div>
 
 			<div class="menu-item">
-				<a class="menu-link" @onclick="@(() => Navigator.NavigateToApprovalWaitlist())">
+				<a class="menu-link" @onclick="(async () => await Actor(Navigator.NavigateToApprovalWaitlist))">
 					<span class="menu-bullet">
 						<span class="bullet bullet-dot"></span>
 					</span>
@@ -82,7 +83,7 @@
 				</a>
 			</div>
 			<div class="menu-item">
-				<a class="menu-link" @onclick="@(() => Navigator.NavigateToSearchUser())">
+				<a class="menu-link" @onclick="(async () => await Actor(Navigator.NavigateToSearchUser))">
 					<span class="menu-bullet">
 						<span class="bullet bullet-dot"></span>
 					</span>
@@ -151,7 +152,7 @@
 	<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToArtisanProfileOverview())">
+			<a class="menu-link @Navigator.IsActive("account/artisan/overview")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanProfileOverview))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -169,7 +170,7 @@
 			</div>*@
 			
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToArtisanSchedule())">
+			<a class="menu-link @Navigator.IsActive("artisan/schedule")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanSchedule))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -178,7 +179,7 @@
 		</div>
 			
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToOrderRequests())">
+			<a class="menu-link @Navigator.IsActive("artisans/requests")" @onclick="(async () => await Actor(Navigator.NavigateToOrderRequests))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -187,11 +188,20 @@
 		</div>
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToArtisanHistory())">
+			<a class="menu-link @Navigator.IsActive("artisan/work-history")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanHistory))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
 				<span class="menu-title">Work history</span>
+			</a>
+		</div>
+		
+		<div class="menu-item">
+			<a class="menu-link @Navigator.IsActive("artisan/payments")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanPayments))">
+				<span class="menu-bullet">
+					<span class="bullet bullet-dot"></span>
+				</span>
+				<span class="menu-title">Payments</span>
 			</a>
 		</div>
 	</div>
@@ -209,7 +219,7 @@
 	<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToCustomerProfileOverview())">
+			<a class="menu-link @Navigator.IsActive("account/customer/overview")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerProfileOverview))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -218,7 +228,7 @@
 		</div>
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="@(() => Navigator.NavigateToCustomerOrderList())">
+			<a class="menu-link @Navigator.IsActive("customers/orders")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerOrderList))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -236,7 +246,7 @@
 		</div>*@
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="Navigator.NavigateToCustomerDisputes">
+			<a class="menu-link @Navigator.IsActive("customer/disputes")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerDisputes))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -245,7 +255,7 @@
 		</div>
 
 		<div class="menu-item">
-			<a class="menu-link" @onclick="Navigator.NavigateToPayments">
+			<a class="menu-link @Navigator.IsActive("payments")" @onclick="(async () => await Actor(Navigator.NavigateToPayments))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -254,7 +264,7 @@
 		</div>
 		
 		<div class="menu-item">
-			<a class="menu-link" @onclick="Navigator.NavigateToCustomerOrderHistory">
+			<a class="menu-link @Navigator.IsActive("customers/orders/history")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerOrderHistory))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -263,7 +273,7 @@
 		</div>
 		
 		<div class="menu-item">
-			<a class="menu-link" @onclick="Navigator.NavigateToReviews">
+			<a class="menu-link @Navigator.IsActive("customer/reviews")" @onclick="(async () => await Actor(Navigator.NavigateToReviews))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
 				</span>
@@ -296,6 +306,18 @@
 </div>
 
 @code{
+
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthService.CheckAuthStatus();
+	}
+
+	async Task Actor(Action navigate)
+	{
+		navigate.Invoke();
+		await Task.Delay(TimeSpan.FromSeconds(0.5));
+		StateHasChanged();
+	}
 
 	[CascadingParameter] public IModalService Modal { get; set; }
 

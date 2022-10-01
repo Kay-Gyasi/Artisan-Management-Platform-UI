@@ -1,9 +1,5 @@
 ﻿@page "/customers/add-order"
-@using AMP.Web.Models.ViewModels
-@using CustomerLibrary.Modals
 @inject LookupService LookupService
-@inject OrderService OrderService
-@inject NotificationService ToastService
 @inject AuthService AuthStateService
 
 <PageTitle>Add Order</PageTitle>
@@ -186,9 +182,8 @@
 	<!--end::Card body-->
 	<!--begin::Actions-->
 	<div class="card-footer d-flex justify-content-end py-6 px-9">
-		<button type="reset" class="btn btn-light btn-active-light-primary me-2" disabled="@IsLoading">Discard</button>
-		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
-				disabled="@IsLoading">Post</button>
+		<button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Post</button>
 	</div>
 	<!--end::Actions-->
 	</EditForm>
@@ -202,12 +197,10 @@
 	[CascadingParameter] IModalService Modal { get; set; }
 	OrderCommand Order { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
-	bool IsLoading { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Services = await LookupService.Get(LookupType.ArtisanServices);
 	}
 

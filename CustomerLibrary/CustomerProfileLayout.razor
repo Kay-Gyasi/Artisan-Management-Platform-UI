@@ -158,16 +158,23 @@
 	<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
 		<!--begin::Nav item-->
 		<li class="nav-item mt-2">
-			<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("overview")" 
+			<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("account/customer/overview")" 
 			   @onclick="@(() => Navigator.NavigateToCustomerProfileOverview())">Overview</a>
 		</li>
 		<!--end::Nav item-->
 		<!--begin::Nav item-->
 		<li class="nav-item mt-2">
-			<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("settings")"
+			<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("account/customer/settings")"
 			   @onclick="@(() => Navigator.NavigateToCustomerProfileSettings())">Settings</a>
 		</li>
 		<!--end::Nav item-->
+		
+		<!--begin::Nav item-->
+        	<li class="nav-item mt-2">
+        		<a class="nav-link text-active-primary ms-0 me-10 py-5 @Navigator.IsActive("customer/image")" 
+        		   @onclick="@(() => Navigator.NavigateToCustomerImage())">Image</a>
+        	</li>
+        	<!--end::Nav item-->
 	</ul>
 	<!--begin::Navs-->
 	</div>
@@ -206,6 +213,7 @@
 	void InitializeProperties()
 	{
 		ImageUrl = Customer?.User.Image?.ImageUrl ?? "";
+		if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
 		UserType = Customer?.User.Type ?? UserType.Customer;
 		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
 		PhoneNumber = Customer?.User.Contact?.PrimaryContact ?? "";

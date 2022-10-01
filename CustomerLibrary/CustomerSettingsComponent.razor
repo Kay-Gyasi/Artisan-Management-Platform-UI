@@ -1,7 +1,6 @@
 ﻿@page "/account/customer/settings"
 @layout CustomerProfileLayout
 @inject AuthService AuthStateService
-@inject CustomerService CustomerService
 @inject NotificationService ToastService
 @inject UserService UserService
 @inject IMapper Mapper
@@ -289,8 +288,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		CustomerStore.AddStateChangeListener(UpdateView);
 		Customer = Mapper.Map<CustomerCommand>(CustomerStore.GetState().Customer);
 		InitializeProperties();

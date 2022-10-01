@@ -2,6 +2,7 @@
 using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Services;
 using AMP.Web.Models.Services.Toast;
+using AMP.Web.Models.Services.Workers;
 using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
@@ -24,9 +25,10 @@ public static class RegisterServices
             .AddStorage()
             .AddStores()
             .AddAuthentication()
+            .AddWorkers()
             .AddHttpClient("AmpDevApi", options =>
             {
-                //options.BaseAddress = new Uri("https://localhost:7149/api/v1/");
+                //options.BaseAddress = new Uri(configuration["DevApiUrl"]);
                 options.BaseAddress = new Uri(configuration["ProdApiUrl"]);
             });
         return services;
@@ -67,6 +69,16 @@ public static class RegisterServices
         services.AddScoped<AuthenticationStateProvider>(provider 
             => provider.GetRequiredService<TokenServerAuthenticationStateProvider>());
         services.AddScoped<AuthService>();
+        return services;
+    }
+
+    private static IServiceCollection AddWorkers(this IServiceCollection services)
+    {
+        services.AddHostedService<FileToServerUpload>();
+        services.Configure<HostOptions>(options =>
+        {
+            options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost;
+        });
         return services;
     }
 }

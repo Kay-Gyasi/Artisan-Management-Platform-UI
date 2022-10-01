@@ -1,8 +1,6 @@
 ﻿@page "/customers/orders"
 @inject NavigationService Navigator
 @inject AuthService AuthStateService
-@inject OrderService OrderService
-@inject IMapper Mapper
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject OrderStore OrderStore
@@ -10,8 +8,7 @@
 <PageTitle>Orders</PageTitle>
 
 <!--begin::Form-->
-<EditForm Model="SearchObj" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
+<EditForm Model="SearchObj" OnSubmit="Submit">
 	<!--begin::Card-->
 	<div class="card mb-7">
 		<!--begin::Card body-->
@@ -33,7 +30,7 @@
 				<!--end::Input group-->
 				<!--begin:Action-->
 				<div class="d-flex align-items-center">
-					<button type="submit" class="btn btn-primary me-5"
+					<button type="submit" class="btn btn-primary me-4"
 							disabled="@IsLoading">Search</button>
 				</div>
 				<!--end:Action-->
@@ -59,7 +56,7 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToViewOrderDetail(order.Id)">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
 					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
@@ -69,13 +66,14 @@
 					}
 					else
 					{
+						// TODO:: Show tag for when order has been completed
 						if (!order.IsRequestAccepted)
 						{
 							<span class="badge badge-info ms-1">Pending acceptance</span>
 						}
 						else
 						{
-							<span class="badge badge-success ms-1">Accepted</span>
+							<span class="badge badge-secondary ms-1">Accepted</span>
 						}
 					}
 					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.Town, @order.WorkAddress?.StreetAddress</div>
@@ -98,18 +96,18 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Orders.Data = new();
 		OrderStore.AddStateChangeListener(UpdateView);
 		await GetOrders();
 		Orders = OrderStore.GetState().Orders;
 	}
 
-	void Submit()
+	async Task Submit()
 	{
 		DisableButton(true);
 		Query.ThenSearch(SearchObj.SearchTerm);
+		await GetOrders();
 		Orders = OrderStore.GetState().Orders;
 		DisableButton(false);
 	}
@@ -120,22 +118,13 @@
 		StateHasChanged();
 	}
 
-	bool IsArtisanAssigned(OrderPageDto order) => order.ArtisanId != null ? true : false;
+	static bool IsArtisanAssigned(OrderPageDto order) => order.ArtisanId != null;
 
-	private async Task GetOrders()
-	{
-		await ActionDispatcher.Dispatch(new GetOrderPageAction(Query));
-	}
+	private async Task GetOrders() => await ActionDispatcher.Dispatch(new GetOrderPageAction(Query));
 
-	private void UpdateView()
-	{
-		StateHasChanged();
-	}
+	private void UpdateView() => StateHasChanged();
 
-	public void Dispose()
-	{
-		OrderStore.RemoveStateChangeListener(UpdateView);
-	}
+	public void Dispose() => OrderStore.RemoveStateChangeListener(UpdateView);
 }
 
 

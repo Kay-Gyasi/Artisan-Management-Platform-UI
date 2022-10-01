@@ -13,6 +13,7 @@ using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using RestSharp;
 
 namespace AMP.Web.Models.Services.HttpServices.Base
@@ -23,14 +24,17 @@ namespace AMP.Web.Models.Services.HttpServices.Base
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TokenServerAuthenticationStateProvider _auth;
         private readonly NavigationService _navigationService;
+        private readonly ILogger<HttpRequestBase> _logger;
 
         public HttpRequestBase(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor,
-            TokenServerAuthenticationStateProvider auth, NavigationService navigationService)
+            TokenServerAuthenticationStateProvider auth, NavigationService navigationService,
+            ILogger<HttpRequestBase> logger)
         {
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
             _auth = auth;
             _navigationService = navigationService;
+            _logger = logger;
         }
 
         public async Task<T> GetRequestAsync<T>(string path, CancellationToken cancellationToken)
@@ -41,7 +45,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.GetAsync(path, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -52,7 +56,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(GetRequestAsync) + "failed!");
                 throw;
             }
         }
@@ -65,7 +69,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.PostAsJsonAsync(path, command, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -76,7 +80,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(PostOrderAsync) + "failed!");
                 throw;
             }
         }
@@ -89,7 +93,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.DeleteAsync(path, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -102,7 +106,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(DeleteRequestAsync) + "failed!");;
                 throw;
             }
         }
@@ -115,7 +119,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.PutAsJsonAsync(path, payload, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -128,7 +132,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(PutRequestAsync) + "failed!");
                 throw;
             }
         }
@@ -142,12 +146,12 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 if (request.StatusCode == HttpStatusCode.NoContent)
                     return null;
                 if (request.IsSuccessStatusCode)
-                    return await request.Content.ReadFromJsonAsync<SigninResponse>();
+                    return await request.Content.ReadFromJsonAsync<SigninResponse>(cancellationToken: cancellationToken);
                 return null;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(nameof(PostLoginAsync) + "failed!");
                 throw;
             }
         }
@@ -160,7 +164,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.PostAsJsonAsync(path, payload, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -176,7 +180,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(PostRequestAsync) + "failed!");
                 throw;
             }
         }
@@ -189,7 +193,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                 var request = await client.PostAsJsonAsync(path, payload, cancellationToken);
                 if (request.ReasonPhrase == "Unauthorized")
                 {
-                    _navigationService.NavigateToLogin();
+                    _navigationService.NavigateToLoginForceLoad();
                     await _auth.SetTokenAsync(null);
                     return default;
                 }
@@ -200,36 +204,43 @@ namespace AMP.Web.Models.Services.HttpServices.Base
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _logger.LogError(nameof(GetPageRequestAsync) + "failed!");
                 throw;
             }
         }
 
-        public async Task UploadImageAsync(string filePath, CancellationToken cancellationToken)
+        public async Task<bool> UploadImageAsync(string filePath, string token,  CancellationToken cancellationToken)
         {
-            var client = new RestClient("https://localhost:7149/api/v1/image/upload");
-            //client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Authorization", $"Bearer {await _auth.GetTokenAsync()}");
-            var builder = new StringBuilder();
-            if (!filePath.StartsWith("/"))
+            try
             {
-                builder.Append("/");
-            }
-            builder.Append(filePath.Replace("\\", "/"));
-            filePath = builder.ToString();
-            request.AddFile("file", filePath);
-            IRestResponse response = client.Execute(request);
-            Console.WriteLine(response.Content);
-        }
+                var client = new RestClient("http://kofigyasi-001-site2.btempurl.com/api/v1/image/upload")
+                {
+                    Timeout = -1
+                };
+                filePath = filePath.Replace(@"\", "/");
+                _logger.LogInformation($"FilePath: {filePath}");
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Authorization", $"Bearer {token}");
+                request.AddFile("file", filePath);
+                
+                _logger.LogInformation("Beginning upload to API...");
+                var response = await client.ExecuteAsync(request, cancellationToken);
 
-        //public async Task<IAuthorityClaims> GetClaimsAsync()
-        //{
-        //    return new IAuthorityClaims
-        //    {
-        //        Token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token")
-        //    };
-        //}
+                if (!response.IsSuccessful)
+                {
+                    _logger.LogError($"Error: {response.ErrorMessage ?? ""}");
+                    return response.IsSuccessful;
+                }
+                
+                _logger.LogInformation("Upload completed successfully!");
+                return response.IsSuccessful;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(nameof(UploadImageAsync) + "failed!");
+                throw;
+            }
+        }
 
         private async Task<HttpClient> CreateClient()
         {

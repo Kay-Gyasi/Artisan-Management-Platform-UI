@@ -13,7 +13,7 @@ namespace AMP.Web.Models.Payments
     {
         public const string VerifySuccessMessage = "success";
         public const string InvalidAmount = "Invalid Amount Sent";
-        public const string DefaultEmail = "kofigyasidev@gmail.com";
+        private readonly IConfiguration _configuration;
         private readonly ILogger<PaymentsService> _logger;
         private readonly PaymentService _paymentService;
 
@@ -21,10 +21,11 @@ namespace AMP.Web.Models.Payments
 
         public PaymentsService(IConfiguration configuration, ILogger<PaymentsService> logger, PaymentService paymentService)
         {
+            _configuration = configuration;
             _logger = logger;
             _paymentService = paymentService;
             var secretKey = configuration["PaystackTest:SecretKey"];
-            //_secretKey = _configuration["PaystackLive:SecretKey"];
+            //var secretKey = configuration["PaystackLive:SecretKey"];
             PayStack = new PayStackApi(secretKey);
         }
 
@@ -37,8 +38,8 @@ namespace AMP.Web.Models.Payments
                 Email = email,
                 Reference = Generate().ToString(),
                 Currency = "GHS",
-                CallbackUrl = $"http://artisan-management-platform.com/payment/verify/{command.OrderId}"
-                //CallbackUrl = $"https://localhost:7194/payment/verify/{command.OrderId}"
+                //CallbackUrl = $"{_configuration["LiveCallbackUrl"]}/{command.OrderId}"
+                CallbackUrl = $"{_configuration["DevCallbackUrl"]}/{command.OrderId}"
             };
 
             var response = PayStack.Transactions.Initialize(request);

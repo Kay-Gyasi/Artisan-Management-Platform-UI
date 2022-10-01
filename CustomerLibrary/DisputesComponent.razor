@@ -89,8 +89,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -19,7 +19,7 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToEditReview(review.Id)">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
 					<a @onclick="() => Navigator.NavigateToEditReview(review.Id)"
@@ -42,8 +42,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Ratings.Data = new();
 		Ratings = await RatingService.GetPage(Query);
 	}

@@ -7,6 +7,7 @@ namespace AMP.Web.Models.Commands
 {
     public class OrderCommand
     {
+        public string ReferenceNo { get; set; }
         public string Id { get; set; }
         public string CustomerId { get; set; }
 

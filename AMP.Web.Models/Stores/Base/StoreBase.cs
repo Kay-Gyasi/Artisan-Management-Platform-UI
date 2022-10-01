@@ -9,21 +9,11 @@ namespace AMP.Web.Models.Stores.Base
 
         private Action _listeners;
 
-        public void AddStateChangeListener(Action listener)
-        {
-            _listeners += listener;
-        }
+        public void AddStateChangeListener(Action listener) => _listeners += listener;
 
-        public void RemoveStateChangeListener(Action listener)
-        {
-            _listeners -= listener;
-        }
+        public void RemoveStateChangeListener(Action listener) => _listeners -= listener;
 
-        protected void BroadcastStateChange()
-        {
-            if (_listeners == null) return;
-            _listeners.Invoke();
-        }
+        protected void BroadcastStateChange() => _listeners?.Invoke();
 
         #endregion
     }

@@ -1,9 +1,6 @@
 ﻿@page "/account/artisan/reviews"
-@inject NavigationService Navigator
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
-@inject OrderService OrderService
-@inject NotificationService ToastService
 @inject RatingService RatingService
 
 <PageTitle>Reviews</PageTitle>
@@ -19,7 +16,7 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
 					<a class="card-title fw-bolder text-muted text-hover-primary fs-4">@review.Customer.User.DisplayName</a>
@@ -38,16 +35,24 @@
 
 
 @code {
+	
+	//TODO:: Confirm use of Artisan property
 	ArtisanDto Artisan { get; set; } = new();
 	PaginatedList<RatingPageDto> Ratings { get; set; } = new();
 	PaginatedQuery Query { get; set; } = PaginatedQuery.Build(0, 1, 20);
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
-		Artisan = await ArtisanService.GetByUserId();
+		await AuthStateService.CheckAuthStatus();
+		var tasks = new[] {SetArtisan(), SetRating()};
+		await Task.WhenAll(tasks);
+	}
+
+	async Task SetArtisan() => Artisan = await ArtisanService.GetByUserId();
+	async Task SetRating()
+	{
 		Ratings.Data = new();
 		Ratings = await RatingService.GetArtisanRatingPage(Query);
 	}
+
 }

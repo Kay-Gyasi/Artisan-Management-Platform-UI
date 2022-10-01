@@ -19,7 +19,7 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
 					<a class="card-title fw-bolder text-muted text-hover-primary fs-4">@review.Customer.User.DisplayName</a>
@@ -50,8 +50,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Artisan = await ArtisanService.GetAsync(ArtisanId);
 		Ratings.Data = new();
 		Query.OtherJson = ArtisanId;

@@ -25,11 +25,11 @@ try
     builder.Logging.AddSerilog(logger);
 
     app = builder.Build();
-    logger.Information("Amp UI started");
+    logger.Information("Amp UI started!");
 }
 catch (Exception e)
 {
-    logger.Fatal(e.Message);
+    logger.Fatal("Started failed!");
     throw;
 }
 

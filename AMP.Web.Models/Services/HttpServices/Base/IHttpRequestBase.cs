@@ -19,7 +19,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
         Task<SigninResponse?> PostLoginAsync(SigninCommand command, CancellationToken cancellationToken);
         //Task<IAuthorityClaims> GetClaimsAsync();
         Task<InsertOrderResponse> PostOrderAsync(string path, OrderCommand command, CancellationToken cancellationToken);
-        Task UploadImageAsync(string filePath, CancellationToken cancellationToken);
+        Task<bool> UploadImageAsync(string filePath, string token, CancellationToken cancellationToken);
     }
 }
 

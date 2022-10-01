@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Components;
 
 namespace AMP.Web.Models.Services.Extensions
 {
@@ -10,19 +11,12 @@ namespace AMP.Web.Models.Services.Extensions
             _navManager = navManager;
         }
 
-        public string GetBaseAddress()
-        {
-            return _navManager.BaseUri + "sample-data/";
-        }
+        public string GetBaseAddress() => _navManager.BaseUri;
 
         public void NavigateToLanding() => _navManager.NavigateTo(_navManager.BaseUri);
 
-        public string IsActive(string keyword) => _navManager.Uri.Contains(keyword) ? "active" : "";
-
-        public string IsDashboard()
-        {
-            return _navManager.ToAbsoluteUri(_navManager.Uri).ToString() == _navManager.BaseUri ? "active" : "";
-        }
+        public string IsActive(string keyword) 
+            => _navManager.Uri == $"{_navManager.BaseUri}{keyword}" ? "active" : "";
 
         public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
         public void NavigateToCustomerViewArtisanProfile(string artisanId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}");
@@ -51,6 +45,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToOrderRequests() => _navManager.NavigateTo("/artisans/requests");
         public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/artisan/schedule");
         public void NavigateToArtisanImage() => _navManager.NavigateTo("/artisan/image");
+        public void NavigateToCustomerImage() => _navManager.NavigateTo("/customer/image");
         public void NavigateToArtisanHistory() => _navManager.NavigateTo("/artisan/work-history");
         public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
         public void NavigateToCustomerOrderListForceLoad() => _navManager.NavigateTo("customers/orders", true);
@@ -63,6 +58,7 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToLoginForceLoad() => _navManager.NavigateTo("login", true);
         public void NavigateToSignup() => _navManager.NavigateTo("signup");
         public void NavigateToPayments() => _navManager.NavigateTo("payments");
+        public void NavigateToArtisanPayments() => _navManager.NavigateTo("artisan/payments");
         public void NavigateToPaymentAuthorizationUrl(string authUrl) => _navManager.NavigateTo(authUrl, true);
         public void NavigateToAssignOrderToArtisan(string id, string service) 
             => _navManager.NavigateTo($"customers/assign-order/{id}/{service}");

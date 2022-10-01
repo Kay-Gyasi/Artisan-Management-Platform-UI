@@ -2,7 +2,6 @@
 @inject OrderService OrderService
 @inject NavigationService Navigator
 @inject AuthService AuthStateService
-@inject IMapper Mapper
 
 <!--begin::Form-->
 <form action="#">
@@ -46,7 +45,7 @@
 	{
 		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToOrderDetail(order.Id)">
 			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/svg/shapes/abstract-4.svg)">
+			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
 				<!--begin::Body-->
 				<div class="card-body">
 					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
@@ -64,17 +63,16 @@
 <!--end::Container-->
 @code {
 	private PaginatedList<OrderPageDto> Orders { get; set; } = new();
-	private PaginatedQuery query { get; set; } 
+	private PaginatedQuery Query { get; set; } 
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 	    var userId = await AuthStateService.GetClaim("nameid");
-	    query = PaginatedQuery.Build(0, 1, 10)
+	    Query = PaginatedQuery.Build(0, 1, 10)
 	        .ThenSearch(userId);
 		Orders.Data = new();
-		Orders = await OrderService.GetPage(query);
+		Orders = await OrderService.GetPage(Query);
 	}
 
 	

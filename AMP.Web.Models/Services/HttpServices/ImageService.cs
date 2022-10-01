@@ -1,9 +1,6 @@
-﻿using System.Net.Http;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using AMP.Web.Models.Commands;
 using AMP.Web.Models.Services.HttpServices.Base;
-using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices
 {
@@ -17,9 +14,9 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<RequestResponse> Upload(MultipartFormDataContent command)
+        public async Task<bool> UploadAsync(string path, string token)
         {
-            return await _http.PostRequestAsync("image/upload", command, new CancellationToken());
+            return await _http.UploadImageAsync(path, token, new CancellationToken());
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿@page "/customers/orders/{OrderId}"
+@using Microsoft.Extensions.Configuration
+@using System.Globalization
 @inject OrderService OrderService
 @inject NavigationService Navigator
 @inject NotificationService ToastService
 @inject AuthService AuthStateService
 @inject IPaymentService PaymentService
+@inject IConfiguration Configuration
 
 <PageTitle>Order Details</PageTitle>
 
@@ -21,7 +24,7 @@
 			@if (!IsArtisanAssigned)
 			{
 				<!--begin::Action-->
-				<a @onclick="@(() => Navigator.NavigateToAssignOrderToArtisan(Order.Id, Order.Service.Name))" 
+				<a @onclick="@(() => Navigator.NavigateToAssignOrderToArtisan(Order?.Id, Order?.Service.Name))" 
 				   class="btn btn-primary align-self-center" disabled="@IsLoading">Assign to artisan</a>
 				<!--end::Action-->
 			}
@@ -60,7 +63,7 @@
 				<!--begin::Col-->
 				<div class="col-lg-8">
 					<span class="fw-bolder fs-6 text-gray-800" 
-						  @onclick=@(() => Navigator.NavigateToCustomerViewArtisanProfile(Order.Artisan.Id))
+						  @onclick=@(() => Navigator.NavigateToCustomerViewArtisanProfile(Order?.Artisan.Id))
 						>@Order?.Artisan.BusinessName</span>
 				</div>
 				<!--end::Col-->
@@ -182,7 +185,7 @@
 		<div class="card-footer">
 			@if (!IsCompleted())
 			{
-				if(!Order.IsRequestAccepted){
+				if(Order is {IsRequestAccepted: false }){
 					<a class="btn btn-danger align-self-center float-end ms-1" disabled="@IsLoading"
 				   @onclick="Delete">Cancel</a>
 				}
@@ -191,7 +194,7 @@
 				{
 					<div class="btn-group float-end" disabled="@IsLoading">
 					
-						@if(Order.Cost > 0 && Order.PaymentMade > 0 && Order.Cost <= Order.PaymentMade)
+						@if(Order is {Cost: > 0,PaymentMade: > 0} && Order?.Cost <= Order?.PaymentMade)
 						{
 							<input type="button" class="btn btn-primary" @onclick="Complete" value="Complete" disabled="@IsLoading"/>
 							@*<button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -232,8 +235,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Order = await OrderService.GetAsync(OrderId);
 		if(Order != null) Order.Artisan ??= new ArtisanDto();
 		IsArtisanAssigned = !string.IsNullOrEmpty(Order?.Artisan.Id);
@@ -241,13 +243,13 @@
 
 	async Task InitiatePayment()
 	{
-		if(Order.Cost <= 0)
+		if(Order?.Cost <= 0)
 		{
 			ToastService.CostNotSet();
 			return;
 		}
 		
-		if((Order.Cost - Order.PaymentMade) <= 0)
+		if((Order?.Cost - Order?.PaymentMade) <= 0)
 		{
 			ToastService.ShowInvalidAmountSent();
 			return;
@@ -261,7 +263,7 @@
 		};
 
 		var email = await AuthStateService.GetClaim("email");
-		if (string.IsNullOrEmpty(email)) email = PaymentsService.DefaultEmail;
+		if (string.IsNullOrEmpty(email)) email = Configuration["DefaultEmail"];
 		var approvalSite = await PaymentService.InitializeTransaction(payment, email);
 		if (approvalSite == PaymentsService.InvalidAmount)
 		{
@@ -307,10 +309,7 @@
 		DisableButton(false);
 	}
 
-	bool IsCompleted()
-	{
-		return Order?.Status == OrderStatus.Completed;
-	}
+	bool IsCompleted() => Order?.Status == OrderStatus.Completed;
 
 	void DisableButton(bool isLoading)
 	{
@@ -318,13 +317,8 @@
 		StateHasChanged();
 	}
 
-	string CostView()
-	{
-		return Order?.Cost <= 0 ? "Not Set" : Order.Cost.ToString();
-	}
-	
-	string PaymentMade()
-	{
-		return Order?.PaymentMade <= 0 ? "No payment made" : Order.PaymentMade.ToString();
-	}
+	string CostView() => Order?.Cost <= 0 ? "Not Set" : Order?.Cost.ToString(CultureInfo.InvariantCulture);
+
+	string PaymentMade() 
+		=> Order?.PaymentMade <= 0 ? "No payment made" : Order?.PaymentMade.ToString(CultureInfo.InvariantCulture);
 }

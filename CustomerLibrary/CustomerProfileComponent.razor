@@ -2,7 +2,6 @@
 @layout CustomerProfileLayout
 @inject NavigationService Navigator
 @inject AuthService AuthStateService
-@inject CustomerService CustomerService
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject CustomerStore CustomerStore
@@ -132,8 +131,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		CustomerStore.AddStateChangeListener(UpdateView);
 		Customer = CustomerStore.GetState().Customer;
 		InitializeProperties();

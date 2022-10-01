@@ -10,7 +10,7 @@
 
 <PageTitle>Artisan Profile View</PageTitle>
 
-<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan" OrderId="@OrderId" ArtisanId="@ArtisanId"></CustomerViewArtisanLayout>
+<CustomerViewArtisanLayout @ref="_artisanLayout" Artisan="Artisan" OrderId="@OrderId" ArtisanId="@ArtisanId"></CustomerViewArtisanLayout>
 
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
@@ -63,7 +63,9 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8 d-flex align-items-center">
-				<span class="fw-bolder fs-6 text-gray-800 me-2">044 3276 454 935</span>
+				<span class="fw-bolder fs-6 text-gray-800 me-2"><a href="tel:@Artisan?.User?.Contact?.PrimaryContact">
+					@Artisan?.User?.Contact?.PrimaryContact
+				</a></span>
 				<span class="badge badge-success" disabled="@Artisan?.IsVerified">Verified</span>
 			</div>
 			<!--end::Col-->
@@ -102,7 +104,7 @@
 <!--end::details View-->
 
 @code {
-	CustomerViewArtisanLayout artisanLayout;
+	CustomerViewArtisanLayout _artisanLayout;
 	[Parameter]
 	public string ArtisanId { get; set; }
 	[Parameter]
@@ -112,8 +114,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 		Artisan = await ArtisanService.GetAsync(ArtisanId);
 		OrderStore.AddStateChangeListener(UpdateView);
 	}

@@ -42,7 +42,7 @@
 						</span>
 						<!--end::Svg Icon-->
 						<div class="text-gray-100 fw-bolder fs-2 mb-2 mt-5">Schedule</div>
-						<div class="fw-bold text-white">-</div>
+						<div class="fw-bold text-white">View your job schedule</div>
 					</div>
 					<!--end::Body-->
 				</a>
@@ -63,7 +63,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <div class="text-gray-900 fw-bolder fs-2 mb-2 mt-5">Place Order</div>
-                    <div class="fw-bold text-gray-400">-</div>
+                    <div class="fw-bold text-gray-400">Place a new job order</div>
                 </div>
                 <!--end::Body-->
             </a>
@@ -85,7 +85,7 @@
                     </span>
                     <!--end::Svg Icon-->
                     <div class="text-white fw-bolder fs-2 mb-2 mt-5">My Orders</div>
-                    <div class="fw-bold text-white">-</div>
+                    <div class="fw-bold text-white">View all your placed orders</div>
                 </div>
                 <!--end::Body-->
             </a>
@@ -98,8 +98,7 @@
 @code{
 	protected override async Task OnInitializedAsync()
 	{
-		var isLoggedIn = await AuthStateService.CheckAuthStatus();
-		if (!isLoggedIn) return;
+		await AuthStateService.CheckAuthStatus();
 	}
 
 }
