@@ -124,33 +124,46 @@
 <!--end::details View-->
 
 @code {
-	private ArtisanDto? Artisan { get; set; }
-	private string? EmailAddress { get; set; }
-	private string? BusinessName { get; set; }
-	private string? UserName { get; set; }
-	private string? StreetAddress { get; set; }
-	private string? Phone { get; set; }
-	private string? Country { get; set; }
+	ArtisanDto? Artisan { get; set; } = new();
+	string EmailAddress { get; set; }
+	string BusinessName { get; set; }
+	string UserName { get; set; }
+	string StreetAddress { get; set; }
+	string Phone { get; set; }
+	string Country { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-
 		await AuthStateService.CheckAuthStatus();
-		await GetArtisan();
 		Artisan = ArtisanStore.GetState().Artisan;
-		InitializeProperties();
+		await InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		//Artisan = ArtisanStore.GetState().Artisan;
 	}
 
-	void InitializeProperties()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		EmailAddress = Artisan?.User?.Contact?.EmailAddress ?? "";
-		BusinessName = Artisan?.BusinessName ?? "";
-		UserName = Artisan?.User?.DisplayName;
-		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
-		Country = Artisan?.User?.Address?.Country.ToString() ?? "";
-		Phone = Artisan?.User?.Contact?.PrimaryContact ?? "";
+		if (firstRender)
+		{
+			await GetArtisan();
+			Artisan = ArtisanStore.GetState().Artisan;
+			await InitializeProperties();
+			StateHasChanged();
+		}
+	}
+
+	async Task InitializeProperties()
+	{
+		var user = await AuthStateService.GetClaim("unique_name");
+		Artisan ??= new();
+		Artisan.User ??= new();
+		Artisan.User.Address ??= new();
+		Artisan.User.Contact ??= new();
+		EmailAddress = Artisan?.User?.Contact?.EmailAddress;
+		BusinessName = Artisan?.BusinessName ?? user;
+		UserName = user;
+		StreetAddress = Artisan?.User?.Address?.StreetAddress;
+		Country = "Ghana";
+		Phone = Artisan?.User?.Contact?.PrimaryContact;
 	}
 
 	private async Task GetArtisan()

@@ -289,9 +289,8 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		CustomerStore.AddStateChangeListener(UpdateView);
-		Customer = Mapper.Map<CustomerCommand>(CustomerStore.GetState().Customer);
 		InitializeProperties();
+		CustomerStore.AddStateChangeListener(UpdateView);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

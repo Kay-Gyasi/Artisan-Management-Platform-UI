@@ -171,7 +171,27 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Order = await OrderService.GetAsync(OrderId);
+		InitializeProperties();
+	}
+	
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Order = await OrderService.GetAsync(OrderId);
+			StateHasChanged();
+		}
+	}
+
+	void InitializeProperties()
+	{
+		Order.Artisan = new();
+		Order.Artisan.User = new();
+		Order.Customer = new();
+		Order.Customer.User = new();
+		Order.Customer.User.Contact = new();
+		Order.Service = new();
+		Order.WorkAddress = new();
 	}
 
 	void UnassignArtisan(string orderId)

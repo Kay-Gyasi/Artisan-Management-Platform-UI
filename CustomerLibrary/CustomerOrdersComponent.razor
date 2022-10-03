@@ -99,8 +99,16 @@
 		await AuthStateService.CheckAuthStatus();
 		Orders.Data = new();
 		OrderStore.AddStateChangeListener(UpdateView);
-		await GetOrders();
-		Orders = OrderStore.GetState().Orders;
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await GetOrders();
+			Orders = OrderStore.GetState().Orders;
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

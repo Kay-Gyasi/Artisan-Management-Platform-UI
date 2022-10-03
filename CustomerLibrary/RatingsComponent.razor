@@ -44,6 +44,15 @@
 	{
 		await AuthStateService.CheckAuthStatus();
 		Ratings.Data = new();
-		Ratings = await RatingService.GetPage(Query);
 	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Ratings = await RatingService.GetPage(Query);
+			StateHasChanged();
+		}
+	}
+
 }

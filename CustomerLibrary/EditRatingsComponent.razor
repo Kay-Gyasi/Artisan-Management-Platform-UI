@@ -93,15 +93,23 @@
 @code {
 	[Parameter]
 	public string RatingId { get; set; } // change to string number / random number generated during insertion
-	public RatingCommand Rating { get; set; } = new();
-	public List<Lookup> Artisans { get; set; } = new();
+	RatingCommand Rating { get; set; } = new();
+	List<Lookup> Artisans { get; set; } = new();
 	bool IsLoading { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
-		Rating = Mapper.Map<RatingCommand>(await RatingService.Get(RatingId));
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
+			Rating = Mapper.Map<RatingCommand>(await RatingService.Get(RatingId));
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

@@ -123,21 +123,18 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		ArtisanStore.AddStateChangeListener(UpdateView);
-		Artisan = Mapper.Map<ArtisanCommand>(ArtisanStore.GetState().Artisan);
 		InitializeProperties();
+		ArtisanStore.AddStateChangeListener(UpdateView);
 	}
 
+	// TODO:: refactor this (readability)
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			await GetArtisan();
-			var artisan = ArtisanStore.GetState().Artisan;
-			Artisan = Mapper.Map<ArtisanCommand>(artisan);
-			User = Mapper.Map<UserCommand>(artisan.User);
-			Services = await LookupService.Get(LookupType.Service);
-
+			await SetArtisanInfo();
+			await GetServices();
+			
 			if (Artisan?.Services is not null)
 			{
 				foreach (var lang in Artisan.Services)
@@ -151,6 +148,16 @@
 		}
 	}
 
+	async Task SetArtisanInfo()
+	{
+		await GetArtisan();
+		var artisan = ArtisanStore.GetState().Artisan;
+		Artisan = Mapper.Map<ArtisanCommand>(artisan);
+		User = Mapper.Map<UserCommand>(artisan.User);
+	}
+
+	async Task GetServices() => Services = await LookupService.Get(LookupType.Service);
+
 	void InitializeProperties()
 	{
 		BusinessName = Artisan?.BusinessName ?? "";
@@ -159,14 +166,12 @@
 
 	void SelectedServicesChanged(ChangeEventArgs e)
 	{
-		if (e.Value is not null)
+		if (e.Value is null) return;
+		ArtisanServices = (string[])e.Value;
+		Servs.Clear();
+		foreach (var lang in ArtisanServices)
 		{
-			ArtisanServices = (string[])e.Value;
-			Servs.Clear();
-			foreach (var lang in ArtisanServices)
-			{
-				Servs.Add(lang);
-			}
+			Servs.Add(lang);
 		}
 	}
 
@@ -199,23 +204,11 @@
 		ToastService.SaveFailure();
 	}
 
-	private async Task GetArtisan()
-	{
-		await ActionDispatcher.Dispatch(new GetByUserIdAction());
-	}
+	private async Task GetArtisan() => await ActionDispatcher.Dispatch(new GetByUserIdAction());
 
-	private async Task ResetArtisan()
-	{
-		await ActionDispatcher.Dispatch(new ResetArtisanAction());
-	}
+	private async Task ResetArtisan() => await ActionDispatcher.Dispatch(new ResetArtisanAction());
 
-	private void UpdateView()
-	{
-		StateHasChanged();
-	}
+	private void UpdateView() => StateHasChanged();
 
-	public void Dispose()
-	{
-		ArtisanStore.RemoveStateChangeListener(UpdateView);
-	}
+	public void Dispose() => ArtisanStore.RemoveStateChangeListener(UpdateView);
 }

@@ -169,7 +169,7 @@
 	{
 		if (string.IsNullOrEmpty(User.Password) ||
 			string.IsNullOrEmpty(User.ConfirmPassword) ||
-			string.IsNullOrEmpty(User.Contact.PrimaryContact)) return;
+			string.IsNullOrEmpty(User?.Contact?.PrimaryContact)) return;
 
 		var phoneRegEx = new Regex(@"\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})");
 		if (!phoneRegEx.IsMatch(User.Contact.PrimaryContact))

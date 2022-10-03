@@ -218,7 +218,6 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                     Timeout = -1
                 };
                 filePath = filePath.Replace(@"\", "/");
-                _logger.LogInformation($"FilePath: {filePath}");
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("Authorization", $"Bearer {token}");
                 request.AddFile("file", filePath);

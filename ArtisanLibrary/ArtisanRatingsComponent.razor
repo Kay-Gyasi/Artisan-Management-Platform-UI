@@ -44,8 +44,16 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		var tasks = new[] {SetArtisan(), SetRating()};
-		await Task.WhenAll(tasks);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var tasks = new[] {SetArtisan(), SetRating()};
+			await Task.WhenAll(tasks);
+			StateHasChanged();
+		}
 	}
 
 	async Task SetArtisan() => Artisan = await ArtisanService.GetByUserId();

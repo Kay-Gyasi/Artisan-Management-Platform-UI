@@ -291,9 +291,8 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		ArtisanStore.AddStateChangeListener(UpdateView);
-		Artisan = Mapper.Map<ArtisanCommand>(ArtisanStore.GetState().Artisan);
 		InitializeProperties();
+		ArtisanStore.AddStateChangeListener(UpdateView);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -201,8 +201,17 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Services = await LookupService.Get(LookupType.ArtisanServices);
 	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Services = await LookupService.Get(LookupType.ArtisanServices);
+			StateHasChanged();
+		}
+	}
+	
 
 	void Submit()
 	{

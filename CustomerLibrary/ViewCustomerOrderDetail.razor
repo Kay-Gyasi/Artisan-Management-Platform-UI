@@ -236,9 +236,29 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Order = await OrderService.GetAsync(OrderId);
-		if(Order != null) Order.Artisan ??= new ArtisanDto();
-		IsArtisanAssigned = !string.IsNullOrEmpty(Order?.Artisan.Id);
+		await InitializeProperties();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Order = await OrderService.GetAsync(OrderId);
+			if(Order != null) Order.Artisan ??= new ArtisanDto();
+			IsArtisanAssigned = !string.IsNullOrEmpty(Order?.Artisan.Id);
+			StateHasChanged();
+		}
+	}
+
+	Task InitializeProperties()
+	{
+		Order.Customer = new();
+		Order.Artisan = new();
+		Order.Customer.User = new();
+		Order.Customer.User.Address = new();
+		Order.Customer.User.Contact = new();
+		Order.WorkAddress = new();
+		return Task.CompletedTask;
 	}
 
 	async Task InitiatePayment()

@@ -8,7 +8,7 @@
 
 <PageTitle>Artisan Reviews</PageTitle>
 
-<CustomerViewArtisanLayout @ref="artisanLayout" Artisan="Artisan" OrderId="@OrderId" ArtisanId="@ArtisanId"></CustomerViewArtisanLayout>
+<CustomerViewArtisanLayout @ref="_artisanLayout" Artisan="Artisan" OrderId="@OrderId" ArtisanId="@ArtisanId"></CustomerViewArtisanLayout>
 
 <!--begin::Container-->
 
@@ -38,7 +38,7 @@
 
 
 @code {
-	CustomerViewArtisanLayout artisanLayout;
+	CustomerViewArtisanLayout _artisanLayout;
 	[Parameter]
 	public string ArtisanId { get; set; }
 	[Parameter]
@@ -56,6 +56,4 @@
 		Query.OtherJson = ArtisanId;
 		Ratings = await RatingService.GetArtisanRatingPage(Query);
 	}
-
-
 }

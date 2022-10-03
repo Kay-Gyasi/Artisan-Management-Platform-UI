@@ -75,7 +75,15 @@
 	{
 		await AuthStateService.CheckAuthStatus();
 	    Orders.Data = new();
-		Orders = await OrderService.GetHistoryPage(Query);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Orders = await OrderService.GetHistoryPage(Query);
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

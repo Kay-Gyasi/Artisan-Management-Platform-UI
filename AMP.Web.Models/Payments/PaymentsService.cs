@@ -38,8 +38,8 @@ namespace AMP.Web.Models.Payments
                 Email = email,
                 Reference = Generate().ToString(),
                 Currency = "GHS",
-                //CallbackUrl = $"{_configuration["LiveCallbackUrl"]}/{command.OrderId}"
-                CallbackUrl = $"{_configuration["DevCallbackUrl"]}/{command.OrderId}"
+                CallbackUrl = $"{_configuration["LiveCallbackUrl"]}/{command.OrderId}"
+                //CallbackUrl = $"{_configuration["DevCallbackUrl"]}/{command.OrderId}"
             };
 
             var response = PayStack.Transactions.Initialize(request);

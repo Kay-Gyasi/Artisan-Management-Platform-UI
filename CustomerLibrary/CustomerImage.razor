@@ -85,8 +85,16 @@
     protected override async Task OnInitializedAsync()
     {
 		await AuthStateService.CheckAuthStatus();
-        ImageUrl = await AuthStateService.GetClaim("ImageUrl");
-        if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ImageUrl = await AuthStateService.GetClaim("ImageUrl");
+            if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
+            StateHasChanged();
+        }
     }
 
     async Task HandleSelectedFile(IFileListEntry[] files)

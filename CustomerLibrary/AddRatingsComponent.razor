@@ -90,14 +90,22 @@
 </div>
 <!--end::Basic info-->
 @code {
-	public RatingCommand Rating { get; set; } = new();
-	public List<Lookup> Artisans { get; set; } = new();
+	RatingCommand Rating { get; set; } = new();
+	List<Lookup> Artisans { get; set; } = new();
 	bool IsLoading { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Artisans = await ArtisanService.GetArtisansWorkedForCustomer();
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

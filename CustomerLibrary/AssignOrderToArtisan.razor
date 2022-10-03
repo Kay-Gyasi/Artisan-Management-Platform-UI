@@ -258,7 +258,8 @@
 				@foreach(var i in Enumerable.Range(1, Paginated.TotalPages))
 				{
 					<li class="page-item @(i == _currentPage ? "active" : "")">
-						<a @onclick="(async() => await JumpToPage(i))" class="page-link">@i</a>
+						<a @onclick="(async() => await JumpToPage(i))" class="page-link" 
+						   disabled="@IsLoading">@i</a>
 					</li>
 				}
 				
@@ -323,11 +324,13 @@
 
 	async Task UpdatePage([Optional] Func<int, PaginatedQuery> setPage)
 	{
+		DisableButton(true);
 		setPage?.Invoke(_currentPage);
 		Query.ThenSearch(Service);
 		if (!string.IsNullOrEmpty((SearchObj.SearchTerm))) Query.OtherJson = SearchObj.SearchTerm;
 		Paginated = await ArtisanService.GetPage(Query);
 		Artisans = Paginated.Data;
+		DisableButton(false);
 		StateHasChanged();	
 	}
 	PaginatedQuery SetPage(int currPage) => Query = PaginatedQuery.Build(0, currPage, 5);

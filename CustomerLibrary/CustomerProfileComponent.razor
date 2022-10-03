@@ -122,7 +122,7 @@
 <!--end::details View-->
 
 @code {
-	private CustomerDto? Customer { get; set; }
+	private CustomerDto? Customer { get; set; } = new();
 	private string? EmailAddress { get; set; }
 	private string? UserName { get; set; }
 	private string? StreetAddress { get; set; }
@@ -132,9 +132,9 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		CustomerStore.AddStateChangeListener(UpdateView);
-		Customer = CustomerStore.GetState().Customer;
+		Customer =  CustomerStore.GetState().Customer;
 		InitializeProperties();
+		CustomerStore.AddStateChangeListener(UpdateView);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -150,18 +150,15 @@
 
 	void InitializeProperties()
 	{
-		EmailAddress = Customer?.User.Contact?.EmailAddress ?? "";
-		UserName = BuildUsername();
-		StreetAddress = Customer?.User.Address?.StreetAddress ?? "";
-		Country = Customer?.User.Address?.Country.ToString() ?? "";
-		Phone = Customer?.User.Contact?.PrimaryContact ?? "";
-	}
-
-	string BuildUsername()
-	{
-		var surname = Customer?.User.FamilyName ?? "";
-		var firstname = Customer?.User.FirstName ?? "";
-		return firstname + " " + surname; // trim names in backend
+		Customer ??= new();
+		Customer.User ??= new();
+		Customer.User.Address ??= new();
+		Customer.User.Contact ??= new();
+		EmailAddress = Customer?.User?.Contact?.EmailAddress;
+		UserName = Customer?.User?.DisplayName;
+		StreetAddress = Customer?.User?.Address?.StreetAddress;
+		Country = "Ghana";
+		Phone = Customer?.User?.Contact?.PrimaryContact;
 	}
 
 	private async Task GetCustomer()

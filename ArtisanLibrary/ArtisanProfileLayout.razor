@@ -302,20 +302,30 @@
 
 @code {
 	private ArtisanDto? Artisan { get; set; }
-	private string? ImageUrl { get; set; }
-	private string? EmailAddress { get; set; }
-	private string? PhoneNumber { get; set; }
-	private string? BusinessName { get; set; }
-	private string? StreetAddress { get; set; }
+	private string ImageUrl { get; set; }
+	private string EmailAddress { get; set; }
+	private string PhoneNumber { get; set; }
+	private string BusinessName { get; set; }
+	private string StreetAddress { get; set; }
 	private UserType UserType { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthService.CheckAuthStatus();
-		await GetArtisan();
 		Artisan = ArtisanStore.GetState().Artisan;
 		await InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await GetArtisan();
+			Artisan = ArtisanStore.GetState().Artisan;
+			await InitializeProperties();
+			StateHasChanged();
+		}
 	}
 
 	async Task InitializeProperties()
@@ -323,10 +333,10 @@
 		ImageUrl = await AuthService.GetClaim("ImageUrl");
 		if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
 		UserType = Artisan?.User?.Type ?? UserType.Artisan;
-		EmailAddress = await AuthService.GetClaim("email");
-		PhoneNumber = await AuthService.GetClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone");
-		BusinessName = Artisan?.BusinessName ?? "";
-		StreetAddress = Artisan?.User?.Address?.StreetAddress ?? "";
+		EmailAddress = Artisan?.User?.Contact?.EmailAddress;
+		PhoneNumber = Artisan?.User?.Contact?.PrimaryContact;
+		BusinessName = Artisan?.BusinessName;
+		StreetAddress = Artisan?.User?.Address?.StreetAddress;
 	}
 
 	private async Task GetArtisan()

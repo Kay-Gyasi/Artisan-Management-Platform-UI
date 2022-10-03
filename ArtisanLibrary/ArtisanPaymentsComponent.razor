@@ -84,7 +84,15 @@
 	{
 		await AuthStateService.CheckAuthStatus();
 		Payments.Data = new();
-		Payments = await PaymentService.GetPage(Query);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Payments = await PaymentService.GetPage(Query);
+			StateHasChanged();
+		}
 	}
 
 	async Task Submit()

@@ -80,7 +80,7 @@
 			<!--end::Label-->
 			<!--begin::Col-->
 			<div class="col-lg-8">
-				<span class="fw-bolder fs-6 text-gray-800">@Artisan?.User?.Address?.Country.ToString()</span>
+				<span class="fw-bolder fs-6 text-gray-800">Ghana</span>
 			</div>
 			<!--end::Col-->
 		</div>
@@ -115,8 +115,24 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		Artisan = await ArtisanService.GetAsync(ArtisanId);
+		InitializeProperties();
 		OrderStore.AddStateChangeListener(UpdateView);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			Artisan = await ArtisanService.GetAsync(ArtisanId);
+			StateHasChanged();
+		}
+	}
+
+	void InitializeProperties()
+	{
+		Artisan.User = new();
+		Artisan.User.Address = new();
+		Artisan.User.Contact = new();
 	}
 
 	async Task AssignArtisan()
