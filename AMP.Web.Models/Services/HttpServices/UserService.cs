@@ -19,12 +19,11 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-
         public async Task<UserDto> GetAsync(string userId) =>
             await _http.GetRequestAsync<UserDto>($"user/get/{userId}", new CancellationToken());
 
-        public async Task<RequestResponse> Save(UserCommand command) =>
-            await _http.PostRequestAsync("user/save", command, new CancellationToken());
+        public async Task<RequestResponse> Update(UserCommand command) =>
+            await _http.PutRequestAsync("user/update", command, new CancellationToken());
         
         public async Task<RequestResponse> Post(UserCommand command) =>
             await _http.PostRequestAsync("user/post", command, new CancellationToken());

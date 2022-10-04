@@ -353,7 +353,7 @@
 			};
 		User?.Languages.Clear();
 		User?.Languages.AddRange(langs);
-		var response = await UserService.Save(User);
+		var response = await UserService.Update(User);
 		IsLoading = false;
 		StateHasChanged();
 		if (response.IsComplete)

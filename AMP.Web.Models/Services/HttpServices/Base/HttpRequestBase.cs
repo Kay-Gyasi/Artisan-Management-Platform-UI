@@ -227,7 +227,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
 
                 if (!response.IsSuccessful)
                 {
-                    _logger.LogError($"Error: {response.ErrorMessage ?? ""}");
+                    _logger.LogError($"Error: {response.ErrorMessage}");
                     return response.IsSuccessful;
                 }
                 
