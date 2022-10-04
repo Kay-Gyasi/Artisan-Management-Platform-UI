@@ -28,8 +28,8 @@ public static class RegisterServices
             .AddWorkers()
             .AddHttpClient("AmpDevApi", options =>
             {
-                //options.BaseAddress = new Uri(configuration["DevApiUrl"]);
-                options.BaseAddress = new Uri(configuration["ProdApiUrl"]);
+                //options.BaseAddress = new Uri(configuration["DevApiUrl"] ?? string.Empty);
+                options.BaseAddress = new Uri(configuration["ProdApiUrl"] ?? string.Empty);
             });
         return services;
     }

@@ -27,9 +27,9 @@ try
     app = builder.Build();
     logger.Information("Amp UI started!");
 }
-catch (Exception e)
+catch (Exception)
 {
-    logger.Fatal("Started failed!");
+    logger.Fatal("Startup failed!");
     throw;
 }
 

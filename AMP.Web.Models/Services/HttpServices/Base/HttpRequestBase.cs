@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Authentication;
@@ -11,8 +9,7 @@ using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
 using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
@@ -21,20 +18,20 @@ namespace AMP.Web.Models.Services.HttpServices.Base
     public class HttpRequestBase : IHttpRequestBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TokenServerAuthenticationStateProvider _auth;
         private readonly NavigationService _navigationService;
         private readonly ILogger<HttpRequestBase> _logger;
+        private readonly IConfiguration _configuration;
 
-        public HttpRequestBase(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor,
+        public HttpRequestBase(IHttpClientFactory httpClientFactory,
             TokenServerAuthenticationStateProvider auth, NavigationService navigationService,
-            ILogger<HttpRequestBase> logger)
+            ILogger<HttpRequestBase> logger, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
-            _httpContextAccessor = httpContextAccessor;
             _auth = auth;
             _navigationService = navigationService;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<T> GetRequestAsync<T>(string path, CancellationToken cancellationToken)
@@ -213,7 +210,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
         {
             try
             {
-                var client = new RestClient("http://kofigyasi-001-site2.btempurl.com/api/v1/image/upload")
+                var client = new RestClient($"{_configuration["ProdApiUrl"]}image/upload")
                 {
                     Timeout = -1
                 };
