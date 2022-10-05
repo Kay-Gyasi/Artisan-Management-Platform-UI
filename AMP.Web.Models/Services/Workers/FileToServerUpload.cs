@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Services.HttpServices;
@@ -35,7 +36,7 @@ namespace AMP.Web.Models.Services.Workers
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(5000, stoppingToken);
-                if (Image is null) continue;
+                if (!ImageIsProvided()) continue;
                 var path = await WriteToDisk(stoppingToken);
                 
                 if(string.IsNullOrEmpty(AuthToken)) continue;
@@ -57,8 +58,8 @@ namespace AMP.Web.Models.Services.Workers
                 await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
                 ms.WriteTo(fs);
                 Image = null;
-                return path;
                 _logger.LogInformation("File successfully uploaded to directory...");
+                return path;
             }
             catch (Exception e)
             {
@@ -98,6 +99,8 @@ namespace AMP.Web.Models.Services.Workers
                 throw;
             }
         }
+
+        private static bool ImageIsProvided() => Image != null && Image.Type.Contains("image");
     }
 }
 

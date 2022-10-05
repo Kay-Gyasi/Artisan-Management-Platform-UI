@@ -14,7 +14,7 @@
 		<span class="menu-section text-muted text-uppercase fs-8 ls-1">Dashboard</span>
 	</div>
 </div>
-<div class="menu-item">
+<div class="menu-item kt_aside_mobile_toggle">
 	<a class="menu-link @(Navigator.IsActive("dashboard"))" @onclick="(async () => await Actor(Navigator.NavigateToDashboard))">
 		<span class="menu-icon">
 			<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
@@ -151,7 +151,7 @@
 	<!-- Manage artisan -->
 	<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("account/artisan/overview")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanProfileOverview))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -169,7 +169,7 @@
 				</a>
 			</div>*@
 			
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("artisan/schedule")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanSchedule))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -178,7 +178,7 @@
 			</a>
 		</div>
 			
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("artisans/requests")" @onclick="(async () => await Actor(Navigator.NavigateToOrderRequests))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -187,7 +187,7 @@
 			</a>
 		</div>
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("artisan/work-history")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanHistory))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -196,7 +196,7 @@
 			</a>
 		</div>
 		
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("artisan/payments")" @onclick="(async () => await Actor(Navigator.NavigateToArtisanPayments))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -218,7 +218,7 @@
 	<!-- Manage customers -->
 	<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("account/customer/overview")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerProfileOverview))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -227,7 +227,7 @@
 			</a>
 		</div>
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("customers/orders")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerOrderList))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -245,7 +245,7 @@
 			</a>
 		</div>*@
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("customer/disputes")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerDisputes))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -254,7 +254,7 @@
 			</a>
 		</div>
 
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("payments")" @onclick="(async () => await Actor(Navigator.NavigateToPayments))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -263,7 +263,7 @@
 			</a>
 		</div>
 		
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("customers/orders/history")" @onclick="(async () => await Actor(Navigator.NavigateToCustomerOrderHistory))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -272,7 +272,7 @@
 			</a>
 		</div>
 		
-		<div class="menu-item">
+		<div class="menu-item kt_aside_mobile_toggle">
 			<a class="menu-link @Navigator.IsActive("customer/reviews")" @onclick="(async () => await Actor(Navigator.NavigateToReviews))">
 				<span class="menu-bullet">
 					<span class="bullet bullet-dot"></span>
@@ -289,7 +289,7 @@
 
 <!--begin::Footer-->
 <div class="aside-footer flex-column-auto py-5" id="kt_aside_footer">
-	<a @onclick="@(() => Modal.Show<SignoutComponent>("Sign out"))" class="btn btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
+	<a @onclick="@(() => Modal.Show<SignoutComponent>("Sign out"))" class="btn btn-custom btn-primary w-100 kt_aside_mobile_toggle" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
 		<span class="btn-label">Logout</span>
 		<!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
 		<span class="svg-icon btn-icon svg-icon-2">

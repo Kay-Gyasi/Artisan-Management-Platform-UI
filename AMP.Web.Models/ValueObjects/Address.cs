@@ -7,6 +7,8 @@ namespace AMP.Web.Models.ValueObjects
     {
         public Countries Country { get; set; }
         public string City { get; set; }
+        
+        [Required(ErrorMessage = "Field is required")]
         public string Town { get; set; }
         [Required(ErrorMessage = "Field is required")]
         public string StreetAddress { get; set; }
