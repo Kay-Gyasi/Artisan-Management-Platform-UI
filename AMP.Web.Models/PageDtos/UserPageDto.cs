@@ -18,5 +18,7 @@ namespace AMP.Web.Models.PageDtos
         public LevelOfEducation LevelOfEducation { get; set; }
         public Contact Contact { get; set; } = new Contact();
         public Address Address { get; set; } = new Address();
+        public ImagePageDto Image { get; set; } = new ImagePageDto();
+
     }
 }

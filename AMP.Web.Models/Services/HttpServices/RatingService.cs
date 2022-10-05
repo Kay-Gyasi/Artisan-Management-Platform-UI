@@ -18,8 +18,8 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<PaginatedList<RatingPageDto>> GetPage(PaginatedQuery paginated)
-            => await _http.GetPageRequestAsync<RatingPageDto>("rating/getpage", paginated, new CancellationToken());
+        public async Task<PaginatedList<RatingPageDto>> GetCustomerPage(PaginatedQuery paginated)
+            => await _http.GetPageRequestAsync<RatingPageDto>("rating/GetCustomerPage", paginated, new CancellationToken());
         
         public async Task<PaginatedList<RatingPageDto>> GetArtisanRatingPage(PaginatedQuery paginated)
             => await _http.GetPageRequestAsync<RatingPageDto>("rating/GetArtisanRatingPage", paginated, new CancellationToken());
