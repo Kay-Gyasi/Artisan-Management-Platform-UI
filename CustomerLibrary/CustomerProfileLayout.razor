@@ -6,7 +6,6 @@
 @inject IActionDispatcher ActionDispatcher
 @inject CustomerStore CustomerStore
 
-
 	<!--begin::Navbar-->
 <div class="card mb-5 mb-xl-10">
 <div class="card-body pt-9 pb-0">
@@ -181,8 +180,9 @@
 	</div>
 	<!--end::Navbar-->
 
+<div>
 	@Body
-		
+</div>		
 
 @code {
 	private CustomerDto? Customer { get; set; } = new();

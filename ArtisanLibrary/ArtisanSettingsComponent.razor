@@ -8,6 +8,7 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject ArtisanStore ArtisanStore
+@inject IJSRuntime JsInterop
 
 <PageTitle>Settings</PageTitle>
 
@@ -15,10 +16,12 @@
 *@<!--begin::Basic info-->
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+	     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
+	     tabindex="0" @ref="_settBody">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
-			<h3 class="fw-bolder m-0">Profile Details</h3>
+			<h3 class="fw-bolder m-0">Personal Info</h3>
 		</div>
 		<!--end::Card title-->
 	</div>
@@ -58,7 +61,7 @@
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label required fw-bold fs-6">Other Name</label>
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Other Name</label>
 		<!--end::Label-->
 		<!--begin::Col-->
 		<div class="col-lg-8 fv-row">
@@ -142,26 +145,18 @@
 	<!--end::Input group-->
 
 	<!--begin::Input group-->
-	<div class="row mb-6">
-	<!--begin::Label-->
-	<label class="col-lg-4 col-form-label fw-bold fs-6">
-		<span class="required">Country</span>
-		<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Country of origination"></i>
-	</label>
-	<!--end::Label-->
-	<!--begin::Col-->
-	<div class="col-lg-8 fv-row">
-	<InputSelect @bind-Value="User.Address.Country" name="country" aria-label="Select a Country" data-control="select2" data-placeholder="Select a country..." class="form-select form-select-solid form-select-lg fw-bold">
-		<option value="">Select a Country...</option>
-		@foreach (var country in Enum.GetValues(typeof(Countries)))
-		{
-			<option value="@country">@country</option>
-		}
-	</InputSelect>
-	</div>
-	<!--end::Col-->
-	</div>
+    <div class="row mb-6">
+    	<!--begin::Label-->
+    	<label class="col-lg-4 col-form-label fw-bold fs-6">Town</label>
+    	<!--end::Label-->
+    	<!--begin::Col-->
+    	<div class="col-lg-8 fv-row">
+    		<InputText @bind-Value="User.Address.Town" name="town" class="form-control form-control-lg form-control-solid" placeholder="Town of residence" />
+    	</div>
+    	<!--end::Col-->
+    </div>
 	<!--end::Input group-->
+		
 	<!--begin::Input group-->
 	<div class="row mb-6">
 		<!--begin::Label-->
@@ -276,6 +271,7 @@
 
 
 @code {
+	ElementReference _settBody;
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	string EmailAddress { get; set; }
@@ -293,6 +289,7 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
+		await JsInterop.InvokeVoidAsync("SetFocusToElement", _settBody);
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -331,14 +328,12 @@
 
 	void SelectedLanguagesChanged(ChangeEventArgs e)
 	{
-		if (e.Value is not null)
+		if (e.Value is null) return;
+		UserLanguages = (string[])e.Value;
+		Langs.Clear();
+		foreach (var lang in UserLanguages)
 		{
-			UserLanguages = (string[])e.Value;
-			Langs.Clear();
-			foreach (var lang in UserLanguages)
-			{
-				Langs.Add(lang);
-			}
+			Langs.Add(lang);
 		}
 	}
 

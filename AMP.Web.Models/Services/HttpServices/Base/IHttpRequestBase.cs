@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
+using AMP.Web.Models.Responses;
 using Kessewa.Extension.Shared.HttpServices.Models;
 
 namespace AMP.Web.Models.Services.HttpServices.Base
@@ -20,6 +21,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
         //Task<IAuthorityClaims> GetClaimsAsync();
         Task<InsertOrderResponse> PostOrderAsync(string path, OrderCommand command, CancellationToken cancellationToken);
         Task<bool> UploadImageAsync(string filePath, string token, CancellationToken cancellationToken);
+        Task<string> GetRequestAsync(string path, CancellationToken cancellationToken);
     }
 }
 

@@ -17,17 +17,13 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<CustomerDto> GetAsync(string id)
-        {
-            return await _http.GetRequestAsync<CustomerDto>
+        public async Task<CustomerDto> GetAsync(string id) =>
+            await _http.GetRequestAsync<CustomerDto>
                 ($"customer/get/{id}", new CancellationToken());
-        }
 
-        public async Task<CustomerDto> GetByUserId()
-        {
-            return await _http.GetRequestAsync<CustomerDto>("customer/GetByUser",
+        public async Task<CustomerDto> GetByUserId() =>
+            await _http.GetRequestAsync<CustomerDto>("customer/GetByUser",
                 new CancellationToken());
-        }
     }
 }
 

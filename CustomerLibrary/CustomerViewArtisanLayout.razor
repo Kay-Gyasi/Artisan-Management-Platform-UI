@@ -1,5 +1,9 @@
-﻿@inject NavigationService Navigator
+﻿@using System.Globalization
+@inject NavigationService Navigator
 @inject ArtisanService ArtisanService
+@inject OrderService OrderService
+@inject NotificationService ToastService
+@inject IActionDispatcher ActionDispatcher
 
 <!--begin::Navbar-->
 <div class="card mb-5 mb-xl-10">
@@ -70,6 +74,13 @@
 	</div>
 	<!--end::User-->
 
+	<!--begin::Actions-->
+    	<div class="d-flex my-4">
+	        <a @onclick="AssignArtisan" disabled="@IsLoading" class="btn btn-sm btn-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_offer_a_deal">
+		        Assign
+	        </a>
+        </div>
+    <!--end::Actions-->
 </div>
 <!--end::Title-->
 <!--begin::Stats-->
@@ -90,7 +101,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder">@Artisan?.NoOfOrders</div>
+					<div class="fs-2 fw-bolder">@Artisan?.NoOfOrders.ToString()</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -110,7 +121,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder">@Artisan?.Rating</div>
+					<div class="fs-2 fw-bolder">@Artisan?.Rating.ToString(CultureInfo.InvariantCulture)</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -131,7 +142,7 @@
 						</svg>
 					</span>
 					<!--end::Svg Icon-->
-					<div class="fs-2 fw-bolder">@Artisan?.NoOfReviews</div>
+					<div class="fs-2 fw-bolder">@Artisan?.NoOfReviews.ToString()</div>
 				</div>
 				<!--end::Number-->
 				<!--begin::Label-->
@@ -173,7 +184,7 @@
 
 
 @code {
-
+	bool IsLoading { get; set; }
 	[Parameter]
 	public ArtisanDto Artisan { get; set; } = new();
 
@@ -201,11 +212,36 @@
 			Artisan.User ??= new();
 			Artisan.User.Image ??= new();
 			if (string.IsNullOrEmpty(Artisan.User.Image.ImageUrl))
-				Artisan.User.Image.ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
+			Artisan.User.Image.ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
 
 			StateHasChanged();			
 		}
 	}
+	
+	async Task AssignArtisan()
+	{
+		DisableButtons(true);
+		var response = await OrderService.AssignArtisan(OrderId, ArtisanId);
+		if (!response.IsComplete)
+		{
+			ToastService.ShowAssignArtisanFailure();
+			DisableButtons(false);
+			return;
+		}
 
+		await ResetOrders();
+		Navigator.NavigateToViewOrderDetail(OrderId);
+	}
+
+	private async Task ResetOrders()
+	{
+		await ActionDispatcher.Dispatch(new ResetOrderPageAction());
+	}
+	
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
 }
 

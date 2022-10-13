@@ -41,9 +41,10 @@ namespace AMP.Web.Models.Authentication
             if (!string.IsNullOrEmpty(token))
             {
                 claims = ServiceExtensions.ParseClaimsFromJwt(token);
-                var role = claims.FirstOrDefault(x =>
-                    x.Value == "Administrator" || x.Value == "Artisan" || x.Value == "Customer" || x.Value == "Developer");
-                claims = claims.Append(new Claim(ClaimTypes.Role, role.Value));
+                var enumerable = claims as Claim[] ?? claims.ToArray();
+                var role = enumerable?.FirstOrDefault(x =>
+                    x.Value is "Administrator" or "Artisan" or "Customer" or "Developer");
+                claims = enumerable?.Append(new Claim(ClaimTypes.Role, role?.Value ?? ""));
             }
             var identity = string.IsNullOrEmpty(token)
                 ? new ClaimsIdentity()

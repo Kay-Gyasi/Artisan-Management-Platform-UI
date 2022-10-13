@@ -40,7 +40,7 @@ namespace AMP.Web.Models.Stores.Artisan
                     await GetArtisanByUserId();
                     break;
                 case ResetArtisanAction.RESET:
-                    await Task.Run(() => Reset());
+                    await Task.Run(Reset);
                     break;               
                 default:
                     break;

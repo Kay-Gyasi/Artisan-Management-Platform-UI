@@ -14,9 +14,7 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<bool> UploadAsync(string path, string token)
-        {
-            return await _http.UploadImageAsync(path, token, new CancellationToken());
-        }
+        public async Task<bool> UploadAsync(string path, string token) 
+            => await _http.UploadImageAsync(path, token, new CancellationToken());
     }
 }

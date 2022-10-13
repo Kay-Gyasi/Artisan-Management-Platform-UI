@@ -5,7 +5,6 @@
 
 <PageTitle>Order History</PageTitle>
 
-
 <!--begin::Form-->
 <EditForm Model="SearchObj" OnValidSubmit="Submit">
 	<DataAnnotationsValidator />
@@ -45,22 +44,30 @@
 <!--begin::Container-->
 	<!--begin::Row-->
 <div class="row g-5 g-xl-8">
-	
-	@foreach (var order in Orders.Data)
+	@if (Orders.Data.Count < 1 || Orders.Data == null)
+    {
+    	<div class="col-12 justify-content-center text-center">
+    		<h3>You have no completed orders</h3>
+    	</div>
+    }
+	else
 	{
-		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToViewOrderDetail(order.Id)">
-			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
-				<!--begin::Body-->
-				<div class="card-body">
-					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
-					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.City, @order.WorkAddress?.StreetAddress</div>
-					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
+		@foreach (var order in Orders.Data)
+		{
+			<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToViewOrderDetail(order.Id)">
+				<!--begin::Statistics Widget 1-->
+				<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
+					<!--begin::Body-->
+					<div class="card-body">
+						<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
+						<div class="fw-bolder text-primary my-6">@order.WorkAddress?.City, @order.WorkAddress?.StreetAddress</div>
+						<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
+					</div>
+					<!--end::Body-->
 				</div>
-				<!--end::Body-->
+				<!--end::Statistics Widget 1-->
 			</div>
-			<!--end::Statistics Widget 1-->
-		</div>
+		}
 	}
 </div>
 	<!--end::Row-->

@@ -10,6 +10,7 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject ArtisanStore ArtisanStore
+@inject IJSRuntime JsInterop
 
 <PageTitle>Business Settings</PageTitle>
 
@@ -17,7 +18,9 @@
 *@<!--begin::Basic info-->
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+	     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
+	     tabindex="0" @ref="_busiBody">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
 			<h3 class="fw-bolder m-0">Business Details</h3>
@@ -46,6 +49,26 @@
 				</div>
 				<!--end::Input group-->
 				
+				<!--begin::Input group-->
+                	<div class="row mb-6">
+                		<!--begin::Label-->
+                		<label class="col-lg-4 col-form-label required fw-bold fs-6">Type</label>
+                		<!--end::Label-->
+                		<!--begin::Col-->
+                		<div class="col-lg-8 fv-row">
+                			<!--begin::Input-->
+                			<select @bind="Artisan.Type" name="type" aria-label="Select a type of business" data-control="select2" data-placeholder="Select a business type..." class="form-select form-select-solid form-select-lg">
+                				<option value="">Select a Business Type...</option>
+                				@foreach (var type in Enum.GetValues(typeof(BusinessType)))
+                				{
+                					<option value="@type.ToString()">@type</option>
+                				}
+                			</select>
+                			<!--end::Input-->
+                        </div>
+                		<!--end::Col-->
+                	</div>
+                <!--end::Input group-->
 
 				<!--begin::Input group-->
 				<div class="row mb-6">
@@ -76,7 +99,7 @@
 				<div class="row mb-6">
 					<!--begin::Label-->
 					<label class="col-lg-4 col-form-label fw-bold fs-6">
-						<span class="required">Description</span>
+						<span>Description</span>
 						<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="Description of business"></i>
 					</label>
 					<!--end::Label-->
@@ -87,7 +110,21 @@
 					<!--end::Col-->
 				</div>
 				<!--end::Input group-->
-
+				@if (Servs.Any(x => x == "Electrical Works"))
+				{
+					<!--begin::Input group-->
+					<div class="row mb-6">
+						<!--begin::Label-->
+						<label class="col-lg-4 col-form-label fw-bold fs-6" title="Energy Commission Certificate Number">ECCN</label>
+						<!--end::Label-->
+						<!--begin::Col-->
+						<div class="col-lg-8 fv-row">
+							<InputText @bind-Value="Artisan.ECCN" type="text" name="eccn" class="form-control form-control-lg form-control-solid" placeholder="Energy Commission Certificate Number" />
+						</div>
+						<!--end::Col-->
+					</div>
+					<!--end::Input group-->
+				}
 			</div>
 			<!--end::Card body-->
 			<!--begin::Actions-->
@@ -105,6 +142,7 @@
 <!--end::Basic info-->
 
 @code {
+	ElementReference _busiBody;
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
@@ -113,18 +151,13 @@
 	string[] ArtisanServices { get; set; } = new string[] {}; 
 	List<string> Servs { get; set; } = new List<string>();	
 	bool IsLoading { get; set; }
-
-
-	protected override void OnInitialized()
-	{
-		InitializeProperties();
-	}
-
+	
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
+		await JsInterop.InvokeVoidAsync("SetFocusToElement", _busiBody);
 	}
 
 	// TODO:: refactor this (readability)

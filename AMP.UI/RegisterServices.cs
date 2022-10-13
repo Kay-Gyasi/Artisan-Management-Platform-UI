@@ -26,10 +26,10 @@ public static class RegisterServices
             .AddStores()
             .AddAuthentication()
             .AddWorkers()
-            .AddHttpClient("AmpDevApi", options =>
+            .AddHttpClient("AmpClient", options =>
             {
-                //options.BaseAddress = new Uri(configuration["DevApiUrl"] ?? string.Empty);
-                options.BaseAddress = new Uri(configuration["ProdApiUrl"] ?? string.Empty);
+                options.BaseAddress = new Uri(configuration["DevApiUrl"] ?? string.Empty);
+                //options.BaseAddress = new Uri(configuration["ProdApiUrl"] ?? string.Empty);
             });
         return services;
     }

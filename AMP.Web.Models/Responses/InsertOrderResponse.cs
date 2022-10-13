@@ -1,4 +1,4 @@
-﻿namespace AMP.Web.Models.Dtos
+﻿namespace AMP.Web.Models.Responses
 {
     public class InsertOrderResponse
     {

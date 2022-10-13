@@ -40,7 +40,7 @@ namespace AMP.Web.Models.Stores.Customer
                     await GetCustomerByUserId();
                     break;
                 case ResetCustomerAction.RESET:
-                    await Task.Run(() => Reset());
+                    await Task.Run(Reset);
                     break;
                 default:
                     break;

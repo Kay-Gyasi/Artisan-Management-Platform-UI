@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
+using AMP.Web.Models.Responses;
 using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,28 @@ namespace AMP.Web.Models.Services.HttpServices.Base
                     return await request.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
                 throw new HttpRequestFailedException($"{nameof(GetRequestAsync)} for {nameof(T)} failed!");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(nameof(GetRequestAsync) + "failed!");
+                throw;
+            }
+        }
+        
+        public async Task<string> GetRequestAsync(string path, CancellationToken cancellationToken)
+        {
+            try
+            {
+                using var client = await CreateClient();
+                var request = await client.GetAsync(path, cancellationToken);
+                if (request.ReasonPhrase == "Unauthorized")
+                {
+                    _navigationService.NavigateToLoginForceLoad();
+                    await _auth.SetTokenAsync(null);
+                    return "Unauthorized";
+                }
+
+                return request.IsSuccessStatusCode ? "success" : "not found";
             }
             catch (Exception e)
             {
@@ -240,7 +263,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
 
         private async Task<HttpClient> CreateClient()
         {
-            var client = _httpClientFactory.CreateClient("AmpDevApi");
+            var client = _httpClientFactory.CreateClient("AmpClient");
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {await _auth.GetTokenAsync()}");
             return client;
         }

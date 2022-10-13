@@ -304,11 +304,18 @@
 	async Task Complete()
 	{
 		DisableButton(true);
+
+		if (Order is {IsArtisanComplete: false })
+		{
+			ToastService.ShowArtisanNotComplete();
+			DisableButton(false);
+			return;
+		}
 		var response = await OrderService.Complete(OrderId);
 		if (response.IsComplete)
 		{
 
-			// Forward payment to artisan
+			// Forward payment to artisan in background
 			Navigator.NavigateToCustomerOrderList();
 			return;
 		}

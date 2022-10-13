@@ -22,11 +22,13 @@ namespace AMP.Web.Models.Stores
 
         public async Task Dispatch(IOrderAction action)
         {
-            await _registeredOrderActionHandlers?.Invoke(action);
+            if(_registeredOrderActionHandlers is not null) 
+                await _registeredOrderActionHandlers.Invoke(action);
         }
         public async Task Dispatch(IAction action)
         {
-            await _registeredActionHandlers?.Invoke(action);
+            if(_registeredActionHandlers is not null) 
+                await _registeredActionHandlers.Invoke(action);
         }
 
         public void Subscribe(Func<IAction, Task> actionHandler)

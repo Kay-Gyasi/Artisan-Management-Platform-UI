@@ -5,6 +5,7 @@ using System.Web;
 using AMP.Web.Models.Commands;
 using AMP.Web.Models.Dtos;
 using AMP.Web.Models.PageDtos;
+using AMP.Web.Models.Responses;
 using AMP.Web.Models.Services.HttpServices.Base;
 using Kessewa.Extension.Shared.HttpServices.Models;
 using Newtonsoft.Json;
@@ -48,22 +49,21 @@ namespace AMP.Web.Models.Services.HttpServices
         public async Task<OrderDto> GetAsync(string id) 
             => await _http.GetRequestAsync<OrderDto>($"order/get/{id}",
                 new CancellationToken());
-        public async Task<InsertOrderResponse> Insert(OrderCommand command)
-        {
-            return await _http.PostOrderAsync("order/insert", command, new CancellationToken());
-        }
+        
+        public async Task<InsertOrderResponse> Insert(OrderCommand command) 
+            => await _http.PostOrderAsync("order/insert", command, new CancellationToken());
 
         public async Task<RequestResponse> Save(OrderCommand command) 
             => await _http.PostRequestAsync("order/save", command, new CancellationToken());
 
         public async Task<RequestResponse> UnassignArtisan(string orderId) 
-            => await _http.PutRequestAsync("order/unassignArtisan", orderId, new CancellationToken());
+            => await _http.PutRequestAsync("order/UnassignArtisan", orderId, new CancellationToken());
 
         public async Task<RequestResponse> Complete(string orderId) 
             => await _http.PutRequestAsync("order/complete", orderId, new CancellationToken());
         
         public async Task<RequestResponse> ArtisanComplete(string orderId) 
-            => await _http.PutRequestAsync("order/artisancomplete", orderId, new CancellationToken());
+            => await _http.PutRequestAsync("order/ArtisanComplete", orderId, new CancellationToken());
 
         public async Task<RequestResponse> Accept(string orderId) 
             => await _http.PutRequestAsync("order/accept", orderId, new CancellationToken());
@@ -78,7 +78,7 @@ namespace AMP.Web.Models.Services.HttpServices
             => await _http.DeleteRequestAsync($"order/delete/{id}", new CancellationToken());
         
         public async Task<RequestResponse> SetCost(SetCostCommand command)
-            => await _http.PutRequestAsync("order/setcost", command, new CancellationToken());
+            => await _http.PutRequestAsync("order/SetCost", command, new CancellationToken());
     }
 }
 

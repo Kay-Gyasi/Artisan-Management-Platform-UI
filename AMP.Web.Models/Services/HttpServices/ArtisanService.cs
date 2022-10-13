@@ -21,40 +21,28 @@ namespace AMP.Web.Models.Services.HttpServices
             _http = http;
         }
 
-        public async Task<ArtisanDto> GetAsync(string id)
-        {
-            return await _http.GetRequestAsync<ArtisanDto>($"artisan/get/{id}",
+        public async Task<ArtisanDto> GetAsync(string id) =>
+            await _http.GetRequestAsync<ArtisanDto>($"artisan/get/{id}",
                 new CancellationToken());
-        }
-        
-        
-        public async Task<ArtisanDto> GetByUserId()
-        {
-            return await _http.GetRequestAsync<ArtisanDto>($"artisan/GetByUser",
+
+
+        public async Task<ArtisanDto> GetByUserId() =>
+            await _http.GetRequestAsync<ArtisanDto>($"artisan/GetByUser",
                 new CancellationToken());
-        }
-        
-        public async Task<List<Lookup>> GetArtisansWorkedForCustomer()
-        {
-            return await _http.GetRequestAsync<List<Lookup>>($"artisan/GetArtisansWorkedForCustomer",
+
+        public async Task<List<Lookup>> GetArtisansWorkedForCustomer() =>
+            await _http.GetRequestAsync<List<Lookup>>($"artisan/GetArtisansWorkedForCustomer",
                 new CancellationToken());
-        }
 
-        public async Task<PaginatedList<ArtisanPageDto>> GetPage(PaginatedQuery query)
-        {
-            return await _http.GetPageRequestAsync<ArtisanPageDto>
-                ("artisan/getpage", query, new CancellationToken());
-        }
+        public async Task<PaginatedList<ArtisanPageDto>> GetPage(PaginatedQuery query) =>
+            await _http.GetPageRequestAsync<ArtisanPageDto>
+                ("artisan/GetPage", query, new CancellationToken());
 
-        public async Task<RequestResponse> Save(ArtisanCommand command)
-        {
-            return await _http.PostRequestAsync("artisan/save", command, new CancellationToken());
-        }
+        public async Task<RequestResponse> Save(ArtisanCommand command) 
+            => await _http.PostRequestAsync("artisan/save", command, new CancellationToken());
 
-        public async Task<RequestResponse> Delete(string id)
-        {
-            return await _http.DeleteRequestAsync($"artisan/delete/{id}", new CancellationToken());
-        }
+        public async Task<RequestResponse> Delete(string id) 
+            => await _http.DeleteRequestAsync($"artisan/delete/{id}", new CancellationToken());
     }
 }
 

@@ -62,6 +62,8 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToPaymentAuthorizationUrl(string authUrl) => _navManager.NavigateTo(authUrl, true);
         public void NavigateToAssignOrderToArtisan(string id, string service) 
             => _navManager.NavigateTo($"customers/assign-order/{id}/{service}");
+        public void NavigateToVerifyPhone(string phone) => _navManager.NavigateTo($"verify-phone/{phone}");
+        public void NavigateToForgotPassword() => _navManager.NavigateTo("forgot-password");
     }
 }
 

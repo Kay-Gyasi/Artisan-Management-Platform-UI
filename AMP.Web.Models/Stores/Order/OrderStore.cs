@@ -38,7 +38,7 @@ namespace AMP.Web.Models.Stores.Order
                     await GetPage(action.Payload);
                     break;
                 case ResetOrderPageAction.RESET:
-                    await Task.Run(() => Reset());
+                    await Task.Run(Reset);
                     break;
                 default:
                     break;

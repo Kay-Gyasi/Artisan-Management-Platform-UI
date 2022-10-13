@@ -51,38 +51,46 @@
 <!--begin::Container-->
 	<!--begin::Row-->
 <div class="row g-5 g-xl-8">
-	
-	@foreach (var order in Orders.Data)
+	@if (Orders.Data.Count < 1 || Orders.Data == null)
+    {
+    	<div class="col-12 justify-content-center text-center">
+    		<h3>You have not made any orders</h3>
+    	</div>
+    }
+	else
 	{
-		<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToViewOrderDetail(order.Id)">
-			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
-				<!--begin::Body-->
-				<div class="card-body">
-					<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
-					@if (!IsArtisanAssigned(order))
-					{
-						<span class="badge badge-danger ms-1">Unassigned</span>
-					}
-					else
-					{
-						// TODO:: Show tag for when order has been completed
-						if (!order.IsRequestAccepted)
+		@foreach (var order in Orders.Data)
+		{
+			<div class="col-xl-4" style="cursor:pointer" @onclick="() => Navigator.NavigateToViewOrderDetail(order.Id)">
+				<!--begin::Statistics Widget 1-->
+				<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
+					<!--begin::Body-->
+					<div class="card-body">
+						<a href="#" class="card-title fw-bolder text-muted text-hover-primary fs-4">@order.Service.Name</a>
+						@if (!IsArtisanAssigned(order))
 						{
-							<span class="badge badge-info ms-1">Pending acceptance</span>
+							<span class="badge badge-danger ms-1">Unassigned</span>
 						}
 						else
 						{
-							<span class="badge badge-secondary ms-1">Accepted</span>
+							// TODO:: Show tag for when order has been completed
+							if (!order.IsRequestAccepted)
+							{
+								<span class="badge badge-info ms-1">Pending acceptance</span>
+							}
+							else
+							{
+								<span class="badge badge-secondary ms-1">Accepted</span>
+							}
 						}
-					}
-					<div class="fw-bolder text-primary my-6">@order.WorkAddress?.Town, @order.WorkAddress?.StreetAddress</div>
-					<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
+						<div class="fw-bolder text-primary my-6">@order.WorkAddress?.Town, @order.WorkAddress?.StreetAddress</div>
+						<p class="text-dark-75 fw-bold fs-5 m-0">@order.Description</p>
+					</div>
+					<!--end::Body-->
 				</div>
-				<!--end::Body-->
+				<!--end::Statistics Widget 1-->
 			</div>
-			<!--end::Statistics Widget 1-->
-		</div>
+		}
 	}
 </div>
 	<!--end::Row-->
@@ -126,7 +134,7 @@
 		StateHasChanged();
 	}
 
-	static bool IsArtisanAssigned(OrderPageDto order) => order.ArtisanId != null;
+	static bool IsArtisanAssigned(OrderPageDto order) => !string.IsNullOrEmpty(order.ArtisanId);
 
 	private async Task GetOrders() => await ActionDispatcher.Dispatch(new GetOrderPageAction(Query));
 

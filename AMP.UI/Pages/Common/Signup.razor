@@ -182,7 +182,7 @@
 		var response = await UserService.Post(User);
 		if (response.IsComplete)
 		{
-			Navigator.NavigateToLogin();
+			Navigator.NavigateToVerifyPhone(User.Contact.PrimaryContact);
 			ToastService.ShowSignupComplete();
 			return;
 		}

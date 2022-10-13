@@ -2,6 +2,7 @@
 @using System.Globalization
 @inject AuthService AuthStateService
 @inject PaymentService PaymentService
+@inject NavigationService Navigator
 
 <PageTitle>Orders</PageTitle>
 
@@ -43,31 +44,39 @@
 <!--begin::Container-->
 	<!--begin::Row-->
 <div class="row g-5 g-xl-8">
-	
-	@foreach (var payment in Payments.Data)
+	@if (Payments.Data.Count < 1 || Payments.Data == null)
+    {
+    	<div class="col-12 justify-content-center text-center">
+    		<h3>You have not received any payments</h3>
+    	</div>
+    }
+	else
 	{
-		<div class="col-xl-4" style="cursor:pointer">
-			<!--begin::Statistics Widget 1-->
-			<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
-				<!--begin::Body-->
-				<div class="card-body">
-					<a href="/payments" class="card-title fw-bolder text-muted text-hover-primary fs-4">Transaction Reference: @payment.TransactionReference</a>
-@*					<div class="fw-bolder text-primary my-6">Transaction Reference: @payment.TransactionReference</div>
-*@					
-					@if (IsForwardedToArtisan(payment))
-					{
-						<span class="badge badge-success ms-1">Forwarded</span>
-					}
-					else
-					{
-						<span class="badge badge-danger ms-1">Withheld</span>
-					}
-					<p class="text-dark-75 fw-bold fs-5 m-0">Amount: @payment.AmountPaid.ToString(CultureInfo.InvariantCulture)</p>
+		@foreach (var payment in Payments.Data)
+		{
+			<div class="col-xl-4" style="cursor:pointer">
+				<!--begin::Statistics Widget 1-->
+				<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(assets/media/abstract-4.svg)">
+					<!--begin::Body-->
+					<div class="card-body">
+						<a @onclick="Navigator.NavigateToArtisanPayments" class="card-title fw-bolder text-muted text-hover-primary fs-4">Transaction Reference: @payment.TransactionReference</a>
+						@*					<div class="fw-bolder text-primary my-6">Transaction Reference: @payment.TransactionReference</div>
+	*@
+						@if (IsForwardedToArtisan(payment))
+						{
+							<span class="badge badge-success ms-1">Forwarded</span>
+						}
+						else
+						{
+							<span class="badge badge-danger ms-1">Withheld</span>
+						}
+						<p class="text-dark-75 fw-bold fs-5 m-0">Amount: @payment.AmountPaid.ToString(CultureInfo.InvariantCulture)</p>
+					</div>
+					<!--end::Body-->
 				</div>
-				<!--end::Body-->
+				<!--end::Statistics Widget 1-->
 			</div>
-			<!--end::Statistics Widget 1-->
-		</div>
+		}
 	}
 </div>
 	<!--end::Row-->

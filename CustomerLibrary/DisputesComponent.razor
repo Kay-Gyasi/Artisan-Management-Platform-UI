@@ -109,6 +109,7 @@
 		if (response.IsComplete)
 		{
 			ToastService.SaveSuccess();
+			Dispute = new();
 			DisableButtons(false);
 			return;
 		}

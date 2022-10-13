@@ -26,7 +26,20 @@ namespace AMP.Web.Models.Services.HttpServices
             await _http.PutRequestAsync("user/update", command, new CancellationToken());
         
         public async Task<RequestResponse> Post(UserCommand command) =>
-            await _http.PostRequestAsync("user/post", command, new CancellationToken());
+            await _http.PostRequestAsync("registration/post", command, new CancellationToken());
+        
+        public async Task<string> SendCode(string phone) =>
+            await _http.GetRequestAsync($"registration/sendCode/{phone}", new CancellationToken());
+        
+        public async Task<string> Verify(string phone, string code) =>
+            await _http.GetRequestAsync($"registration/verify/{phone}/{code}", new CancellationToken());
+
+        public async Task<string> SendPassResetLink(string phone) =>
+            await _http.GetRequestAsync($"user/SendPasswordResetLink/{phone}", new CancellationToken());
+
+        public async Task<string> ResetPassword(string phone, string confirmCode, string newPassword) =>
+            await _http.GetRequestAsync($"user/ResetPassword/{phone}/{confirmCode}/{newPassword}",
+                new CancellationToken());
 
         public async Task<RequestResponse> Delete(string id) =>
             await _http.DeleteRequestAsync($"user/delete/{id}", new CancellationToken());

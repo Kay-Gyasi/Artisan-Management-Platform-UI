@@ -60,5 +60,27 @@ namespace AMP.Web.Models.Services.Toast
         public void ShowImageUploadStartup() => _toastService.ShowInfo("Image upload starting... Changes will be reflected on next login");
 
         public void ShowInvalidFile() => _toastService.ShowError("Input file is invalid!");
+        
+        public void ShowArtisanNotComplete()
+            => _toastService.ShowError("The artisan has not completed the order!");
+
+        public void CodeSendSuccess() 
+            => _toastService.ShowSuccess("Code send success!");
+        
+        public void CodeSendFailure() 
+            => _toastService.ShowError("Code send failure!");
+
+        public void SendPassResetSuccess()
+            => _toastService.ShowSuccess("Please check your sms for a link to reset your password");
+        
+        public void SendPassResetFailed()
+            => _toastService.ShowError("Phone entered was not found");
+
+        public void PassResetSuccess()            
+            => _toastService.ShowSuccess("Password has been reset successfully");
+        
+        public void PassResetFailed()            
+            => _toastService.ShowError("Password reset failed");
+
     }
 }

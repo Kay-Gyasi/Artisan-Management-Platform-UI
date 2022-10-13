@@ -2,9 +2,6 @@
 @inject NavigationService Navigator
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
-@inject OrderService OrderService
-@inject NotificationService ToastService
-@inject IActionDispatcher ActionDispatcher
 @inject OrderStore OrderStore
 @implements IDisposable
 
@@ -21,12 +18,7 @@
 			<h3 class="fw-bolder m-0">Profile Details</h3>
 		</div>
 		<!--end::Card title-->
-		<!--begin::Action-->
-		<div class="mt-auto mb-auto">
-			<button class="btn float-end btn-primary align-self-center me-1"
-					disabled="@IsLoading" @onclick="AssignArtisan">Assign</button>
-		</div>
-		<!--end::Action-->
+		
 	</div>
 	<!--begin::Card header-->
 	<!--begin::Card body-->
@@ -55,6 +47,36 @@
 			<!--end::Col-->
 		</div>
 		<!--end::Input group-->
+		
+		<!--begin::Input group-->
+        		<div class="row mb-7">
+        			<!--begin::Label-->
+        			<label class="col-lg-4 fw-bold text-muted">Type of Business</label>
+        			<!--end::Label-->
+        			<!--begin::Col-->
+        			<div class="col-lg-8 fv-row">
+        				<span class="fw-bold text-gray-800 fs-6">@Artisan.Type.ToString()</span>
+        			</div>
+        			<!--end::Col-->
+        		</div>
+		<!--end::Input group-->
+		
+		@if (Artisan.Services.Any(x => x.Name == "Electrical Works"))
+		{
+			<!--begin::Input group-->
+			<div class="row mb-7">
+				<!--begin::Label-->
+				<label class="col-lg-4 fw-bold text-muted">Is certified?</label>
+				<!--end::Label-->
+				<!--begin::Col-->
+				<div class="col-lg-8 fv-row">
+					<span class="fw-bold text-gray-800 fs-6">@IsCertified()</span>
+				</div>
+				<!--end::Col-->
+			</div>
+			<!--end::Input group-->
+		}
+		
 		<!--begin::Input group-->
 		<div class="row mb-7">
 			<!--begin::Label-->
@@ -109,7 +131,6 @@
 	public string ArtisanId { get; set; }
 	[Parameter]
 	public string OrderId { get; set; }
-	bool IsLoading { get; set; }
 	ArtisanDto Artisan { get; set; } = new();
 
 	protected override async Task OnInitializedAsync()
@@ -135,32 +156,6 @@
 		Artisan.User.Contact = new();
 	}
 
-	async Task AssignArtisan()
-	{
-		DisableButtons(true);
-		var response = await OrderService.AssignArtisan(OrderId, ArtisanId);
-		if (!response.IsComplete)
-		{
-			ToastService.ShowAssignArtisanFailure();
-			DisableButtons(false);
-			return;
-		}
-
-		await ResetOrders();
-	    Navigator.NavigateToViewOrderDetail(OrderId);
-	}
-
-	void DisableButtons(bool isLoading)
-	{
-		IsLoading = isLoading;
-		StateHasChanged();
-	}
-
-	private async Task ResetOrders()
-	{
-		await ActionDispatcher.Dispatch(new ResetOrderPageAction());
-	}
-
 	private void UpdateView()
 	{
 		StateHasChanged();
@@ -170,4 +165,6 @@
 	{
 		OrderStore.RemoveStateChangeListener(UpdateView);
 	}
+
+	string IsCertified() => !string.IsNullOrEmpty(Artisan.ECCN) ? "Yes" : "No";
 }

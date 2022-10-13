@@ -16,7 +16,7 @@
 		<!--begin::Card title-->
         	<div class="card-title">
         		<!--begin::Search-->
-        		<div class="d-flex align-items-center position-relative my-1">
+        		<div class="d-flex align-items-center position-relative my-1 mw-75">
         			<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
         			<span class="svg-icon svg-icon-1 position-absolute ms-6">
         				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -267,17 +267,19 @@
         				<div class="d-flex align-items-sm-center mb-7">
         					<!--begin::Symbol-->
         					<div class="symbol symbol-60px symbol-2by3 me-4">
-        						<div class="symbol-label" style="background-image: url(@ShowArtisanImage(artisan))"></div>
+        						<div class="symbol-label" style="background-image: url(@ShowArtisanImage(artisan)); height: 10vh;"></div>
         					</div>
         					<!--end::Symbol-->
         					<!--begin::Content-->
         					<div class="d-flex flex-row-fluid align-items-center flex-wrap my-lg-0 me-2">
         						<!--begin::Title-->
-        						<div class="flex-grow-1 my-lg-0 my-2 me-2">
-	                                <a @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(artisan.Id, OrderId))"
-	                                   class="text-gray-800 fw-bolder text-hover-primary fs-6">@artisan.BusinessName</a>
-        							<span class="text-muted fw-bold d-block pt-1">@artisan.User.Contact.PrimaryContact</span>
-        						</div>
+						        <div class="flex-grow-1 my-lg-0 my-2 me-2">
+							        <div style="max-width: 20vw;">
+								        <a @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(artisan.Id, OrderId))"
+                                        							           class="text-gray-800 fw-bolder text-hover-primary fs-6">@artisan.BusinessName</a>
+							        </div>
+							        <span class="text-muted fw-bold d-block pt-1">@artisan.User.Contact.PrimaryContact</span>
+						        </div>
         						<!--end::Title-->
         						<!--begin::Section-->
         						<div class="d-flex align-items-center">
@@ -285,7 +287,7 @@
         								<i class="fa fa-star-half-alt me-1 text-warning fs-5"></i>
         								<span class="text-gray-800 fw-bolder">@artisan.Rating.ToString(CultureInfo.InvariantCulture)</span>
         							</div>
-        							<a @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(artisan.Id, OrderId))" class="btn btn-icon btn-light btn-sm border-0">
+        							<a @onclick="@(() => Navigator.NavigateToCustomerViewArtisanForOrder(artisan.Id, OrderId))" class="btn btn-icon btn-primary btn-sm border-0">
         								<!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
         								<span class="svg-icon svg-icon-2 svg-icon-primary">
         									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

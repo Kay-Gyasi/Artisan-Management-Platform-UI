@@ -6,13 +6,16 @@
 @inject ImageService ImageService
 @inject NotificationService ToastService
 @layout ArtisanProfileLayout
+@inject IJSRuntime JsInterop
 
 <div class="card mb-5 mb-xl-10">
 <!--begin::Card header-->
-<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
+     tabindex="0" @ref="_imagBody">
     <!--begin::Card title-->
     <div class="card-title m-0">
-        <h3 class="fw-bolder m-0">Profile Details</h3>
+        <h3 class="fw-bolder m-0">Current Image</h3>
     </div>
     <!--end::Card title-->
 </div>
@@ -76,6 +79,7 @@
 </div>
 </div>
 @code {
+    ElementReference _imagBody;
     IFileListEntry _file;
     string ImageUrl { get; set; }
     bool IsLoading { get; set; }
@@ -85,6 +89,7 @@
     protected override async Task OnInitializedAsync()
     {
 		await AuthStateService.CheckAuthStatus();
+        await JsInterop.InvokeVoidAsync("SetFocusToElement", _imagBody);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
