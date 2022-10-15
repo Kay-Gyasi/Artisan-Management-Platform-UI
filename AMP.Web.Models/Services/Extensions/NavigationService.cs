@@ -64,6 +64,10 @@ namespace AMP.Web.Models.Services.Extensions
             => _navManager.NavigateTo($"customers/assign-order/{id}/{service}");
         public void NavigateToVerifyPhone(string phone) => _navManager.NavigateTo($"verify-phone/{phone}");
         public void NavigateToForgotPassword() => _navManager.NavigateTo("forgot-password");
+
+        public void NavigateToAddDispute() => _navManager.NavigateTo("customer/add-dispute");
+
+        public void NavigateToEditDispute(string disputeId) => _navManager.NavigateTo($"customer/edit-dispute/{disputeId}");
     }
 }
 

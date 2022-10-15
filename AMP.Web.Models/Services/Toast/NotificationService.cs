@@ -82,5 +82,10 @@ namespace AMP.Web.Models.Services.Toast
         public void PassResetFailed()            
             => _toastService.ShowError("Password reset failed");
 
+        public void SendInviteSuccess()
+            => _toastService.ShowSuccess("Invite has been sent successfully");
+        
+        public void SendInviteFailed()
+            => _toastService.ShowError("Invite send failed");
     }
 }

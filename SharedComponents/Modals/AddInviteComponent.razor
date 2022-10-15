@@ -1,0 +1,175 @@
+﻿@inject NotificationService ToastService
+@inject InvitationService InvitationService
+
+<!--begin::Modal content-->
+<div class="card scroll-y" tabindex="-1">
+	<!--begin::Modal header-->
+	<div class="card-header pb-0 border-0 justify-content-end">
+		<!--begin::Heading-->
+        <div class="text-center mb-13">
+        	<!--begin::Title-->
+        	<h1 class="mb-3">Invite a Friend</h1>
+        	<!--end::Title-->
+        	<!--begin::Description-->
+        	<div class="text-muted fw-bold fs-5">If you need more info, please check out
+        		<a href="#" class="link-primary fw-bolder">FAQ Page</a>.</div>
+        	<!--end::Description-->
+        </div>
+        
+        <!--end::Heading-->
+	</div>
+	<!--begin::Modal header-->
+	<!--begin::Modal body-->
+	<div class="card-body border-top p-9">
+		
+		@*<!--begin::Google Contacts Invite-->
+		<div class="btn btn-light-primary fw-bolder w-100 mb-8">
+		<img alt="Logo" src="assets/media/google-icon.svg" class="h-20px me-3" />Invite Gmail Contacts</div>
+		<!--end::Google Contacts Invite-->
+		<!--begin::Separator-->
+		<div class="separator d-flex flex-center mb-8">
+			<span class="text-uppercase bg-body fs-7 fw-bold text-muted px-3">or</span>
+		</div>
+		<!--end::Separator-->*@
+		
+		<EditForm Model="Command" OnValidSubmit="Submit">
+			<DataAnnotationsValidator />
+			
+			<!--begin::Input group-->
+            <div class="row mb-6">
+            	<!--begin::Label-->
+            	<label class="col-lg-4 col-form-label required fw-bold fs-6">Phone</label>
+            	<!--end::Label-->
+            	<!--begin::Col-->
+            	<div class="col-lg-8 fv-row">
+            		<InputText @bind-Value="Command.InvitedPhone" name="phone" class="form-control form-control-lg form-control-solid" 
+            		           placeholder="Phone number of invitee" />
+            		<ValidationMessage For="(() => Command.InvitedPhone)" />
+            	</div>
+            	<!--end::Col-->
+            </div>
+            <!--end::Input group-->
+
+			<!--begin::Input group-->
+            <div class="row mb-6">
+            	<!--begin::Label-->
+            	<label class="col-lg-4 col-form-label required fw-bold fs-6">Type</label>
+            	<!--end::Label-->
+            	<!--begin::Col-->
+            	<div class="col-lg-8 fv-row">
+            		<!--begin::Input-->
+            		<InputSelect @bind-Value="Command.Type" name="type" aria-label="Select a type" data-control="select2" data-placeholder="Invite as..." class="form-select form-select-solid form-select-lg">
+            			@foreach (var level in Enum.GetValues(typeof(InviteType)))
+            			{
+            				<option value="@level">@level.ToString()</option>
+            			}
+            		</InputSelect>
+            		<!--end::Input-->
+            		<!--begin::Hint-->
+            		<div class="form-text">Please select the type of user to invite the invitee as</div>
+            		<!--end::Hint-->
+            	</div>
+            	<!--end::Col-->
+            </div>
+			<!--end::Input group-->
+			
+			<!--begin::Actions-->
+            <div class="card-footer d-flex justify-content-end py-6 px-9">
+            	<button type="reset" class="btn btn-light btn-active-light-primary me-2" disabled="@IsLoading">Discard</button>
+            	<button type="submit" class="btn btn-primary" disabled="@IsLoading">Send</button>
+            </div>
+            <!--end::Actions-->
+		</EditForm>
+		@*<!--begin::Users-->
+        <div class="mb-10">
+        	<!--begin::Heading-->
+        	<div class="fs-6 fw-bold mb-2">Your Invitations</div>
+        	<!--end::Heading-->
+			@if (Invites.Count < 1)
+	        {
+	            <div class="col-12 justify-content-center text-center">
+            		<h6>You have not sent any invites</h6>
+	            </div>
+	        }
+			else
+			{
+				@foreach (var invite in Invites)
+				{
+					
+					<!--begin::List-->
+					<div class="mh-300px scroll-y me-n7 pe-7">
+						<!--begin::User-->
+						<div class="d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed">
+							<!--begin::Details-->
+							<div class="d-flex align-items-center">
+								<!--begin::Avatar-->
+								<div class="symbol symbol-35px symbol-circle">
+									<img alt="Pic" src="assets/media/150-1.jpg"/>
+								</div>
+								<!--end::Avatar-->
+								<!--begin::Details-->
+								<div class="ms-5">
+									<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">@invite.InvitedPhone</a>
+									$1$
+									<div class="fw-bold text-muted">e.smith@kpmg.com.au</div>
+								#1#
+								</div>
+								<!--end::Details-->
+							</div>
+							<!--end::Details-->
+							<!--begin::Access menu-->
+							<div class="ms-2 w-100px">
+								<span class="fw-bolder fs-6 text-gray-800 me-2">@invite.Type.ToString()</span>
+							</div>
+							<!--end::Access menu-->
+						</div>
+						<!--end::User-->
+					</div>
+					<!--end::List-->
+				}
+			}
+	        </div>
+        <!--end::Users-->*@
+	</div>
+	<!--end::Modal body-->
+</div>
+
+
+@code {
+	InvitationCommand Command { get; set; } = new();
+	List<InvitationDto> Invites { get; set; } = new();
+	bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		Invites = await InvitationService.GetUserInvites();
+	}
+
+	async Task Submit()
+	{
+		DisableButton(true);
+		var response = await InvitationService.AddInvite(Command);
+		if (response.IsComplete)
+		{
+			Command = new();
+			ToastService.SendInviteSuccess();
+			DisableButton(false);
+			return;
+		}
+        
+		ToastService.SendInviteFailed();
+		DisableButton(false);
+	}
+
+	enum InviteType
+	{
+		Artisan = 3,
+		Customer
+	}
+
+	void DisableButton(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
+}

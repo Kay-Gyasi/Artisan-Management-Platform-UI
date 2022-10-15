@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime JsRuntime
+﻿@using SharedComponents.Modals
+@inject IJSRuntime JsRuntime
 
 <div id="kt_header" style="" class="header align-items-stretch">
 	<!--begin::Brand-->
@@ -121,7 +122,7 @@
 					<!--begin::Actions-->
 					<div class="d-flex">
 						<!--begin::Action-->
-						<a href="#" class="btn btn-sm btn-icon btn-icon-muted btn-active-icon-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
+						<a @onclick="ToggleForm" class="btn btn-sm btn-icon btn-icon-muted btn-active-icon-primary">
 							<!--begin::Svg Icon | path: icons/duotune/communication/com006.svg-->
 							<span class="svg-icon svg-icon-1">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -808,6 +809,12 @@
 
 
 @code {
+	[CascadingParameter] IModalService Modal { get; set; }
+
+	void ToggleForm()
+	{
+		Modal.Show<AddInviteComponent>();
+	}
 	// protected override async void OnAfterRender(bool firstRender)
 	// {
 	// 	//await JsRuntime.InvokeVoidAsync("KTLayoutToolbar.init");

@@ -1,123 +1,95 @@
 ﻿@page "/customer/disputes"
-@using AMP.Web.Models.ViewModels
 @inject DisputeService DisputeService
-@inject LookupService LookupService
-@inject NotificationService ToastService
 @inject AuthService AuthStateService
+@inject NavigationService Navigator
 
 <PageTitle>Disputes</PageTitle>
 
-
-<!--begin::Basic info-->
-<div class="card mb-5 mb-xl-10">
-	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
-		<!--begin::Card title-->
-		<div class="card-title m-0">
-			<h3 class="fw-bolder m-0">Post Dispute</h3>
+<!--begin::Form-->
+<EditForm Model="SearchObj" OnSubmit="Submit">
+	<!--begin::Card-->
+	<div class="card mb-7">
+		<!--begin::Card body-->
+		<div class="card-body">
+			<!--begin::Compact form-->
+			<div class="d-flex align-items-center">
+				<!--begin:Action-->
+                <div class="d-flex align-items-center">
+                	<button type="button" class="btn btn-primary" @onclick="Navigator.NavigateToAddDispute">Add Dispute</button>
+                </div>
+                <!--end:Action-->
+			</div>
 		</div>
-		<!--end::Card title-->
-		<div class="mt-auto mb-auto">
-			Open Disputes: @DisputeCount.Count
-		</div>
+		<!--end::Card body-->
 	</div>
-	<!--begin::Card header-->
-	<!--begin::Content-->
-	<div id="kt_account_profile_details" class="collapse show">
-		<!--begin::Form-->
-	<EditForm Model="Dispute" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
-	<DataAnnotationsValidator />
-	<!--begin::Card body-->
-	<div class="card-body border-top p-9">
+	<!--end::Card-->
+</EditForm>
+<!--end::Form-->
 
-	<!--begin::Input group-->
-	<div class="row mb-6">
-		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label fw-bold fs-6">Order</label>
-		<!--end::Label-->
-		<!--begin::Col-->
-		<div class="col-lg-8 fv-row">
-			<InputSelect @bind-Value="Dispute.OrderId" name="artisan" class="form-control form-control-lg form-control-solid"
-						 placeholder="Order on which dispute is being held">
-				<option value="">--Select an order--</option>
-				@foreach (var order in OpenOrders)
-				{
-					<option value="@order.Id">@order.Name</option>
-				}
-			</InputSelect>
-		</div>
-		<!--end::Col-->
-	</div>
-	<!--end::Input group-->
-
-	<!--begin::Input group-->
-	<div class="row mb-6">
-		<!--begin::Label-->
-		<label class="col-lg-4 col-form-label required fw-bold fs-6">Details</label>
-		<!--end::Label-->
-		<!--begin::Col-->
-		<div class="col-lg-8 fv-row">
-			<InputTextArea @bind-Value="Dispute.Details" name="disputeDetails" class="form-control form-control-lg form-control-solid" 
-						   placeholder="Details" style="min-height: 20vh;" />
-		</div>
-		<!--end::Col-->
-	</div>
-	<!--end::Input group-->
-
-	</div>
-	<!--end::Card body-->
-	<!--begin::Actions-->
-	<div class="card-footer d-flex justify-content-end py-6 px-9">
-		<button type="reset" class="btn btn-light btn-active-light-primary me-2"
-				disabled="@IsLoading">Discard</button>
-		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
-				disabled="@IsLoading">Post</button>
-	</div>
-	<!--end::Actions-->
-	</EditForm>
-		<!--end::Form-->
-	</div>
-	<!--end::Content-->
+<!--begin::Container-->
+	<!--begin::Row-->
+<div class="row g-5 g-xl-8">
+	@if (Disputes.Data.Count < 1 || Disputes.Data == null)
+    {
+    	<div class="col-12 justify-content-center text-center">
+    		<h3>You have no open disputes</h3>
+    	</div>
+    }
+	else
+	{
+		@foreach (var dispute in Disputes.Data)
+		{
+			<div class="col-xl-4" style="cursor:pointer" @onclick="(() => Navigator.NavigateToEditDispute(dispute.Id))">
+				<!--begin::Statistics Widget 1-->
+				<div class="card bgi-no-repeat card-xl-stretch mb-xl-8" style="background-position: right top; background-size: 30% auto; background-image: url(abstract-4.svg)">
+					<!--begin::Body-->
+					<div class="card-body">
+						<a @onclick="(() => Navigator.NavigateToEditDispute(dispute.Id))" class="card-title fw-bolder text-muted text-hover-primary fs-4">Order Reference No.: @dispute.Order.ReferenceNo</a>
+						@*					<div class="fw-bolder text-primary my-6">Transaction Reference: @payment.TransactionReference</div>
+	
+						<p class="text-dark-75 fw-bold fs-5 m-0">Amount: @dispute.AmountPaid</p>*@
+					</div>
+					<!--end::Body-->
+				</div>
+				<!--end::Statistics Widget 1-->
+			</div>
+		}
+	}
 </div>
-<!--end::Basic info-->
+	<!--end::Row-->
+
+<!--end::Container-->
 
 @code {
-	DisputeCommand Dispute { get; set; } = new();
-	DisputeCount DisputeCount { get; set; } = new();
-	List<Lookup> OpenOrders { get; set; } = new();
+	Search SearchObj { get; set; } = new();
 	bool IsLoading { get; set; }
+	PaginatedList<DisputePageDto> Disputes { get; set; } = new();
+	PaginatedQuery Query { get; set; } = PaginatedQuery.Build(0, 1, 20);
 
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
+		Disputes.Data = new();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			OpenOrders = await LookupService.GetOpenOrdersLookup();
-		    DisputeCount = await DisputeService.GetOpenDisputeCount();
+			Disputes = await DisputeService.GetPage(Query);
 			StateHasChanged();
 		}
 	}
 
 	async Task Submit()
 	{
-		DisableButtons(true);
-		var response = await DisputeService.Save(Dispute);
-		if (response.IsComplete)
-		{
-			ToastService.SaveSuccess();
-			Dispute = new();
-			DisableButtons(false);
-			return;
-		}
-		ToastService.SaveFailure();
-		DisableButtons(false);
+		DisableButton(true);
+		Query.ThenSearch(SearchObj.SearchTerm);
+		Disputes = await DisputeService.GetPage(Query);
+		DisableButton(false);
 	}
 
-	void DisableButtons(bool isLoading)
+	void DisableButton(bool isLoading)
 	{
 		IsLoading = isLoading;
 		StateHasChanged();

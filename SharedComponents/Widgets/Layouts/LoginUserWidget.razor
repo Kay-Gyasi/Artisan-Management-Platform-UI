@@ -270,6 +270,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthService.CheckAuthStatus();
         User = await AuthService.GetClaim("unique_name");
         Role = await AuthService.GetClaim("role");
         Email = await AuthService.GetClaim("email");

@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Commands;
-using AMP.Web.Models.Dtos;
 using AMP.Web.Models.Responses;
 using AMP.Web.Models.Services.Extensions;
 using Kessewa.Extension.Shared.HttpServices.Models;

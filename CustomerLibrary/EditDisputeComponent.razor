@@ -1,0 +1,128 @@
+﻿@page "/customer/edit-dispute/{DisputeId}"
+@inject DisputeService DisputeService
+@inject LookupService LookupService
+@inject NotificationService ToastService
+@inject AuthService AuthStateService
+@inject IMapper Mapper
+
+<PageTitle>Edit Dispute</PageTitle>
+
+
+<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+	<!--begin::Card header-->
+	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+		<!--begin::Card title-->
+		<div class="card-title m-0">
+			<h3 class="fw-bolder m-0">Post Dispute</h3>
+		</div>
+		<!--end::Card title-->
+		<div class="mt-auto mb-auto">
+			Open Disputes: @DisputeCount.Count
+		</div>
+	</div>
+	<!--begin::Card header-->
+	<!--begin::Content-->
+	<div id="kt_account_profile_details" class="collapse show">
+		<!--begin::Form-->
+	<EditForm Model="Dispute" id="kt_account_profile_details_form" class="form" OnValidSubmit="Submit">
+	<DataAnnotationsValidator />
+	<!--begin::Card body-->
+	<div class="card-body border-top p-9">
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label fw-bold fs-6">Order</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputSelect @bind-Value="Dispute.OrderId" name="artisan" class="form-control form-control-lg form-control-solid"
+						 placeholder="Order on which dispute is being held">
+				<option value="">--Select an order--</option>
+				@foreach (var order in OpenOrders)
+				{
+					<option value="@order.Id">@order.Name</option>
+				}
+			</InputSelect>
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	<!--begin::Input group-->
+	<div class="row mb-6">
+		<!--begin::Label-->
+		<label class="col-lg-4 col-form-label required fw-bold fs-6">Details</label>
+		<!--end::Label-->
+		<!--begin::Col-->
+		<div class="col-lg-8 fv-row">
+			<InputTextArea @bind-Value="Dispute.Details" name="disputeDetails" class="form-control form-control-lg form-control-solid" 
+						   placeholder="Details" style="min-height: 20vh;" />
+		</div>
+		<!--end::Col-->
+	</div>
+	<!--end::Input group-->
+
+	</div>
+	<!--end::Card body-->
+	<!--begin::Actions-->
+	<div class="card-footer d-flex justify-content-end py-6 px-9">
+		<button type="reset" class="btn btn-light btn-active-light-primary me-2"
+				disabled="@IsLoading">Discard</button>
+		<button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit"
+				disabled="@IsLoading">Post</button>
+	</div>
+	<!--end::Actions-->
+	</EditForm>
+		<!--end::Form-->
+	</div>
+	<!--end::Content-->
+</div>
+<!--end::Basic info-->
+
+@code {
+	[Parameter] 
+	public string DisputeId { get; set; }
+	DisputeCommand Dispute { get; set; } = new();
+	DisputeCount DisputeCount { get; set; } = new();
+	List<Lookup> OpenOrders { get; set; } = new();
+	bool IsLoading { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await AuthStateService.CheckAuthStatus();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			OpenOrders = await LookupService.GetOpenOrdersLookup();
+		    DisputeCount = await DisputeService.GetOpenDisputeCount();
+			Dispute = Mapper.Map<DisputeCommand>(await DisputeService.GetAsync(DisputeId));
+			StateHasChanged();
+		}
+	}
+
+	async Task Submit()
+	{
+		DisableButtons(true);
+		var response = await DisputeService.Save(Dispute);
+		if (response.IsComplete)
+		{
+			ToastService.SaveSuccess();
+			Dispute = new();
+			DisableButtons(false);
+			return;
+		}
+		ToastService.SaveFailure();
+		DisableButtons(false);
+	}
+
+	void DisableButtons(bool isLoading)
+	{
+		IsLoading = isLoading;
+		StateHasChanged();
+	}
+}
