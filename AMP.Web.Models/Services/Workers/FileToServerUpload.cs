@@ -17,6 +17,7 @@ namespace AMP.Web.Models.Services.Workers
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger<FileToServerUpload> _logger;
         private readonly IServiceProvider _serviceProvider;
+        public static event Action IsDone;
     
         public static IFileListEntry Image;
         public static string AuthToken;
@@ -43,6 +44,7 @@ namespace AMP.Web.Models.Services.Workers
                 var isUploaded = await UploadImage(path);
     
                 if (isUploaded) await DeleteImage(path);
+                ReloadPage();
             }
         }
     
@@ -101,6 +103,19 @@ namespace AMP.Web.Models.Services.Workers
         }
 
         private static bool ImageIsProvided() => Image != null && Image.Type.Contains("image");
+
+        private static void ReloadPage()
+        {
+            try
+            {
+                IsDone?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }
 

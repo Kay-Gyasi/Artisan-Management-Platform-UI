@@ -3,7 +3,8 @@
 @using AMP.Web.Models.Services.Workers
 @inject AuthService AuthStateService
 @inject TokenServerAuthenticationStateProvider TokenServer
-@inject ImageService ImageService
+@inject UserService UserService
+@inject NavigationService Navigator
 @inject NotificationService ToastService
 @layout ArtisanProfileLayout
 @inject IJSRuntime JsInterop
@@ -82,14 +83,18 @@
     ElementReference _imagBody;
     IFileListEntry _file;
     string ImageUrl { get; set; }
-    bool IsLoading { get; set; }
-    ImageCommand Image { get; set; } = new();
 
     string _fileName = "";
     protected override async Task OnInitializedAsync()
     {
 		await AuthStateService.CheckAuthStatus();
         await JsInterop.InvokeVoidAsync("SetFocusToElement", _imagBody);
+        FileToServerUpload.IsDone += async () =>
+        {
+            var response = await UserService.GetRefreshToken();
+            if (response is not null && !string.IsNullOrEmpty(response.Token)) await TokenServer.SetTokenAsync(response.Token);
+            Navigator.NavigateToArtisanImageForceLoad();
+        };
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -57,7 +57,7 @@ namespace AMP.Web.Models.Services.Toast
         public void CostNotSet() =>
             _toastService.ShowInfo("Cost not set on this order by assigned artisan");
 
-        public void ShowImageUploadStartup() => _toastService.ShowInfo("Image upload starting... Changes will be reflected on next login");
+        public void ShowImageUploadStartup() => _toastService.ShowInfo("Image upload starting... AMP will reload after completion");
 
         public void ShowInvalidFile() => _toastService.ShowError("Input file is invalid!");
         

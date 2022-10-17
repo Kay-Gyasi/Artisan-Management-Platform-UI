@@ -262,7 +262,7 @@ namespace AMP.Web.Models.Services.HttpServices.Base
 
         private async Task<HttpClient> CreateClient()
         {
-            var client = _httpClientFactory.CreateClient("AmpClient");
+            var client = _httpClientFactory.CreateClient("AmpClient"); 
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {await _auth.GetTokenAsync()}");
             return client;
         }

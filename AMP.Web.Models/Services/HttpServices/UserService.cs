@@ -46,6 +46,9 @@ namespace AMP.Web.Models.Services.HttpServices
 
         public async Task<SigninResponse?> Login(SigninCommand command) =>
             await _http.PostLoginAsync(command, new CancellationToken());
+        
+        public async Task<SigninResponse> GetRefreshToken() =>
+            await _http.GetRequestAsync<SigninResponse>("user/GetRefreshToken", new CancellationToken());
     }
 }
 

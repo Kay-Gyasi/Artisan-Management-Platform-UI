@@ -45,7 +45,9 @@ namespace AMP.Web.Models.Services.Extensions
         public void NavigateToOrderRequests() => _navManager.NavigateTo("/artisans/requests");
         public void NavigateToArtisanSchedule() => _navManager.NavigateTo("/artisan/schedule");
         public void NavigateToArtisanImage() => _navManager.NavigateTo("/artisan/image");
+        public void NavigateToArtisanImageForceLoad() => _navManager.NavigateTo("/artisan/image", true);
         public void NavigateToCustomerImage() => _navManager.NavigateTo("/customer/image");
+        public void NavigateToCustomerImageForceLoad() => _navManager.NavigateTo("/customer/image", true);
         public void NavigateToArtisanHistory() => _navManager.NavigateTo("/artisan/work-history");
         public void NavigateToCustomerOrderList() => _navManager.NavigateTo("customers/orders");
         public void NavigateToCustomerOrderListForceLoad() => _navManager.NavigateTo("customers/orders", true);
