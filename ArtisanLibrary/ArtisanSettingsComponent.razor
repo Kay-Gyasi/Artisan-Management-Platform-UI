@@ -8,7 +8,6 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject ArtisanStore ArtisanStore
-@inject IJSRuntime JsInterop
 
 <PageTitle>Settings</PageTitle>
 
@@ -289,7 +288,7 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _settBody);
+		await _settBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

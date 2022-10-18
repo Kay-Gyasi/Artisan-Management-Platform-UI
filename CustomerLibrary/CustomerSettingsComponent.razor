@@ -7,10 +7,8 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject CustomerStore CustomerStore
-@inject IJSRuntime JsInterop
 
 <PageTitle>Settings</PageTitle>
-
 
 @*<CustomerProfileLayout></CustomerProfileLayout>
 *@<!--begin::Basic info-->
@@ -295,7 +293,7 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		CustomerStore.AddStateChangeListener(UpdateView);
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _csettBody);
+		await _csettBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

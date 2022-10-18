@@ -6,7 +6,6 @@
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
 @layout ArtisanProfileLayout
-@inject IJSRuntime JsInterop
 
 <PageTitle>Profile Overview</PageTitle>
 
@@ -154,7 +153,7 @@
 		Artisan = ArtisanStore.GetState().Artisan;
 		await InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _profBody);
+		await _profBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

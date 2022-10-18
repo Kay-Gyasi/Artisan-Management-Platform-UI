@@ -7,7 +7,6 @@
 @inject NavigationService Navigator
 @inject NotificationService ToastService
 @layout ArtisanProfileLayout
-@inject IJSRuntime JsInterop
 
 <div class="card mb-5 mb-xl-10">
 <!--begin::Card header-->
@@ -88,7 +87,7 @@
     protected override async Task OnInitializedAsync()
     {
 		await AuthStateService.CheckAuthStatus();
-        await JsInterop.InvokeVoidAsync("SetFocusToElement", _imagBody);
+        await _imagBody.FocusAsync();
         FileToServerUpload.IsDone += async () =>
         {
             var response = await UserService.GetRefreshToken();

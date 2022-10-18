@@ -2,7 +2,6 @@
 @inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
 @inject RatingService RatingService
-@inject IJSRuntime JsInterop
 
 <PageTitle>Reviews</PageTitle>
 
@@ -54,7 +53,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _rateBody);
+		await _rateBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

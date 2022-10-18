@@ -5,7 +5,6 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject CustomerStore CustomerStore
-@inject IJSRuntime JsInterop
 
 <PageTitle>Profile Overview</PageTitle>
 
@@ -137,7 +136,7 @@
 		Customer =  CustomerStore.GetState().Customer;
 		InitializeProperties();
 		CustomerStore.AddStateChangeListener(UpdateView);
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _compBody);
+		await _compBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)

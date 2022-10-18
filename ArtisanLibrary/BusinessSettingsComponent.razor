@@ -10,7 +10,6 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject ArtisanStore ArtisanStore
-@inject IJSRuntime JsInterop
 
 <PageTitle>Business Settings</PageTitle>
 
@@ -157,7 +156,7 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await JsInterop.InvokeVoidAsync("SetFocusToElement", _busiBody);
+		await _busiBody.FocusAsync();
 	}
 
 	// TODO:: refactor this (readability)
