@@ -14,7 +14,6 @@
 
 @*<ArtisanProfileLayout></ArtisanProfileLayout>
 *@<!--begin::Basic info-->
-<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
 	<div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
@@ -139,10 +138,8 @@
 	<!--end::Content-->
 </div>
 <!--end::Basic info-->
-</ErrorBoundary>
 
 @code {
-	ErrorBoundary _errorBoundary;
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
@@ -179,12 +176,7 @@
 			UpdateView();
 		}
 	}
-
-	protected override void OnParametersSet()
-	{
-		RefreshIfErrorBoundary();
-	}
-
+	
 	async Task SetArtisanInfo()
 	{
 		await GetArtisan();
@@ -246,12 +238,6 @@
 	private async Task ResetArtisan() => await ActionDispatcher.Dispatch(new ResetArtisanAction());
 
 	private void UpdateView() => StateHasChanged();
-	
-	void RefreshIfErrorBoundary()
-	{
-		_errorBoundary?.Recover();
-	}
-
 
 	public void Dispose() => ArtisanStore.RemoveStateChangeListener(UpdateView);
 }

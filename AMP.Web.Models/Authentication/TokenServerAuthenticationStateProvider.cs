@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -34,22 +35,33 @@ namespace AMP.Web.Models.Authentication
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await GetTokenAsync();
-            IEnumerable<Claim> claims = new List<Claim>();
-            if (!string.IsNullOrEmpty(token))
+            try
             {
-                claims = ServiceExtensions.ParseClaimsFromJwt(token);
-                var enumerable = claims as Claim[] ?? claims.ToArray();
-                var role = enumerable?.FirstOrDefault(x =>
-                    x.Value is "Administrator" or "Artisan" or "Customer" or "Developer");
-                claims = enumerable?.Append(new Claim(ClaimTypes.Role, role?.Value ?? ""));
+                var token = await GetTokenAsync();
+                IEnumerable<Claim> claims = new List<Claim>();
+                if (!string.IsNullOrEmpty(token))
+                {
+                    claims = ServiceExtensions.ParseClaimsFromJwt(token);
+                    var enumerable = claims as Claim[] ?? claims.ToArray();
+                    var role = enumerable?.FirstOrDefault(x =>
+                        x.Value is "Administrator" or "Artisan" or "Customer" or "Developer");
+                    claims = enumerable?.Append(new Claim(ClaimTypes.Role, role?.Value ?? ""));
+                }
+                var identity = string.IsNullOrEmpty(token)
+                    ? new ClaimsIdentity()
+                    : new ClaimsIdentity(claims, "jwt");
+
+                return new AuthenticationState(new ClaimsPrincipal(identity));
             }
-            var identity = string.IsNullOrEmpty(token)
-                ? new ClaimsIdentity()
-                : new ClaimsIdentity(claims, "jwt");
-            return new AuthenticationState(new ClaimsPrincipal(identity));
+            catch (InvalidOperationException ex)
+            {
+                return null;
+            }            
         }
+
+        
     }
 }

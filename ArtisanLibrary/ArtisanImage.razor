@@ -8,7 +8,6 @@
 @inject NotificationService ToastService
 @layout ArtisanProfileLayout
 
-<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
     <!--begin::Card header-->
     <div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
@@ -79,10 +78,8 @@
         <!--end::Actions-->
     </div>
 </div>
-</ErrorBoundary>
 
 @code {
-    ErrorBoundary _errorBoundary;
     IFileListEntry _file;
     string ImageUrl { get; set; }
 
@@ -108,11 +105,6 @@
         }
     }
 
-    protected override void OnParametersSet()
-    {
-        RefreshIfErrorBoundary();
-    }
-
     async Task HandleSelectedFile(IFileListEntry[] files)
     {
         try
@@ -136,11 +128,5 @@
         }
     }
     
-    void RefreshIfErrorBoundary()
-    {
-        _errorBoundary?.Recover();
-    }
-
-
     bool FileIsImage() => _file != null && _file.Type.Contains("image");
 }

@@ -12,7 +12,6 @@
 
 @*<CustomerProfileLayout></CustomerProfileLayout>
 *@<!--begin::Basic info-->
-<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
 	<div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
@@ -274,10 +273,8 @@
 	<!--end::Content-->
 </div>
 <!--end::Deactivate Account-->
-</ErrorBoundary>
 
 @code {
-	ErrorBoundary _errorBoundary;
 	CustomerCommand? Customer { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	string EmailAddress { get; set; }
@@ -318,11 +315,6 @@
 			User.Address ??= new Address();
 			UpdateView();
 		}
-	}
-
-	protected override void OnParametersSet()
-	{
-		RefreshIfErrorBoundary();
 	}
 
 	void InitializeProperties()
@@ -394,13 +386,6 @@
 		StateHasChanged();
 	}
 	
-	void RefreshIfErrorBoundary()
-	{
-		_errorBoundary?.Recover();
-		// Navigator.NavigateToCustomerProfileSettingsForceLoad();
-	}
-
-
 	public void Dispose()
 	{
 		CustomerStore.RemoveStateChangeListener(UpdateView);

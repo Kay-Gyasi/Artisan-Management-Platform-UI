@@ -29,14 +29,7 @@
 					<div class="post d-flex flex-column-fluid" id="kt_post">
 						<!--begin::Container-->
 						<div id="kt_content_container" class="container-xxl">
-							<ErrorBoundary @ref="_errorBoundary">
-								<ChildContent>
 								    @Body							    
-							    </ChildContent>
-							    <ErrorContent>
-								    <p class="errorUI">An error has occurred. Please refresh the page</p>
-							    </ErrorContent>
-							</ErrorBoundary>
 						</div>
 						<!--end::Container-->
 					</div>
@@ -92,13 +85,3 @@
 	</div>
 	<!--end::Scrolltop-->
 <!--end::Main-->
-
-@code
-{
-	private ErrorBoundary? _errorBoundary;
-
-	protected override void OnParametersSet()
-	{
-		_errorBoundary?.Recover();
-	}
-}

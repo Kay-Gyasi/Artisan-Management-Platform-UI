@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AMP.Web.Models.Services.HttpServices;
 using BlazorInputFile;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +15,7 @@ namespace AMP.Web.Models.Services.Workers
 {
     public class FileToServerUpload : BackgroundService
     {
-        private readonly IWebHostEnvironment _environment;
+        private readonly IWebAssemblyHostEnvironment _environment;
         private readonly ILogger<FileToServerUpload> _logger;
         private readonly IServiceProvider _serviceProvider;
         public static event Action IsDone;
@@ -22,7 +23,7 @@ namespace AMP.Web.Models.Services.Workers
         public static IFileListEntry Image;
         public static string AuthToken;
     
-        public FileToServerUpload(IWebHostEnvironment environment, 
+        public FileToServerUpload(IWebAssemblyHostEnvironment environment, 
             ILogger<FileToServerUpload> logger,
             IServiceProvider serviceProvider)
         {
@@ -54,7 +55,8 @@ namespace AMP.Web.Models.Services.Workers
             {
                 _logger.LogInformation("File detected! Initiating image to directory upload...");
                 _logger.LogInformation($"Image: {Image.Name}");
-                var path = Path.Combine(_environment.ContentRootPath, "wwwroot", "assets", "Uploads", Image.Name);
+                //var path = Path.Combine(_environment.ContentRootPath, "wwwroot", "assets", "Uploads", Image.Name);
+                var path = Path.Combine(_environment.BaseAddress, "wwwroot", "assets", "Uploads", Image.Name);
                 var ms = new MemoryStream();
                 await Image.Data.CopyToAsync(ms, stoppingToken);
                 await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write);

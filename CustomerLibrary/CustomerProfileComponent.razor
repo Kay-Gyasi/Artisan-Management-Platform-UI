@@ -8,7 +8,6 @@
 
 <PageTitle>Profile Overview</PageTitle>
 
-<ErrorBoundary @ref="_errorBoundary">
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
 	<!--begin::Card header-->
@@ -121,10 +120,8 @@
 	<!--end::Card body-->
 </div>
 <!--end::details View-->
-</ErrorBoundary>
 
 @code {
-	ErrorBoundary _errorBoundary;
 	private CustomerDto? Customer { get; set; } = new();
 	private string? EmailAddress { get; set; }
 	private string? UserName { get; set; }
@@ -151,11 +148,6 @@
 		}
 	}
 
-	protected override void OnParametersSet()
-	{
-		RefreshIfErrorBoundary();
-	}
-
 	void InitializeProperties()
 	{
 		Customer ??= new();
@@ -178,13 +170,6 @@
 	{
 		StateHasChanged();
 	}
-	
-	void RefreshIfErrorBoundary()
-	{
-		_errorBoundary?.Recover();
-		// Navigator.NavigateToCustomerProfileOverviewForceLoad();
-	}
-
 
 	public void Dispose()
 	{

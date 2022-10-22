@@ -4,7 +4,6 @@
 @attribute [Authorize]
 <PageTitle>Dashboard</PageTitle>
 
-<ErrorBoundary @ref="_errorBoundary">
 <!--begin::Row-->
 <div class="row g-5 g-xl-8">
 	<AuthorizeView Roles="Artisan">
@@ -95,24 +94,11 @@
     </AuthorizeView>
 </div>
 <!--end::Row-->
-</ErrorBoundary>
 
 @code{
-	ErrorBoundary _errorBoundary;
 
-	protected override async Task OnInitializedAsync()
-	{
-		await AuthStateService.CheckAuthStatus();
-	}
-
-	protected override void OnParametersSet()
-	{
-		RefreshIfErrorBoundary();
-	}
-
-	void RefreshIfErrorBoundary()
-	{
-		_errorBoundary?.Recover();
-	}
-
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthStateService.CheckAuthStatus();
+    }
 }

@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AMP.Web.Models.Services.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AMP.Web.Models.Services
@@ -17,9 +19,12 @@ namespace AMP.Web.Models.Services
         }
 
         public async Task CheckAuthStatus()
-        {
+        {            
             var authState = await _provider.GetAuthenticationStateAsync();
-            if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform")) _navigation.NavigateToLoginForceLoad();
+            if (!authState.User.HasClaim(x => x.Value == "AmpWebPlatform"))
+            {
+                _navigation.NavigateToLoginForceLoad();
+            }       
         }
 
         public async Task<string?> GetClaim(string claim)
@@ -27,7 +32,6 @@ namespace AMP.Web.Models.Services
             var authState = await _provider.GetAuthenticationStateAsync();
             return authState.User.FindFirst(claim)?.Value;
         }
-
     }
 }
 

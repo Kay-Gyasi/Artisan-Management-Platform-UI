@@ -10,7 +10,6 @@
 <!--begin::Container-->
 
 <!--begin::Row-->
-<ErrorBoundary @ref="_errorBoundary">
 <div class="row g-5 g-xl-8 focusAsync" tabindex="0">
 	@if (Ratings.Data.Count < 1 || Ratings.Data == null)
 	{
@@ -41,11 +40,9 @@
 	<!--end::Row-->
 
 <!--end::Container-->
-</ErrorBoundary>
 
 
 @code {
-	ErrorBoundary _errorBoundary;
 
 	//TODO:: Confirm use of Artisan property
 	ArtisanDto Artisan { get; set; } = new();
@@ -67,22 +64,11 @@
 		}
 	}
 
-	protected override void OnParametersSet()
-	{
-		RefreshIfErrorBoundary();
-	}
-
 	async Task SetArtisan() => Artisan = await ArtisanService.GetByUserId();
+
 	async Task SetRating()
 	{
 		Ratings.Data = new();
 		Ratings = await RatingService.GetArtisanRatingPage(Query);
 	}
-	
-	void RefreshIfErrorBoundary()
-	{
-		_errorBoundary?.Recover();
-	}
-
-
 }

@@ -13,8 +13,13 @@ namespace AMP.Web.Models
         
         public static IServiceCollection AddStorage(this IServiceCollection services)
         {
-            services.AddScoped<LocalStorageService>()
-                .AddScoped<IPaymentService, PaymentsService>();
+            services.AddScoped<LocalStorageService>();                
+            return services;
+        }
+
+        public static IServiceCollection AddPaymentService(this IServiceCollection services)
+        {
+            services.AddScoped<IPaymentService, PaymentsService>();
             return services;
         }
 

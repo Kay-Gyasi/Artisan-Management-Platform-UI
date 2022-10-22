@@ -1,14 +1,18 @@
 ﻿using AMP.Web.Models;
 using AMP.Web.Models.Authentication;
 using AMP.Web.Models.Services;
+using AMP.Web.Models.Services.Extensions;
+using AMP.Web.Models.Services.HttpServices;
+using AMP.Web.Models.Services.HttpServices.Base;
 using AMP.Web.Models.Services.Toast;
 using AMP.Web.Models.Services.Workers;
+using AutoMapper;
 using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace AMP.UI;
+namespace AMP.Server;
 
 public static class RegisterServices
 {
@@ -23,13 +27,14 @@ public static class RegisterServices
             .AddScoped<NotificationService>()
             .RegisterHttpServices()
             .AddStorage()
+            .AddPaymentService()
             .AddStores()
             .AddAuthentication()
-            .AddWorkers()
+            //.AddWorkers()
             .AddHttpClient("AmpClient", options =>
             {
-                //options.BaseAddress = new Uri(configuration["DevApiUrl"] ?? string.Empty);
-                options.BaseAddress = new Uri(configuration["ProdApiUrl"] ?? string.Empty);
+                 options.BaseAddress = new Uri(configuration["DevApiUrl"] ?? string.Empty);
+                 //options.BaseAddress = new Uri(configuration["ProdApiUrl"] ?? string.Empty);
             });
         return services;
     }
@@ -65,6 +70,7 @@ public static class RegisterServices
 
     private static IServiceCollection AddAuthentication(this IServiceCollection services)
     {
+        services.AddAuthorizationCore();
         services.AddScoped<TokenServerAuthenticationStateProvider>();
         services.AddScoped<AuthenticationStateProvider>(provider 
             => provider.GetRequiredService<TokenServerAuthenticationStateProvider>());
@@ -75,10 +81,10 @@ public static class RegisterServices
     private static IServiceCollection AddWorkers(this IServiceCollection services)
     {
         services.AddHostedService<FileToServerUpload>();
-        services.Configure<HostOptions>(options =>
-        {
-            options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost;
-        });
+        // services.Configure<HostOptions>(options =>
+        // {
+        //     options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost;
+        // });
         return services;
     }
 }
