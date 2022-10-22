@@ -4,7 +4,7 @@
                 AdditionalAssemblies="@(new[] {typeof(ArtisanProfileLayout).Assembly, typeof(CustomerProfileLayout).Assembly})">
             <Found Context="routeData">
                 <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-                @*<FocusOnNavigate RouteData="@routeData" Selector="h1"/>*@
+                <FocusOnNavigate RouteData="@routeData" Selector=".focusAsync"/>
             </Found>
             <NotFound>
                 <PageTitle>Not found</PageTitle>

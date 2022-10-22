@@ -9,8 +9,9 @@
 
 <!--begin::Container-->
 
-	<!--begin::Row-->
-<div class="row g-5 g-xl-8" tabindex="0" @ref="_rateBody">
+<!--begin::Row-->
+<ErrorBoundary @ref="_errorBoundary">
+<div class="row g-5 g-xl-8 focusAsync" tabindex="0">
 	@if (Ratings.Data.Count < 1 || Ratings.Data == null)
 	{
 	    <div class="col-12 justify-content-center text-center">
@@ -40,10 +41,11 @@
 	<!--end::Row-->
 
 <!--end::Container-->
+</ErrorBoundary>
 
 
 @code {
-	ElementReference _rateBody;
+	ErrorBoundary _errorBoundary;
 
 	//TODO:: Confirm use of Artisan property
 	ArtisanDto Artisan { get; set; } = new();
@@ -53,7 +55,6 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await AuthStateService.CheckAuthStatus();
-		await _rateBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -66,11 +67,22 @@
 		}
 	}
 
+	protected override void OnParametersSet()
+	{
+		RefreshIfErrorBoundary();
+	}
+
 	async Task SetArtisan() => Artisan = await ArtisanService.GetByUserId();
 	async Task SetRating()
 	{
 		Ratings.Data = new();
 		Ratings = await RatingService.GetArtisanRatingPage(Query);
 	}
+	
+	void RefreshIfErrorBoundary()
+	{
+		_errorBoundary?.Recover();
+	}
+
 
 }

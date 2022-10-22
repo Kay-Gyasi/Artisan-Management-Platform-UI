@@ -12,11 +12,12 @@
 
 @*<CustomerProfileLayout></CustomerProfileLayout>
 *@<!--begin::Basic info-->
+<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+	<div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
 	     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
-	     tabindex="0" @ref="_csettBody">
+	     tabindex="0">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
 			<h3 class="fw-bolder m-0">Personal Info</h3>
@@ -273,9 +274,10 @@
 	<!--end::Content-->
 </div>
 <!--end::Deactivate Account-->
+</ErrorBoundary>
 
 @code {
-	ElementReference _csettBody;
+	ErrorBoundary _errorBoundary;
 	CustomerCommand? Customer { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	string EmailAddress { get; set; }
@@ -293,7 +295,6 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		CustomerStore.AddStateChangeListener(UpdateView);
-		await _csettBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -317,6 +318,11 @@
 			User.Address ??= new Address();
 			UpdateView();
 		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		RefreshIfErrorBoundary();
 	}
 
 	void InitializeProperties()
@@ -387,6 +393,13 @@
 	{
 		StateHasChanged();
 	}
+	
+	void RefreshIfErrorBoundary()
+	{
+		_errorBoundary?.Recover();
+		// Navigator.NavigateToCustomerProfileSettingsForceLoad();
+	}
+
 
 	public void Dispose()
 	{

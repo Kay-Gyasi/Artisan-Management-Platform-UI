@@ -3,16 +3,16 @@
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
 @inject ArtisanStore ArtisanStore
-@inject ArtisanService ArtisanService
 @inject AuthService AuthStateService
 @layout ArtisanProfileLayout
 
 <PageTitle>Profile Overview</PageTitle>
 
+<ErrorBoundary @ref="_errorBoundary">
 <!--begin::details View-->
 <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
 	<!--begin::Card header-->
-	<div class="card-header cursor-pointer" tabindex="0" @ref="_profBody">
+	<div class="card-header cursor-pointer focusAsync" tabindex="0">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
 			<h3 class="fw-bolder m-0">Profile Details</h3>
@@ -135,9 +135,10 @@
 	<!--end::Card body-->
 </div>
 <!--end::details View-->
+</ErrorBoundary>
 
 @code {
-	ElementReference _profBody;
+	ErrorBoundary _errorBoundary;
 	ArtisanDto? Artisan { get; set; } = new();
 	string EmailAddress { get; set; }
 	string BusinessName { get; set; }
@@ -153,7 +154,6 @@
 		Artisan = ArtisanStore.GetState().Artisan;
 		await InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await _profBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -165,6 +165,11 @@
 			await InitializeProperties();
 			StateHasChanged();
 		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		RefreshIfErrorBoundary();
 	}
 
 	async Task InitializeProperties()
@@ -192,6 +197,12 @@
 	{
 		StateHasChanged();
 	}
+	
+	void RefreshIfErrorBoundary()
+	{
+		_errorBoundary?.Recover();
+	}
+
 
 	public void Dispose()
 	{

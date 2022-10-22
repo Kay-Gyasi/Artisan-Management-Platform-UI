@@ -19,14 +19,20 @@ namespace AMP.Web.Models.Services.Extensions
             => _navManager.Uri == $"{_navManager.BaseUri}{keyword}" ? "active" : "";
 
         public void NavigateToArtisanProfileOverview() => _navManager.NavigateTo("/account/artisan/overview");
+        public void NavigateToArtisanProfileOverviewForceLoad() => _navManager.NavigateTo("/account/artisan/overview", true);
         public void NavigateToCustomerViewArtisanProfile(string artisanId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}");
         public void NavigateToCustomerViewArtisanForOrder(string artisanId, string orderId) => _navManager.NavigateTo($"/customers/view-artisan/{artisanId}/{orderId}");
         public void NavigateToCustomerViewArtisanRating(string artisanId, string orderId) => _navManager.NavigateTo($"/customers/view-artisan/reviews/{artisanId}/{orderId}");
         public void NavigateToCustomerProfileOverview() => _navManager.NavigateTo("/account/customer/overview");
+        public void NavigateToCustomerProfileOverviewForceLoad() => _navManager.NavigateTo("/account/customer/overview", true);
         public void NavigateToArtisanProfileSettings() => _navManager.NavigateTo("/account/artisan/settings");
+        public void NavigateToArtisanProfileSettingsForceLoad() => _navManager.NavigateTo("/account/artisan/settings", true);
         public void NavigateToArtisanBusinessSettings() => _navManager.NavigateTo("/account/artisan/business");
+        public void NavigateToArtisanBusinessSettingsForceLoad() => _navManager.NavigateTo("/account/artisan/business", true);
         public void NavigateToArtisanReviews() => _navManager.NavigateTo("/account/artisan/reviews");
+        public void NavigateToArtisanReviewsForceLoad() => _navManager.NavigateTo("/account/artisan/reviews", true);
         public void NavigateToCustomerProfileSettings() => _navManager.NavigateTo("/account/customer/settings");
+        public void NavigateToCustomerProfileSettingsForceLoad() => _navManager.NavigateTo("/account/customer/settings", true);
         public void NavigateToCustomerProposals() => _navManager.NavigateTo("/customers/proposals");
         public void NavigateToViewArtisans() => _navManager.NavigateTo("/users/artisans");
         public void NavigateToViewCustomers() => _navManager.NavigateTo("/users/customers");

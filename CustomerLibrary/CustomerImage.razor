@@ -8,20 +8,21 @@
 @inject NotificationService ToastService
 @layout CustomerProfileLayout
 
+<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
-<!--begin::Card header-->
-<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
-     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
-     tabindex="0" @ref="_cimagBody">
-    <!--begin::Card title-->
-    <div class="card-title m-0">
-        <h3 class="fw-bolder m-0">Current Image</h3>
+    <!--begin::Card header-->
+    <div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
+         data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
+         tabindex="0">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Current Image</h3>
+        </div>
+        <!--end::Card title-->
     </div>
-    <!--end::Card title-->
-</div>
-<!--begin::Card header-->
-<!--begin::Content-->
-<div id="kt_account_profile_details" class="collapse show">
+    <!--begin::Card header-->
+    <!--begin::Content-->
+    <div id="kt_account_profile_details" class="collapse show">
         <!--begin::Card body-->
         <div class="card-body border-top p-9">
             <!--begin::Input group-->
@@ -76,10 +77,12 @@
             
         </div>
         <!--end::Actions-->
+    </div>
 </div>
-</div>
+</ErrorBoundary>
+
 @code {
-    ElementReference _cimagBody;
+    ErrorBoundary _errorBoundary;
     IFileListEntry _file;
     string ImageUrl { get; set; }
     bool IsLoading { get; set; }
@@ -89,7 +92,6 @@
     protected override async Task OnInitializedAsync()
     {
 		await AuthStateService.CheckAuthStatus();
-        await _cimagBody.FocusAsync();
         FileToServerUpload.IsDone += async () =>
         {
             var response = await UserService.GetRefreshToken();
@@ -106,6 +108,11 @@
             if (string.IsNullOrEmpty(ImageUrl)) ImageUrl = "https://res.cloudinary.com/kay-gyasi/image/upload/v1664598169/EPMS_Login_kdthcn.png";
             StateHasChanged();
         }
+    }
+
+    protected override void OnParametersSet()
+    {
+        RefreshIfErrorBoundary();
     }
 
     async Task HandleSelectedFile(IFileListEntry[] files)
@@ -130,6 +137,13 @@
             throw;
         }
     }
+    
+    void RefreshIfErrorBoundary()
+    {
+        _errorBoundary?.Recover();
+        // Navigator.NavigateToCustomerImageForceLoad();
+    }
+
 
     bool FileIsImage() => _file != null && _file.Type.Contains("image");
 }

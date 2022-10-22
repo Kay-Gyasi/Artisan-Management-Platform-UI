@@ -6,7 +6,6 @@ using AMP.Web.Models.Services.Workers;
 using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AMP.UI;

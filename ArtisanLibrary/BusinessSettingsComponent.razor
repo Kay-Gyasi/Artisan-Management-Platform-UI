@@ -5,7 +5,6 @@
 @inject NotificationService ToastService
 @inject AuthService AuthStateService
 @inject LookupService LookupService
-@inject UserService UserService
 @inject IMapper Mapper
 @implements IDisposable
 @inject IActionDispatcher ActionDispatcher
@@ -15,11 +14,12 @@
 
 @*<ArtisanProfileLayout></ArtisanProfileLayout>
 *@<!--begin::Basic info-->
+<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+	<div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
 	     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
-	     tabindex="0" @ref="_busiBody">
+	     tabindex="0">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
 			<h3 class="fw-bolder m-0">Business Details</h3>
@@ -139,9 +139,10 @@
 	<!--end::Content-->
 </div>
 <!--end::Basic info-->
+</ErrorBoundary>
 
 @code {
-	ElementReference _busiBody;
+	ErrorBoundary _errorBoundary;
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	List<Lookup> Services { get; set; } = new();
@@ -156,7 +157,6 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await _busiBody.FocusAsync();
 	}
 
 	// TODO:: refactor this (readability)
@@ -178,6 +178,11 @@
 			InitializeProperties();
 			UpdateView();
 		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		RefreshIfErrorBoundary();
 	}
 
 	async Task SetArtisanInfo()
@@ -241,6 +246,12 @@
 	private async Task ResetArtisan() => await ActionDispatcher.Dispatch(new ResetArtisanAction());
 
 	private void UpdateView() => StateHasChanged();
+	
+	void RefreshIfErrorBoundary()
+	{
+		_errorBoundary?.Recover();
+	}
+
 
 	public void Dispose() => ArtisanStore.RemoveStateChangeListener(UpdateView);
 }

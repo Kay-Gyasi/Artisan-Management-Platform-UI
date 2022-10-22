@@ -2,7 +2,6 @@
 @layout ArtisanProfileLayout
 @inject NotificationService ToastService
 @inject AuthService AuthStateService
-@inject ArtisanService ArtisanService
 @inject UserService UserService
 @inject IMapper Mapper
 @implements IDisposable
@@ -11,13 +10,12 @@
 
 <PageTitle>Settings</PageTitle>
 
-@*<ArtisanProfileLayout></ArtisanProfileLayout>
-*@<!--begin::Basic info-->
+<ErrorBoundary @ref="_errorBoundary">
 <div class="card mb-5 mb-xl-10">
 	<!--begin::Card header-->
-	<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" 
+	<div class="card-header border-0 cursor-pointer focusAsync" role="button" data-bs-toggle="collapse" 
 	     data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details"
-	     tabindex="0" @ref="_settBody">
+	     tabindex="0">
 		<!--begin::Card title-->
 		<div class="card-title m-0">
 			<h3 class="fw-bolder m-0">Personal Info</h3>
@@ -266,11 +264,10 @@
 	<!--end::Content-->
 </div>
 <!--end::Deactivate Account-->
-
-
+</ErrorBoundary>
 
 @code {
-	ElementReference _settBody;
+	ErrorBoundary _errorBoundary;
 	ArtisanCommand? Artisan { get; set; } = new();
 	UserCommand? User { get; set; } = new();
 	string EmailAddress { get; set; }
@@ -288,7 +285,6 @@
 		await AuthStateService.CheckAuthStatus();
 		InitializeProperties();
 		ArtisanStore.AddStateChangeListener(UpdateView);
-		await _settBody.FocusAsync();
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -311,6 +307,11 @@
 			InitializeProperties();
 			UpdateView();
 		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		RefreshIfErrorBoundary();
 	}
 
 	void InitializeProperties()
@@ -378,6 +379,11 @@
 	private void UpdateView()
 	{
 		StateHasChanged();
+	}
+
+	void RefreshIfErrorBoundary()
+	{
+		_errorBoundary?.Recover();
 	}
 
 	public void Dispose()
